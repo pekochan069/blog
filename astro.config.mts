@@ -2,7 +2,6 @@ import markdoc from "@astrojs/markdoc";
 import sitemap from "@astrojs/sitemap";
 import solidJs from "@astrojs/solid-js";
 import vercel from "@astrojs/vercel";
-import swup from "@swup/astro";
 import tailwindcss from "@tailwindcss/vite";
 import compressor from "astro-compressor";
 import expressiveCode from "astro-expressive-code";
@@ -16,16 +15,7 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    sitemap(),
-    swup({
-      containers: ["#swup"],
-    }),
-    markdoc(),
-    solidJs(),
-    expressiveCode(),
-    compressor(),
-  ],
+  integrations: [sitemap(), markdoc(), solidJs(), expressiveCode(), compressor()],
   // markdown: {
   //   remarkPlugins: [
   //     [remarkFlexibleToc, {}],
