@@ -1,0 +1,57 @@
+---
+import type { MarkdownHeading } from "astro";
+
+type Props = {
+  headings: MarkdownHeading[];
+};
+
+const { headings } = Astro.props;
+---
+
+<aside
+  class="invisible top-20 hidden h-[calc(100%-5rem)] w-full max-w-60 xl:visible xl:sticky xl:block"
+>
+  <div class="no-scrollbar h-full max-h-[calc(100svh-5rem)] w-full overflow-y-scroll pb-4">
+    <p class="mb-4 text-lg font-semibold">목차</p>
+    <ul>
+      {
+        headings.map((heading) => (
+          <li>
+            <a
+              id={`toc-${heading.slug}`}
+              href={`#${heading.slug}`}
+              class="toc-link text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-primary-foreground"
+              data-depth={heading.depth}
+            >
+              {heading.text.replace("#", "")}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</aside>
+<script>
+  const { hash } = new URL(window.location.href);
+  document.querySelectorAll(".toc-link").forEach((link) => {
+    if (hash === link.getAttribute("href")) {
+      link.classList.remove("text-muted-foreground");
+      link.classList.add("text-foreground", "font-semibold", "underline");
+    }
+
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      const target = document.querySelector(link.getAttribute("href")!);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", link.getAttribute("href")!);
+        document.querySelectorAll(".toc-link").forEach((l) => {
+          l.classList.remove("text-foreground", "font-semibold", "underline");
+          l.classList.add("text-muted-foreground");
+        });
+        link.classList.remove("text-muted-foreground");
+        link.classList.add("text-foreground", "font-semibold", "underline");
+      }
+    });
+  });
+</script>

@@ -1,0 +1,8 @@
+---
+import { processFileTree } from "~/lib/markdown/rehype-file-tree";
+
+const fileTreeHtml = await Astro.slots.render("default");
+const html = processFileTree(fileTreeHtml, "file-tree");
+---
+
+<div class="file-tree" set:html={html} />

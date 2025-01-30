@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pekochan.vercep.app/sitemap-index.xml

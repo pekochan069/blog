@@ -1,0 +1,25 @@
+---
+import { contents } from "~/lib/content";
+import MobileSidebar from "./navbar/mobile-sidebar";
+import { ThemeToggle } from "./navbar/theme-toggle.tsx";
+
+const url = new URL(Astro.url);
+---
+
+<header
+  class="fixed top-0 z-1 flex w-full justify-center border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:border-border"
+>
+  <div class="container flex h-16 items-center justify-between px-4">
+    <nav>
+      <a href="/">Pekochan069</a>
+    </nav>
+    <div>
+      <ThemeToggle client:load />
+      {
+        url.pathname.startsWith("/posts/") && (
+          <MobileSidebar contents={contents} current={url.pathname.split("/")[2]} client:load />
+        )
+      }
+    </div>
+  </div>
+</header>

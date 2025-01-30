@@ -1,0 +1,32 @@
+---
+import { contents } from "~/lib/content";
+
+type Props = {
+  current: string;
+};
+
+const { current } = Astro.props;
+---
+
+<aside
+  class="invisible top-20 hidden h-[calc(100%-5rem)] w-full max-w-60 lg:visible lg:sticky lg:block"
+>
+  <div class="no-scrollbar h-full max-h-[calc(100svh-5rem)] w-full overflow-y-scroll pb-4">
+    <p class="mb-4 text-lg font-semibold">다른 글 보기</p>
+    <ul class="">
+      {
+        contents.map((content) => (
+          <li>
+            <a
+              class="text-sm text-muted-foreground hover:text-foreground data-[current=true]:font-semibold data-[current=true]:text-foreground data-[current=true]:underline"
+              href={`/posts/${content.id}`}
+              data-current={current === content.id}
+            >
+              {content.data.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</aside>

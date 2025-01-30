@@ -1,0 +1,50 @@
+---
+title: 파일 트리 예제
+description: 파일 트리 예제
+category: ''
+tags: ["메타", "블로그"]
+published: 2025-01-28T16:55:12.088Z
+draft: false
+---
+
+## File Tree
+
+{% FileTree %}
+- public/
+  - robots.txt
+  - favicon.svg
+  - social-image.png
+  - a.ico
+- src/
+  - components/
+    - Header.astro
+    - Button.jsx
+  - **content/**
+      - config.ts
+      - posts/
+        - post1.md
+        - post2.md
+        - post3.mdx
+  - layouts/
+    - PostLayout.astro
+  - pages/
+    - posts/
+      - [post].astro
+    - about.astro
+    - **index.astro**
+    - rss.xml.js
+  - styles/
+    - global.css
+- astro.config.mjs
+- package.json
+- global.d.ts
+- tsconfig.json
+- .prettierrc
+- biome.json
+- .gitignore
+- tailwind.config.js
+- README.md
+- a.ipynb
+- pyproject.toml
+- requirements.txt
+{% /FileTree %}
