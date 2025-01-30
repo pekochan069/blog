@@ -22,6 +22,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "github-slugger": "^2.0.0",
+        "hast-util-from-html": "^2.0.3",
         "hast-util-select": "^6.0.3",
         "hast-util-to-string": "^3.0.1",
         "material-icon-theme": "^5.19.0",

@@ -365,7 +365,8 @@
   .file-tree {
     @apply mt-6 overflow-x-auto border p-4 text-xs;
 
-    img {
+    img,
+    svg {
       @apply h-4 w-4;
     }
 

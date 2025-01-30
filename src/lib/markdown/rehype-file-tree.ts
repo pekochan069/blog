@@ -21,14 +21,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import type { Element, ElementContent, Text } from "hast";
 import type { Child } from "hastscript";
 import { AstroError } from "astro/errors";
+import { fromHtml } from "hast-util-from-html";
 import { select } from "hast-util-select";
 import { toString } from "hast-util-to-string";
-import { h } from "hastscript";
+import { h, s } from "hastscript";
 import { rehype } from "rehype";
+import { rootDir } from "root-dir";
 import { CONTINUE, SKIP, visit } from "unist-util-visit";
+import { env } from "~/env";
 import { defaultFile, defaultFolder, defaultFolderOpen, mi } from "../markdown/file-tree-icons";
 
 declare module "vfile" {
@@ -36,6 +41,13 @@ declare module "vfile" {
     directoryLabel: string;
   }
 }
+
+const FOLDER_SVG = `<path
+    d="M13.84376,7.53645l-1.28749-1.0729A2,2,0,0,0,11.27591,6H4A2,2,0,0,0,2,8V24a2,2,0,0,0,2,2H28a2,2,0,0,0,2-2V10a2,2,0,0,0-2-2H15.12412A2,2,0,0,1,13.84376,7.53645Z"
+    fill="#90a4ae" />`;
+const FOLDER_OPEN_SVG = `<path
+    d='M28.96692,12H9.44152a2,2,0,0,0-1.89737,1.36754L4,24V10H28a2,2,0,0,0-2-2H15.1241a2,2,0,0,1-1.28038-.46357L12.5563,6.46357A2,2,0,0,0,11.27592,6H4A2,2,0,0,0,2,8V24a2,2,0,0,0,2,2H26l4.80523-11.21213A2,2,0,0,0,28.96692,12Z'
+    fill='#90a4ae' />`;
 
 /**
  * Process the HTML for a file tree to create the necessary markup for each file and directory
@@ -173,7 +185,34 @@ function makeText(value = ""): Text {
 
 /** Make a node containing an SVG icon from the passed HTML string. */
 function makeFileIcon(fileName: string) {
-  return h("img", { src: getFileIcon(fileName), class: "tree-icon", "aria-hidden": "true" });
+  const svgSource = getFileIcon(fileName);
+  let path;
+  if (env.ENV_TYPE === "dev") {
+    path = resolve(rootDir, `.${svgSource}`);
+  } else {
+    path = resolve(rootDir, `../../${svgSource}`);
+  }
+  const svg = readFileSync(path, "utf8");
+
+  if (!svg) {
+    return h("img", { src: defaultFile, class: "tree-icon", "aria-hidden": "true" });
+  }
+
+  const html = fromHtml(svg, { fragment: true, space: "svg" });
+
+  return s(
+    "svg",
+    {
+      class: "tree-icon",
+      "aria-hidden": "true",
+      // @ts-ignore
+      viewBox: html.children[0].properties.viewBox,
+      xmlns: "http://www.w3.org/2000/svg",
+      fill: "transparent",
+    },
+    // @ts-ignore
+    ...html.children[0].children,
+  );
 }
 
 /** Return the icon for a file based on its file name. */
@@ -244,11 +283,31 @@ function getFileIconFromExtension(fileName: string) {
 }
 
 function makeDirectoryIcon(folderName: string) {
-  const folder = getDirectoryIcon(folderName);
+  // const folder = getDirectoryIcon(folderName);
 
   return [
-    h("img", { src: folder.default, class: "tree-icon close", "aria-hidden": "true" }),
-    h("img", { src: folder.open, class: "tree-icon open", "aria-hidden": "true" }),
+    s(
+      "svg",
+      {
+        viewBox: "0 0 32 32",
+        fill: "transparent",
+        xmlns: "http://www.w3.org/2000/svg",
+        class: "tree-icon close",
+        "aria-hidden": "true",
+      },
+      fromHtml(FOLDER_SVG, { fragment: true, space: "svg" }),
+    ),
+    s(
+      "svg",
+      {
+        viewBox: "0 0 32 32",
+        fill: "transparent",
+        xmlns: "http://www.w3.org/2000/svg",
+        class: "tree-icon open",
+        "aria-hidden": "true",
+      },
+      fromHtml(FOLDER_OPEN_SVG, { fragment: true, space: "svg" }),
+    ),
   ];
 }
 

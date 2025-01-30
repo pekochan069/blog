@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && bun run pagefind",
+    "build": "ENV_TYPE=build astro check && astro build && bun run pagefind",
     "preview": "astro preview",
     "astro": "astro",
     "pagefind": "pagefind --site dist",
@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "github-slugger": "^2.0.0",
+    "hast-util-from-html": "^2.0.3",
     "hast-util-select": "^6.0.3",
     "hast-util-to-string": "^3.0.1",
     "material-icon-theme": "^5.19.0",
