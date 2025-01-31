@@ -23,7 +23,7 @@ async function main() {
     postName += ".mdoc";
   }
 
-  const postDir = "./src/data/posts";
+  const postDir = "./src/content/posts";
   const fileName = `${postDir}/${postName}`;
 
   if (await exists(fileName)) {
@@ -32,7 +32,7 @@ async function main() {
   }
 
   const text = `---
-title: ${postName.replace(/\.mdx$/, "")}
+title: ${postName.replace(/\.mdoc$/, "")}
 description: ''
 category: ''
 tags: []
