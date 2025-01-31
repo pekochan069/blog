@@ -407,7 +407,7 @@
         }
 
         ul {
-          @apply ml-1 pl-4;
+          @apply ml-1 pl-7;
 
           &:last-child {
           }
