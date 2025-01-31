@@ -34,20 +34,13 @@ import { rehype } from "rehype";
 import { rootDir } from "root-dir";
 import { CONTINUE, SKIP, visit } from "unist-util-visit";
 import { env } from "~/env";
-import { defaultFile, defaultFolder, defaultFolderOpen, mi } from "../markdown/file-tree-icons";
+import { defaultFileSvg, folderOpenSvg, folderSvg, mi } from "../markdown/file-tree-icons";
 
 declare module "vfile" {
   interface DataMap {
     directoryLabel: string;
   }
 }
-
-const FOLDER_SVG = `<path
-    d="M13.84376,7.53645l-1.28749-1.0729A2,2,0,0,0,11.27591,6H4A2,2,0,0,0,2,8V24a2,2,0,0,0,2,2H28a2,2,0,0,0,2-2V10a2,2,0,0,0-2-2H15.12412A2,2,0,0,1,13.84376,7.53645Z"
-    fill="#90a4ae" />`;
-const FOLDER_OPEN_SVG = `<path
-    d='M28.96692,12H9.44152a2,2,0,0,0-1.89737,1.36754L4,24V10H28a2,2,0,0,0-2-2H15.1241a2,2,0,0,1-1.28038-.46357L12.5563,6.46357A2,2,0,0,0,11.27592,6H4A2,2,0,0,0,2,8V24a2,2,0,0,0,2,2H26l4.80523-11.21213A2,2,0,0,0,28.96692,12Z'
-    fill='#90a4ae' />`;
 
 /**
  * Process the HTML for a file tree to create the necessary markup for each file and directory
@@ -122,9 +115,7 @@ const fileTreeProcessor = rehype()
         // Create an icon for the file or directory (placeholder do not have icons).
         const icon = h(
           "span",
-          isDirectory
-            ? makeDirectoryIcon(firstChildTextContent)
-            : makeFileIcon(firstChildTextContent),
+          isDirectory ? makeDirectoryIcon() : makeFileIcon(firstChildTextContent),
         );
         icon.properties.class = isDirectory ? "tree-directory-icon" : "tree-file-icon";
         if (isDirectory) {
@@ -185,17 +176,34 @@ function makeText(value = ""): Text {
 
 /** Make a node containing an SVG icon from the passed HTML string. */
 function makeFileIcon(fileName: string) {
-  const svgSource = getFileIcon(fileName);
+  const svgFileName = getFileIcon(fileName);
   let path;
   if (env.ENV_TYPE === "dev") {
-    path = resolve(rootDir, `.${svgSource}`);
+    path = resolve(rootDir, "node_modules", "material-icon-theme", "icons", `${svgFileName}`);
   } else {
-    path = resolve(rootDir, `../../${svgSource}`);
+    path = resolve(
+      rootDir,
+      "../..",
+      "node_modules",
+      "material-icon-theme",
+      "icons",
+      `${svgFileName}`,
+    );
   }
   const svg = readFileSync(path, "utf8");
 
-  if (!svg) {
-    return h("img", { src: defaultFile, class: "tree-icon", "aria-hidden": "true" });
+  if (svg === "") {
+    return s(
+      "svg",
+      {
+        class: "tree-icon",
+        "aria-hidden": "true",
+        viewBox: "0 0 24 24",
+        xmlns: "http://www.w3.org/2000/svg",
+        fill: "transparent",
+      },
+      fromHtml(defaultFileSvg),
+    );
   }
 
   const html = fromHtml(svg, { fragment: true, space: "svg" });
@@ -218,20 +226,20 @@ function makeFileIcon(fileName: string) {
 /** Return the icon for a file based on its file name. */
 function getFileIcon(fileName: string) {
   const name = getFileIconName(fileName);
-  if (!name) return defaultFile;
+  if (!name) return defaultFileSvg;
 
   const icon = mi.iconDefinitions?.[name];
-  if (!icon) return defaultFile;
+  if (!icon) return defaultFileSvg;
 
   const path = icon.iconPath.split("/");
 
-  return `/node_modules/material-icon-theme/icons/${path[path.length - 1]}`;
+  return path[path.length - 1];
 }
 
 /** Return the icon name for a file based on its file name. */
 function getFileIconName(fileName: string) {
   if (mi.fileNames === undefined) {
-    return defaultFile;
+    return defaultFileSvg;
   }
 
   let icon: string | undefined = mi.fileNames[fileName];
@@ -282,7 +290,7 @@ function getFileIconFromExtension(fileName: string) {
   return;
 }
 
-function makeDirectoryIcon(folderName: string) {
+function makeDirectoryIcon() {
   // const folder = getDirectoryIcon(folderName);
 
   return [
@@ -295,7 +303,7 @@ function makeDirectoryIcon(folderName: string) {
         class: "tree-icon close",
         "aria-hidden": "true",
       },
-      fromHtml(FOLDER_SVG, { fragment: true, space: "svg" }),
+      fromHtml(folderSvg, { fragment: true, space: "svg" }),
     ),
     s(
       "svg",
@@ -306,38 +314,38 @@ function makeDirectoryIcon(folderName: string) {
         class: "tree-icon open",
         "aria-hidden": "true",
       },
-      fromHtml(FOLDER_OPEN_SVG, { fragment: true, space: "svg" }),
+      fromHtml(folderOpenSvg, { fragment: true, space: "svg" }),
     ),
   ];
 }
 
 /** Icon for a folder. */
-function getDirectoryIcon(directoryName: string) {
-  const icon = getDirectoryIconName(directoryName);
-  if (!icon)
-    return {
-      default: defaultFolder,
-      open: defaultFolderOpen,
-    };
+// function getDirectoryIcon(directoryName: string) {
+//   const icon = getDirectoryIconName(directoryName);
+//   if (!icon)
+//     return {
+//       default: defaultFolder,
+//       open: defaultFolderOpen,
+//     };
 
-  const path = mi.iconDefinitions?.[icon]?.iconPath.split("/");
-  if (!path) return { default: defaultFolder, open: defaultFolderOpen };
+//   const path = mi.iconDefinitions?.[icon]?.iconPath.split("/");
+//   if (!path) return { default: defaultFolder, open: defaultFolderOpen };
 
-  return {
-    default: `/node_modules/material-icon-theme/icons/${path[path.length - 1]}`,
-    open: `/node_modules/material-icon-theme/icons/${path[path.length - 1].replace(".svg", "-open.svg")}`,
-  };
-}
+//   return {
+//     default: `/node_modules/material-icon-theme/icons/${path[path.length - 1]}`,
+//     open: `/node_modules/material-icon-theme/icons/${path[path.length - 1].replace(".svg", "-open.svg")}`,
+//   };
+// }
 
 /**
  * Get an icon from a folder name
  */
-function getDirectoryIconName(directoryName: string) {
-  const icon = mi.folderNames?.[directoryName];
-  if (icon) return icon;
+// function getDirectoryIconName(directoryName: string) {
+//   const icon = mi.folderNames?.[directoryName];
+//   if (icon) return icon;
 
-  return;
-}
+//   return;
+// }
 
 /** Validate that the user provided HTML for a file tree is valid. */
 function validateFileTree(tree: Element) {
