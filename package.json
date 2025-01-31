@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "ENV_TYPE=build astro check && astro build && bun run pagefind",
+    "build": "astro check && astro build && bun run pagefind",
     "preview": "astro preview",
     "astro": "astro",
     "pagefind": "pagefind --site dist",

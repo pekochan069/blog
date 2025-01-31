@@ -4,7 +4,7 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "production"]).default("development"),
-    ENV_TYPE: z.enum(["dev", "build"]).default("dev"),
+    ENV_TYPE: z.enum(["dev", "build", "vercel"]).default("dev"),
   },
   runtimeEnv: import.meta.env,
 });
