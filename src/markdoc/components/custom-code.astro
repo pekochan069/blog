@@ -1,7 +1,9 @@
 ---
 import { Code } from "astro-expressive-code/components";
+import Math from "./math.astro";
 
 const { code, lang } = Astro.props;
 ---
 
-<Code code={code} lang={lang} wrap={false} />
+{lang !== "math" && <Code code={code} lang={lang} wrap={false} />}
+{lang === "math" && <Math src={code} />}

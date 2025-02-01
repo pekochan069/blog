@@ -211,23 +211,23 @@
     }
 
     h2 {
-      @apply mt-10 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-8;
+      @apply mt-10 border-b pb-2 text-3xl font-semibold tracking-tight text-maroon first:mt-8;
     }
 
     h3 {
-      @apply mt-8 text-2xl font-semibold tracking-tight;
+      @apply mt-8 text-2xl font-semibold tracking-tight text-yellow;
     }
 
     h4 {
-      @apply mt-6 text-xl font-semibold tracking-tight;
+      @apply mt-6 text-xl font-semibold tracking-tight text-green;
     }
 
     h5 {
-      @apply mt-6 text-lg font-semibold tracking-tight;
+      @apply mt-6 text-lg font-semibold tracking-tight text-sky;
     }
 
     h6 {
-      @apply mt-6 text-base font-semibold tracking-tight;
+      @apply mt-6 text-base font-semibold tracking-tight text-mauve;
     }
 
     h1,
@@ -260,16 +260,31 @@
       @apply my-6 ml-6 list-disc [&>li]:mt-2;
     }
 
+    ol {
+      @apply list-decimal;
+
+      li {
+        &::marker {
+          @apply font-semibold text-foreground/80;
+        }
+      }
+    }
+
     code {
       @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
     }
 
-    .astro-code {
-      @apply mt-4 rounded-sm border border-border px-4 py-2;
+    pre.math {
+      @apply mt-4 mb-0 rounded-sm border text-lg;
+      box-shadow: 0.1rem 0.1rem 0.2rem #e6e9ef80;
+    }
 
-      code {
-        @apply relative rounded-none bg-transparent bg-none p-0 text-base font-normal;
-      }
+    .expressive-code {
+      @apply mt-6 rounded-sm;
+    }
+
+    a {
+      @apply text-primary no-underline hover:underline;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -440,9 +455,5 @@
         @apply pl-3.5;
       }
     }
-  }
-
-  .expressive-code {
-    @apply mt-6;
   }
 }

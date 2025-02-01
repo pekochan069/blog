@@ -1,0 +1,21 @@
+---
+import temml from "temml";
+
+type Props = {
+  m: string;
+};
+const { m } = Astro.props;
+
+let html = "";
+try {
+  html = temml.renderToString(m, {
+    displayMode: false,
+  });
+} catch (error) {
+  throw new Error(`Failed to render math block on path ${Astro.request.url}`, { cause: error });
+}
+---
+
+<span class="inline-math">
+  <Fragment set:html={html} />
+</span>
