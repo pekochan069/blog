@@ -20,8 +20,8 @@ const { headings } = Astro.props;
             <a
               id={`toc-${heading.slug}`}
               href={`#${heading.slug}`}
-              class="toc-link text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-primary-foreground"
-              data-depth={heading.depth}
+              style={`margin-left: ${heading.depth - 2}rem`}
+              class="toc-link inline-flex gap-2 text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-primary-foreground"
             >
               {heading.text.replace("#", "")}
             </a>
