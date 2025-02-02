@@ -55,4 +55,12 @@ const { title = "pekochan069" } = Astro.props;
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
   }
+
+  document.addEventListener("astro:before-swap", (event) => {
+    const isDark = getThemePreference() === "dark";
+    event.newDocument.documentElement.classList[isDark ? "add" : "remove"]("dark");
+    event.newDocument.documentElement.dataset["theme"] = isDark
+      ? "catppuccin-macchiato"
+      : "catppuccin-latte";
+  });
 </script>
