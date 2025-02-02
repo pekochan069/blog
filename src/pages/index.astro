@@ -15,18 +15,18 @@ import { contents } from "~/lib/content";
                 <h2 class="inline-block text-xl font-semibold tracking-wide">
                   {content.data.title}
                 </h2>
-                <ul class="flex flex-wrap gap-2">
-                  {content.data.tags.map((tag) => (
-                    <li>
-                      <Badge>{tag}</Badge>
-                    </li>
-                  ))}
-                </ul>
               </div>
               <p class="mb-2 h-5 text-sm">{content.data.category}</p>
-              <p class="text-sm text-muted-foreground">
+              <p class="mb-1 text-sm text-muted-foreground">
                 {content.data.published.toLocaleDateString()}
               </p>
+              <ul class="flex flex-wrap gap-x-2 gap-y-0.5">
+                {content.data.tags.map((tag) => (
+                  <li>
+                    <Badge>{tag}</Badge>
+                  </li>
+                ))}
+              </ul>
             </a>
           </li>
         ))
