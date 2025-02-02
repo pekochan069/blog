@@ -270,12 +270,16 @@
       }
     }
 
+    pre {
+      @apply relative max-w-[calc(100vw-2rem)]! overflow-x-auto;
+    }
+
     code {
       @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
     }
 
     pre.math {
-      @apply mt-4 mb-0 rounded-sm border text-lg;
+      @apply mt-4 mb-0 rounded-sm border px-2 text-lg;
       box-shadow: 0.1rem 0.1rem 0.2rem #e6e9ef80;
     }
 
