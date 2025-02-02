@@ -279,8 +279,7 @@
     }
 
     pre.math {
-      @apply mt-4 mb-0 rounded-sm border px-2 text-lg;
-      box-shadow: 0.1rem 0.1rem 0.2rem #e6e9ef80;
+      @apply mt-4 mb-0 rounded-sm border px-2 text-lg shadow-[0.1rem_0.1rem_0.2rem_#e6e9ef80] dark:shadow-[0.1rem_0.1rem_0.2rem_#1e203080];
     }
 
     .expressive-code {
