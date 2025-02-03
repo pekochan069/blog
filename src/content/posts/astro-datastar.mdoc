@@ -1,0 +1,98 @@
+---
+title: astro-datastar
+description: Astro Datastar Integration
+category: npm
+tags: ["프로그래밍", "npm", "Astro", "Datastar", "javascript", "typescript"]
+published: 2025-02-03T15:34:12.369Z
+draft: false
+---
+
+## astro-datastar
+
+오늘은 처음으로 npm 패키지를 출시해보았습니다. 패키지 이름은 `@pekochan069/astro-datastar`로 `Astro` 프로젝트에서 `Datastar`를 사용할 수 있도록 해주는 확장 패키지입니다. 코드는 몇 줄 안되는 간단한 패키지이지만, 실제로 라이브러리를 만들면서 많은 지금까지는 생각해보지 못한 부분들을 생각해볼 수 있었습니다.
+
+패키지는 [astro-datastar](https://github.com/pekochan069/astro-datastar)에서 확인할 수 있습니다.
+
+## 사용법
+
+간단하게 사용법을 살펴보면 우선 Astro로 만든 프로젝트가 필요하겠죠. Astro 프로젝트를 생성해줍니다.
+
+```sh
+bun create astro@latest
+```
+
+저는 `bun`을 좋아해 `bun`을 사용했지만, `npm`, `pnpm`, `yarn` 전부 사용 가능합니다.
+프로젝트를 만들었다면 다음과 같은 구조의 프로젝트가 생성됩니다.
+
+{% FileTree %}
+- .vscode
+  - extensions.json
+  - launch.json
+- public/
+  - favicon.svg
+- src/
+  - assets/
+    - astro.svg
+    - background.svg
+  - components/
+    - Welcome.astro
+  - layouts/
+    - Layout.astro
+  - pages/
+    - index.astro
+- .gitignore
+- bun.lock
+- package.json
+- README.md
+- tsconfig.json
+{% /FileTree %}
+
+Astro 프로젝트를 생성했다면, `@pekochan069/astro-datastar` 패키지를 설치합니다.
+
+```sh
+bun add @pekochan069/astro-datastar
+```
+
+패키지를 설치했다면 `astro.config.mjs` 파일을 업데이트해야 합니다.
+프로젝트의 루트에 `astro.config.mjs` 파일을 열면 다음과 같은 내용이 있을 것입니다.
+
+```js
+// astro.config.mjs
+// @ts-check
+import { defineConfig } from 'astro/config';
+
+// https://astro.build/config
+export default defineConfig({});
+```
+
+이제 `@pekochan069/astro-datastar` 패키지를 추가하고 integration을 추가해줍니다.
+
+```js
+// astro.config.mjs
+// @ts-check
+import { defineConfig } from "astro/config";
+import datastar from "@pekochan069/astro-datastar";
+
+// https://astro.build/config
+export default defineConfig({
+  integrations: [datastar()],
+});
+```
+
+이러면 설정은 끝났습니다. 이제 `Datastar`를 사용할 수 있습니다.
+
+```astro
+// src/pages/index.astro
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <div>
+    <input data-bind="input" />
+    <div data-text="$input"></div>
+  </div>
+</Layout>
+```
+
+`bun run dev`로 프로젝트를 실행하면 `input` 태그에 입력한 값이 바로 아래에 있는 `div`에 실시간으로 업데이트됩니다. 
