@@ -425,7 +425,7 @@
         }
 
         ul {
-          @apply ml-1 pl-7;
+          @apply pl-7;
 
           &:last-child {
           }
@@ -455,7 +455,7 @@
     & > ul {
       @apply border-0;
       & > .file {
-        @apply pl-3.5;
+        @apply pl-3;
       }
     }
   }
