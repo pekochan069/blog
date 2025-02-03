@@ -1,5 +1,6 @@
 ---
 import { contents } from "~/lib/content";
+import { LineiconsGithubOriginal } from "./icons/lineicons/github-original";
 import MobileSidebar from "./navbar/mobile-sidebar";
 import { ThemeToggle } from "./navbar/theme-toggle.tsx";
 
@@ -13,7 +14,15 @@ const url = new URL(Astro.url);
     <nav>
       <a href="/">Pekochan069</a>
     </nav>
-    <div>
+    <div class="flex items-center gap-2">
+      <a
+        href="https://github.com/pekochan069"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex h-9 w-9 cursor-pointer items-center justify-center gap-2 rounded-md px-3 text-xs font-medium whitespace-nowrap ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+      >
+        <LineiconsGithubOriginal class="size-5" />
+      </a>
       <ThemeToggle client:load />
       {
         url.pathname.startsWith("/posts/") && (
