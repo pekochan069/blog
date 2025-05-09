@@ -178,7 +178,7 @@ function makeText(value = ""): Text {
 function makeFileIcon(fileName: string) {
   const svgFileName = getFileIcon(fileName);
   let path;
-  if (env.ENV_TYPE === "dev") {
+  if (env.NODE_ENV === "development") {
     path = resolve(rootDir, "node_modules", "material-icon-theme", "icons", `${svgFileName}`);
   } else {
     path = resolve(

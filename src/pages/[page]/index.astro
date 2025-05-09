@@ -1,15 +1,27 @@
 ---
 import { Pagination } from "~/components/pagination";
 import { Badge } from "~/components/ui/badge";
+import { POST_PER_PAGE } from "~/constants";
 import BaseLayout from "~/layouts/base-layout.astro";
 import { contents, totalPages } from "~/lib/content";
+
+export function getStaticPaths() {
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: String(i + 1) },
+  }));
+}
+
+const { page } = Astro.params;
+const currentPage = Number(page);
+const start = POST_PER_PAGE * (currentPage - 1);
+const end = start + POST_PER_PAGE;
 ---
 
 <BaseLayout>
   <div class="mx-auto w-full max-w-[80ch] p-4">
     <ul class="flex flex-col gap-4">
       {
-        contents.map((content) => (
+        contents.slice(start, end).map((content) => (
           <li class="rounded-md border border-accent p-4 transition-colors hover:border-foreground">
             <a href={`/posts/${content.id}`}>
               <div class="mb-0.5 flex gap-4">
@@ -35,6 +47,6 @@ import { contents, totalPages } from "~/lib/content";
     </ul>
   </div>
   <div class="my-4 flex justify-center">
-    <Pagination currentPage={1} totalPages={totalPages} />
+    <Pagination currentPage={currentPage} totalPages={totalPages} />
   </div>
 </BaseLayout>

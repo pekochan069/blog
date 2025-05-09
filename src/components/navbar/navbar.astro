@@ -1,8 +1,11 @@
 ---
+import { LineiconsGithubOriginal } from "~/icons/lineicons/github-original";
 import { contents } from "~/lib/content";
-import { LineiconsGithubOriginal } from "./icons/lineicons/github-original";
-import MobileSidebar from "./navbar/mobile-sidebar";
-import { ThemeToggle } from "./navbar/theme-toggle.tsx";
+import { Button } from "../ui/button";
+import MobileSidebar from "./mobile-sidebar.tsx";
+import { SearchButton } from "./search-dialog";
+import Search from "./search.astro";
+import { ThemeToggle } from "./theme-toggle.tsx";
 
 const url = new URL(Astro.url);
 ---
@@ -12,17 +15,24 @@ const url = new URL(Astro.url);
 >
   <div class="container flex h-16 items-center justify-between px-4">
     <nav>
-      <a href="/">Pekochan069</a>
+      <a href="/">pekochan069</a>
     </nav>
     <div class="flex items-center gap-2">
-      <a
+      <div>
+        <SearchButton client:load />
+        <Search />
+      </div>
+      <Button
+        as="a"
         href="https://github.com/pekochan069"
         target="_blank"
         rel="noopener noreferrer"
-        class="inline-flex h-9 w-9 cursor-pointer items-center justify-center gap-2 rounded-md px-3 text-xs font-medium whitespace-nowrap ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+        variant="ghost"
+        size="icon"
+        class="size-9"
       >
         <LineiconsGithubOriginal class="size-5" />
-      </a>
+      </Button>
       <ThemeToggle client:load />
       {
         url.pathname.startsWith("/posts/") && (

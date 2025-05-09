@@ -4,12 +4,11 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
-import { TablerMenu2 } from "../icons/tabler/menu-2";
+import { TablerMenu2 } from "~/icons/tabler/menu-2";
 
 type MobileSidebarProps = {
   contents: any[];

@@ -1,4 +1,5 @@
 import { getCollection } from "astro:content";
+import { POST_PER_PAGE } from "~/constants";
 import { env } from "~/env";
 
 export const contents = (
@@ -10,6 +11,8 @@ export const contents = (
     return true;
   })
 ).sort((a, b) => new Date(b.data.published).getTime() - new Date(a.data.published).getTime());
+
+export const totalPages = Math.ceil(contents.length / POST_PER_PAGE);
 
 export function getCategories() {
   const categoryMap = new Map<string, number>();

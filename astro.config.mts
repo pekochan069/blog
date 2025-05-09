@@ -5,6 +5,7 @@ import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import compressor from "astro-compressor";
 import expressiveCode from "astro-expressive-code";
+import icon from "astro-icon";
 import { defineConfig } from "astro/config";
 
 // import mdx from "@astrojs/mdx";
@@ -15,7 +16,7 @@ import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [sitemap(), markdoc(), solidJs(), expressiveCode(), compressor()],
+  integrations: [icon(), sitemap(), markdoc(), solidJs(), expressiveCode(), compressor()],
   // markdown: {
   //   remarkPlugins: [
   //     [remarkFlexibleToc, {}],

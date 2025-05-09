@@ -1,0 +1,19 @@
+---
+// https://spacemadness.dev/docs/configuring-search/
+import { SearchDialog } from "./search-dialog";
+---
+
+<SearchDialog client:only="solid-js" />
+
+<script is:inline>
+  window.pagefind = null;
+  window.addEventListener("DOMContentLoaded", () => {
+    // if (import.meta.env.DEV) return;
+    const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+
+    onIdle(async () => {
+      window.pagefind = await import("/pagefind/pagefind.js");
+      window.pagefind.init();
+    });
+  });
+</script>

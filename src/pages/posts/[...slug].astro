@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import Sidebar from "~/components/sidebar.astro";
 import Toc from "~/components/toc.astro";
+import { Badge } from "~/components/ui/badge";
 import BaseLayout from "~/layouts/base-layout.astro";
 import { contents } from "~/lib/content";
 
@@ -26,8 +27,11 @@ const { Content, headings } = await render(content);
   <div class="relative container mx-auto mt-4 flex gap-4 p-4 pb-16">
     <Sidebar current={slug} />
     <div class="flex-1">
-      <main class="prose">
+      <main class="prose" data-pagefind-body>
         <h1 id={content.data.title}>{content.data.title}</h1>
+        <div class="mt-2 flex flex-wrap gap-x-2 gap-y-1">
+          {content.data.tags.map((tag) => <Badge>{tag}</Badge>)}
+        </div>
         <Content />
       </main>
     </div>

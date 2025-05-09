@@ -6,9 +6,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { TablerDeviceDesktop } from "../icons/tabler/device-desktop";
-import { TablerMoonFilled } from "../icons/tabler/moon-filled";
-import { TablerSun } from "../icons/tabler/sun";
+import { TablerDeviceDesktop } from "~/icons/tabler/device-desktop";
+import { TablerMoonFilled } from "~/icons/tabler/moon-filled";
+import { TablerSun } from "~/icons/tabler/sun";
 
 export function ThemeToggle() {
   const [theme, setTheme] = createSignal<"light" | "dark" | "system">("light");
