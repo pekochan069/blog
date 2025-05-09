@@ -35,10 +35,10 @@ Effect의 큰 장점 중 하나는 `Effect`의 합성이 굉장히 쉽고 강력
 
 ```ts
 const effect = Effect.succeed(1)
-    .pipe(
-        Effect.map((n) => n + 1),
-        Effect.map((n) => n > 1)
-    );
+  .pipe(
+    Effect.map((n) => n + 1),
+    Effect.map((n) => n > 1)
+  );
 ```
 
 `pipe`와 함께 자주 자주 사용되는 기능은 `Effect.gen`입니다. `Effect.gen`은 제너레이터를 이용해 `Effect`를 평가해 쉽게 effectful한 코드를 작성할 수 있게 해주는 도구입니다. `Effect.gen`은 `pipe`와 다르게 일반 타입스크립트 제너레이터를 사용하므로 평범한 루프 및 분기 처리 등을 사용할 수 있습니다.
@@ -49,16 +49,16 @@ const effect2 = Effect.succeed(2)
 const failedEffect = Effect.fail(3)
 
 const gen = Effect.gen(function*() {
-    const n1 = yield* effect; // 1
-    const n2 = yield* effect2; // 2
-    const n3 = yield* failedEffect; // 오류, 즉시 종료
+  const n1 = yield* effect; // 1
+  const n2 = yield* effect2; // 2
+  const n3 = yield* failedEffect; // 오류, 즉시 종료
 
-    for (let i = 0; i < 10; ++i) {
-        const n = yield* effect;
-        console.log(n);
-    }
+  for (let i = 0; i < 10; ++i) {
+    const n = yield* effect;
+    console.log(n);
+  }
 
-    return n1 + n2 + n3;
+  return n1 + n2 + n3;
 })
 ```
 
@@ -84,11 +84,11 @@ function mayFailParse<T>(jsonBlob: string): T {
 
 ```ts
 function mayFailParse<T>(jsonBlob: string): T | null {
-    try {
-        return JSON.parse(jsonBlob) as T;
-    } catch (e) {
-        return null;
-    }
+  try {
+    return JSON.parse(jsonBlob) as T;
+  } catch (e) {
+    return null;
+  }
 }
 ```
 
@@ -148,7 +148,7 @@ function mayFailParse<T, U>(
 
 `transform`에서 오류가 발생할 수 있기 때문에 `TransformError`를 추가하고, 반환 타입에도 `TransformError`를 명시해줘야 합니다. `JSONParseError`와 `TransformError`를 하나의 `Error` 클래스로 합쳐 하나의 `Error` 타입을 반환할 수도 있지만, 그걸 제외하더라고 중첩되는 `try catch`문, 복잡한 호출자측 오류 회복 등 다양한 문제가 존재합니다.
 
-Effect는 이러한 문제를 강력한 패턴으로 해결해줍니다.
+Effect는 이러한 문제를 해결할 수 있는 길을 제시합니다.
 
 ```ts
 class JSONParseError {
@@ -157,7 +157,43 @@ class JSONParseError {
 
 class TransformError {}
 
-function mayFailParse(jsonBlob: string) {
-    return Effect.try
+// Effect<T, JSONParseError>
+function parse<T>(jsonBlog: string) {
+  return Effect.try({
+    try: () => JSON.parse(jsonBlog) as T,
+    catch: (e) => {
+      if (e instanceof SyntaxError) {
+        return new JSONParseError("SyntaxError");
+      }
+      if (e instanceof TypeError) {
+        return new JSONParseError("TypeError");
+      }
+      return new JSONParseError("UnknownError");
+    }
+  })
+}
+
+// Effect<U, TransformError>
+function transform<T, U>(parsed: T): U {
+  return Effect.try({
+    try: () => transformParsed(parsed),
+    catch: (e) => new TransformError(),
+  )
+}
+
+// Effect<U, ParseError | TransformError>
+function mayFailParse<T, U>(jsonBlob: string) {
+  return Effect.gen(function* () {
+    const parsed = yield* parse<T>(jsonBlob);
+    const transformed = yield* transform<T, U>(parsed);
+
+    return transformed;
+  })
 }
 ```
+
+Effect의 아름다운 점은 함수를 정의하고 나면 타입 추론으로 자동으로 반환값과 발생할 수 있는 오류를 타입으로 알 수 있다는 점입니다. 위의 `mayFailParse`의 경우 `Effect<U, ParseError | TransformError>` 타입의 값을 반환합니다. 이 `Effect`는 `Effect.runSync`로 실행해 값을 가져올 수 있습니다. 이 모든 과정은 타입 안전한 코드를 작성할 수 있게 합니다. 이전의 `try catch`를 사용한 코드에서는 실수를 하면 필요한 타입 정보를 얻지 못할 수도 있고, 실수를 저지르기도 굉장히 쉽습니다. Effect는 일정한 코드의 스타일을 지키기만 한다면 자동으로 안전한 코드를 얻을 수 있습니다. 이것이 바로 Effect를 사용해야 하는 이유라고 생각합니다.
+
+## Effect를 React에서 사용하기
+
+Effect에 대해 간략히 알아봤으므로, 이제 본 주제인 react에서 Effect를 사용해보도록 하겠습니다. 
