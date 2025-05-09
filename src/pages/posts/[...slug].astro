@@ -6,7 +6,7 @@ import { Badge } from "~/components/ui/badge";
 import BaseLayout from "~/layouts/base-layout.astro";
 import { contents } from "~/lib/content";
 
-const slug = Astro.params["slug"];
+const slug = Astro.params.slug;
 
 if (slug === undefined) {
   Astro.redirect(`/404`);

@@ -20,6 +20,7 @@ import { TablerSearch } from "~/icons/tabler/search";
 
 declare global {
   interface Window {
+    // biome-ignore lint/suspicious/noExplicitAny: No type available
     pagefind: any;
   }
 }

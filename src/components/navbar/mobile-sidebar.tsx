@@ -1,3 +1,4 @@
+import type { contents } from "~/lib/content";
 import { For } from "solid-js";
 import { Button } from "~/components/ui/button";
 import {
@@ -11,7 +12,7 @@ import {
 import { TablerMenu2 } from "~/icons/tabler/menu-2";
 
 type MobileSidebarProps = {
-  contents: any[];
+  contents: typeof contents;
   current: string;
 };
 

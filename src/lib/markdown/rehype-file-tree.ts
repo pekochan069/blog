@@ -28,7 +28,7 @@ import type { Child } from "hastscript";
 import { AstroError } from "astro/errors";
 import { fromHtml } from "hast-util-from-html";
 import { select } from "hast-util-select";
-import { toString } from "hast-util-to-string";
+import { toString as hastToString } from "hast-util-to-string";
 import { h, s } from "hastscript";
 import { rehype } from "rehype";
 import { rootDir } from "root-dir";
@@ -101,7 +101,7 @@ const fileTreeProcessor = rehype()
         otherChildren.splice(0, subTreeIndex > -1 ? subTreeIndex : otherChildren.length);
         comment.push(...commentNodes);
 
-        const firstChildTextContent = firstChild ? toString(firstChild) : "";
+        const firstChildTextContent = firstChild ? hastToString(firstChild) : "";
 
         // Decide a node is a directory if it ends in a `/` or contains another list.
         const isDirectory =
@@ -177,7 +177,7 @@ function makeText(value = ""): Text {
 /** Make a node containing an SVG icon from the passed HTML string. */
 function makeFileIcon(fileName: string) {
   const svgFileName = getFileIcon(fileName);
-  let path;
+  let path: string;
   if (env.NODE_ENV === "development") {
     path = resolve(rootDir, "node_modules", "material-icon-theme", "icons", `${svgFileName}`);
   } else {

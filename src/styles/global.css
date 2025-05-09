@@ -426,9 +426,6 @@
 
         ul {
           @apply pl-7;
-
-          &:last-child {
-          }
         }
 
         &[open] {

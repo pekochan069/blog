@@ -27,7 +27,7 @@ const DropdownMenuContent = <T extends ValidComponent = "div">(
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
         class={cn(
-          "animate-content-hide bg-popover text-popover-foreground data-[expanded]:animate-content-show z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border p-1 shadow-md",
+          "animate-content-hide data-[expanded]:animate-content-show z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
           props.class,
         )}
         {...rest}
@@ -48,7 +48,7 @@ const DropdownMenuItem = <T extends ValidComponent = "div">(
   return (
     <DropdownMenuPrimitive.Item
       class={cn(
-        "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors outline-none select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         props.class,
       )}
       {...rest}
@@ -82,7 +82,7 @@ const DropdownMenuSeparator = <T extends ValidComponent = "hr">(
   const [, rest] = splitProps(props as DropdownMenuSeparatorProps, ["class"]);
   return (
     <DropdownMenuPrimitive.Separator
-      class={cn("bg-muted -mx-1 my-1 h-px", props.class)}
+      class={cn("-mx-1 my-1 h-px bg-muted", props.class)}
       {...rest}
     />
   );
@@ -101,7 +101,7 @@ const DropdownMenuSubTrigger = <T extends ValidComponent = "div">(
   return (
     <DropdownMenuPrimitive.SubTrigger
       class={cn(
-        "focus:bg-accent data-[state=open]:bg-accent flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none",
+        "flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none focus:bg-accent data-[state=open]:bg-accent",
         props.class,
       )}
       {...rest}
@@ -135,7 +135,7 @@ const DropdownMenuSubContent = <T extends ValidComponent = "div">(
   return (
     <DropdownMenuPrimitive.SubContent
       class={cn(
-        "bg-popover text-popover-foreground animate-in z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border p-1 shadow-md",
+        "z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in",
         props.class,
       )}
       {...rest}
@@ -156,7 +156,7 @@ const DropdownMenuCheckboxItem = <T extends ValidComponent = "div">(
   return (
     <DropdownMenuPrimitive.CheckboxItem
       class={cn(
-        "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         props.class,
       )}
       {...rest}
@@ -212,7 +212,7 @@ const DropdownMenuRadioItem = <T extends ValidComponent = "div">(
   return (
     <DropdownMenuPrimitive.RadioItem
       class={cn(
-        "focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm transition-colors outline-none select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         props.class,
       )}
       {...rest}

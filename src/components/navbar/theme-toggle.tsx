@@ -23,9 +23,7 @@ export function ThemeToggle() {
       theme() === "dark" ||
       (theme() === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-    document.documentElement.dataset["theme"] = isDark
-      ? "catppuccin-macchiato"
-      : "catppuccin-latte";
+    document.documentElement.dataset.theme = isDark ? "catppuccin-macchiato" : "catppuccin-latte";
   });
 
   return (
