@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "NODE_ENV=production astro check && astro build && bun run pagefind",
+    "build": "NODE_ENV=production astro check && astro build && pagefind --site dist",
     "build:search": "bun run build && cp -fR dist/pagefind public/",
     "preview": "astro preview",
     "astro": "astro",

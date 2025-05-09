@@ -72,7 +72,6 @@ export function SearchButton() {
 
 async function search(query: string) {
   if (!window.pagefind) {
-    console.log(1);
     return [];
   }
 
@@ -80,7 +79,6 @@ async function search(query: string) {
     return [];
   }
 
-  console.log(2);
   try {
     const pagefindResults = await window.pagefind.search(query);
 
@@ -95,7 +93,6 @@ async function search(query: string) {
       }),
     );
 
-    console.log(dataArray);
     return dataArray;
   } catch {
     return [];
