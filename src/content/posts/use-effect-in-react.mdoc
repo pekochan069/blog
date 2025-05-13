@@ -9,11 +9,11 @@ draft: true
 
 ## Effect
 
-이 글의 주제는 [__Effect__](https://effect.website/)인데, Effect를 모르는 사람들이 많이 존재하기에, 글의 주제에 들어가기에 앞서 빠르게 Effect에 대해 설명을 하고 넘어가 보겠습니다.
+이 글의 주제는 [Effect](https://effect.website/)인데, Effect를 모르는 사람들이 많이 존재하기에, 글의 주제에 들어가기에 앞서 빠르게 Effect에 대해 설명을 하고 넘어가 보겠습니다.
 
 ### Effect란?
 
-Effect는 동기, 비동기 코드를 작성할 때 발생할 수 있는 오류와 사이드 이펙트, 의존성 등을 관리하기 위한 강력한 도구들을 제공하는 프레임워크입니다. 여기서 프레임워크라고 언급한 이유는 Effect는 콘솔, 입출력, Http API, 자료구조 등 프로그램을 만들기 위한 다양한 라이브러리들의 집합이기 때문입니다. Effect는 `Scala`의 [ZIO](https://zio.dev/)를 타입스크립트에 가져오기 위해 프로젝트가 시작되었으며, 이후 `fp-ts`와 합쳐져 현재까지 활발하게 개발되고 있습니다.
+**Effect**는 동기, 비동기 코드를 작성할 때 발생할 수 있는 오류와 사이드 이펙트, 의존성 등을 관리하기 위한 강력한 도구들을 제공하는 프레임워크입니다. 여기서 프레임워크라고 언급한 이유는 Effect는 콘솔, 입출력, Http API, 자료구조 등 프로그램을 만들기 위한 다양한 라이브러리들의 집합이기 때문입니다. Effect는 `Scala`의 [ZIO](https://zio.dev/)를 타입스크립트에 가져오기 위해 프로젝트가 시작되었으며, 이후 `fp-ts`와 합쳐져 현재까지 활발하게 개발되고 있습니다.
 
 Effect의 가장 중요한 기능은 `Effect` 타입입니다. Effect의 시작은 `Effect`에서 시작해 `Effect`로 끝납니다. `Effect`는 다음과 같은 타입 시그니쳐를 가지고 있습니다.
 
@@ -137,8 +137,7 @@ function mayFailParse<T, U>(
   } catch (e) {
     if (e instanceof SyntaxError) {
       return new JSONParseError("SyntaxError");
-    }
-    if (e instanceof TypeError) {
+    } else if (e instanceof TypeError) {
       return new JSONParseError("TypeError");
     }
     return new JSONParseError("UnknownError");
@@ -147,6 +146,35 @@ function mayFailParse<T, U>(
 ```
 
 `transform`에서 오류가 발생할 수 있기 때문에 `TransformError`를 추가하고, 반환 타입에도 `TransformError`를 명시해줘야 합니다. `JSONParseError`와 `TransformError`를 하나의 `Error` 클래스로 합쳐 하나의 `Error` 타입을 반환할 수도 있지만, 그걸 제외하더라고 중첩되는 `try catch`문, 복잡한 호출자측 오류 회복 등 다양한 문제가 존재합니다.
+
+```ts
+class JSONParseError {
+  constructor(public tag: string) {}
+}
+
+class TransformError {}
+
+function mayFailParse<T, U>(
+  jsonBlob: string,
+): U | JSONParseError | TransformError {
+  try {
+    const json = JSON.parse(jsonBlob) as T;
+
+    return transform(json);
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      return new JSONParseError("SyntaxError");
+    } else if (e instanceof TypeError) {
+      return new JSONParseError("TypeError");
+    } else if (e instanceof SomeTransformError) {
+      return new TransformError("Some Transform Error") 
+    }
+    return new JSONParseError("UnknownError");
+  }
+}
+```
+
+중첩되는 `try catch`문을 해결하기 위해 `try catch`문을 하나로 처리할 수도 있습니다. 이러면 위에서와같이 일명 아도겐 코드라고 불리는 무한 들여쓰기 문제를 해결할 수 있습니다. 하지만 이 방식에는 큰 문제가 있는데, 실제로 오류가 발생하는 지점과 오류를 처리하는 지점의 괴리가 발생한다는 점입니다. 일반적으로 코드를 볼 때 그 주변에 있는 코드의 문맥을 이용해 코드를 이해를 하는데, 이렇게 오류와 오류 처리 부분이 떨어지게 되면 실제로 어디서 오류가 발생하는지 봤을 때 모호해지는 문제가 발생합니다.
 
 Effect는 이러한 문제를 해결할 수 있는 길을 제시합니다.
 
@@ -196,4 +224,152 @@ Effect의 아름다운 점은 함수를 정의하고 나면 타입 추론으로 
 
 ## Effect를 React에서 사용하기
 
-Effect에 대해 간략히 알아봤으므로, 이제 본 주제인 react에서 Effect를 사용해보도록 하겠습니다. 
+Effect에 대해 간략히 알아봤으므로, 이제 본 주제인 **react**에서 **Effect**를 사용해보도록 하겠습니다. 
+
+### Effect로 안전하게 백엔드 호출하기
+
+웹 프로젝트에서 백엔드를 호출해 정보를 받아오는 일은 가장 많이 하는 작업입니다. 백엔드를 호출하는 방법은 여러가지 방법이 있고, 각 프레임워크마다 여러 도구들을 제공하고 있습니다. 예제 프로젝트는 [TanStack Start](https://tanstack.com/start/latest)의 `Server Function` RPC 기능을 이용해 진행해보겠습니다.
+
+프로젝트는 할 일 목록을 가져오는 간단한 Todo List 앱으로, [effect-react](https://github.com/pekochan069/effect-react) 에서 확인할 수 있습니다.
+
+우선 가장 기본적인 구현입니다. `Tanstack Start`의 `Server Function`은 [createServerFn](https://tanstack.com/start/latest/docs/framework/react/server-functions#defining-server-functions)과 [useServerFn]() 함수를 이용해 사용할 수 있습니다.
+
+```ts
+// server.ts
+...
+export const getTodos = createServerFn().handler(
+  async () => await db.select().from(todos)
+)
+...
+```
+
+할 일 목록을 가져오는 클라이언트 코드는 다음과 같이 작성할 수 있습니다.
+
+```tsx
+// TodosContext.tsx
+export function TodosProvider({ children }: { children: ReactNode }) {
+  const $getTodos = useServerFn(getTodos);
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  ...
+
+  useEffect(() => {
+    $getTodos().then((res) => {
+      setTodos(res);
+    })
+  }, []);
+
+  return (
+    <TodosContext.Provider value={{ todos }}>
+      {children}
+    </TodosContext.Provider>
+  )
+}
+```
+
+현재의 구현에는 몇 가지 문제가 존재합니다.
+
+1. 데이터베이스는 실패할 수 있다.
+
+이 프로젝트의 데이터베이스는 간단하게 로컬 `sqlite` 파일을 `drizzle-orm`을 이용해 연결해 사용을 하고 있습니다. 이 경우에 데이터베이스는 File I/O 오류를 일으킬 수 있습니다. 데이터베이스가 별도의 서버, 혹은 외부의 서버리스 데이터베이스에서 연결을 할 수도 있습니다. 이 경우 데이터베이스에 연결을 할 때 네트워크 오류가 일어날 가능성이 있습니다. 이를 해결하기 위해선 데이터베이스 부분을 `try catch` 문으로 감싸야 합니다.
+
+```ts
+export const getTodos = createServerFn().handler(
+  async () => {
+    try {
+      return await db.select().from(todos);
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+)
+```
+
+이 함수는 간단하지만, 스키마 검증이나 사용자 인증, JSON 역직렬화 등의 작업을 필요로 할 경우 위에서 설명한대로 훨씬 더 많은 `try catch`문이 필요하거나 오류와 동떨어진 위치에서 오류를 처리하게 됩니다.
+
+2. 네트워크는 실패할 수 있다
+
+클라이언트 코드에서 할 일 목록을 불러오는 코드도 데이터베이스와 마찬가지로 네트워크 오류가 발생할 수 있습니다. 이를 해결하기 위해 클라이언트에서도 `try catch`문이 필요합니다.
+
+```tsx
+// TodosContext.tsx
+export function TodosProvider({ children }: { children: ReactNode }) {
+  const $getTodos = useServerFn(getTodos);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+
+  ...
+
+  useEffect(() => {
+    try {
+      $getTodos().then((res) => {
+        setTodos(res);
+      })
+    } catch (e) {
+      console.error(e);
+      setError(e);
+    }
+  }, []);
+
+  return (
+    <TodosContext.Provider value={{ todos, error }}>
+      {children}
+    </TodosContext.Provider>
+  )
+}
+```
+
+#### Effect로 오류 처리하기
+
+```ts
+class DBError extends Data.TaggedError("DBError")<{
+  message?: string,
+  cause?: unknown,
+}> {}
+
+const getTodosEffect = Effect.tryPromise({
+  try: () => db.select.from(todos),
+  catch: (e) => new DBError({ message: "Database Error", cause: e }),
+});
+
+...
+
+const getTodos = createServerFn().handler(
+  async () =>
+    await Effect.runPromise(
+      getTodosEffect.pipe(
+        Effect.catchTag("DBError", () => Effect.succeed([] as Todo[])),
+      ),
+    ),
+);
+```
+
+위에서 본 코드와는 꽤 많은 부분이 달라졌다. 하나하나씩 살펴보자
+
+1. `DBError`로 일어날 수 있는 오류 명시
+
+자바스크립트, 타입스크립트의 가장 큰 문제점 중 하나는 발생할 수 있는 오류를 함수 시그니처에 담기가 까다롭다는 점이다. 하지만 Effect는 어떤 오류가 일어날지 태그를 이용해 쉽게 판별할 수 있는 시스템을 제공한다.
+
+우선 Effect는 오류가 발생했을 때 반환된 오류의 `_tag`를 검사해 어떤 오류 유형인지 판별할 수 있다. `TaggedError`는 이를 편하게 사용할 수 있도록 Effect에서 제공하는 자료형 중 하나이다. 비슷하게 `TaggedClass`도 존재한다. 이 오류는 `Effect.try`와 `Effect.tryPromise`에서 사용하면 된다. `Effect.tryPromise`문을 더 자세히 보자.
+
+```ts
+Effect.tryPromise({
+  try: () => db.select.from(todos),
+  catch: (e) => new DBError({ message: "Database Error", cause: e }),
+});
+```
+
+우선 `Effect.tryPromise`는 두 가지 방식으로 사용 가능한데, 첫 번째는 위와 같이 시도할 코드를 `try`, 오류가 일어날 시 수행할 코드를 `catch`에 넣어 사용하는 것이다. 이는 함수에서 어떤 오류가 발생할 지 명시적으로 표기할 때 사용한다. 두 번째 방식은 다음과 같이 콜백만 넣어주는 형태이다.
+
+```ts
+Effect.tryPromise(() => db.select.from(todos));
+```
+
+이 형태는 어떤 오류가 발생할 지 모를 경우, 혹은 어떤 오류가 발생하던 동일한 오류처리 루틴을 가질 경우 유용하다. 이 프로젝트에서는 오류가 명백하기 때문에 전자의 방식을 사용했다.
+
+마지막으로 실제로 수행하는 부분인 `getTodos`에서는 `Effect.runPromise`를 이용해 수행을 하였다. 함수를 평가하기 전에 오류를 처리하기 위해 실행할 `Effect`에 `pipe`를 이용해 오류처리문을 넣었다. 클라이언트에서 오류가 발생할 시 추가적인 정보를 보여주려고 한다면 다른 오류 처리용 값을 반환할 수도 있지만, 이 프로젝트에서는 간단하게 빈 배열을 반환하는 것으로 처리를 했다. 이는 프로젝트에서 필요로 하는 내용에 따라 적절히 조절을 하면 된다.
+
+클라이언트에서의 코드 또한 동일한 방식으로 처리를 하면 된다. 그러면 서버와 클라이언트 모두 안전한 코드를 실행할 수 있게 된다.
+
+### Effect의 Cache 사용하기
