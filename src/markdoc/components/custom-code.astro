@@ -1,9 +1,17 @@
 ---
 import { Code } from "astro-expressive-code/components";
 import MathComponent from "./math.astro";
+import Mermaid from "./mermaid.astro";
 
 const { code, lang } = Astro.props;
 ---
 
-{lang !== "math" && <Code code={code} lang={lang} wrap={false} />}
-{lang === "math" && <MathComponent src={code} />}
+{
+  lang === "math" ? (
+    <MathComponent src={code} />
+  ) : lang === "mermaid" ? (
+    <Mermaid src={code} />
+  ) : (
+    <Code code={code} lang={lang} wrap={false} />
+  )
+}
