@@ -1,29 +1,29 @@
 ---
-import { createMermaidRenderer } from "mermaid-isomorphic";
-
 type Props = {
   src: string;
 };
 const { src } = Astro.props;
-
-const renderer = createMermaidRenderer();
-
-let html = "";
-try {
-  const results = await renderer([src]);
-
-  for (const result of results) {
-    if (result.status === "rejected") {
-      throw new Error(result.reason);
-    }
-
-    html += result.value;
-  }
-} catch (error) {
-  throw new Error(`Failed to render mermaid block on path ${Astro.request.url}`, { cause: error });
-}
 ---
 
 <pre class="mermaid">
-  <Fragment set:html={html} />
+  <Fragment set:html={src} />
 </pre>
+<script>
+  import mermaid from "mermaid";
+
+  // mermaid.initialize({
+  //   "theme"
+  // })
+
+  (() => {
+    // @ts-ignore
+    if (window.mermaid) {
+      return;
+    }
+
+    // @ts-ignore
+    window.mermaid = mermaid;
+    // @ts-ignore
+    window.mermaid.initialize({});
+  })();
+</script>

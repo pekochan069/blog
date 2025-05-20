@@ -278,8 +278,24 @@
       @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
     }
 
-    pre.math {
+    pre.math, pre.mermaid {
       @apply mt-4 mb-0 rounded-sm border px-2 text-lg shadow-[0.1rem_0.1rem_0.2rem_#e6e9ef80] dark:shadow-[0.1rem_0.1rem_0.2rem_#1e203080];
+    }
+
+    pre.mermaid {
+      @apply hidden; 
+
+      &:has(svg) {
+        @apply block;
+      }
+
+      .arrowMarkerPath {
+        stroke: hsl(var(--foreground)) !important;
+      }
+
+      .flowchart-link {
+        stroke: hsl(var(--foreground)) !important;
+      }
     }
 
     .expressive-code {
