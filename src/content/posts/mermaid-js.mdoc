@@ -1,0 +1,103 @@
+---
+title: Mermaid.js로 다이어그램 그리기
+description: 블로그에 Mermaid.js 추가하기
+category: Mermaid.js
+tags: ["메타", "프로그래밍", "다이어그램", "typescript", "Mermaid.js"]
+published: 2025-05-21T00:03:21.890Z
+draft: false
+---
+
+## Mermaid.js
+
+[Mermaid.js](https://mermaid.js.org/)는 다양한 다이어그램을 코드를 이용해 정의하고 svg나 이미지로 렌더링해주는 자바스크립트 프로젝트입니다. 마크다운에서 영향을 받은 문법을 사용해 마크다운으로 문서를 작성하는 사람들은 쉽게 적응할 수 있는 도구입니다.
+
+Mermaid.js는 ERD, 플로우 차트, 그래프 등 다양한 다이어그램들을 지원하는 강력한 도구입니다. 특히 최근에 많이 사용되는 코드를 생성해주는 AI들과 같이 사용하면 그 효율성이 기존의 다이어그램 도구들보다 훨씬 빠르게 원하는 다이어그램을 생성할 수 있다는 장점 또한 있습니다.
+
+이 블로그에 Mermaid.js를 사용해 다이어그램 지원을 추가한 이유도 그렇습니다. 깔끔하면서도 보기 좋은 다이어그램을 만드는 것은 상당히 어려운 작업인데, 이를 AI에게 일임해 나는 로직에 집중하면서 귀찮은 어떤 노드를 선택하고 어떻게 연결할 것인가, 노드들을 어디에 배치할 것인가 등을 AI와 Mermaid.js의 자동 다이어그램 생성 기능을 이용하는 것입니다. 또한 이 블로그에는 이미지를 사용하지 않으려고 하고 있습니다. 이미지를 올리려면 이미지를 호스팅하기 위한 추가 서버가 필요하게 되며 이는 간단한 블로그에 추가하기에는 과도한 의존성의 추가라고 생각하고 있습니다. 
+
+## Mermaid.js 추가하기
+
+블로그에 Mermaid.js를 추가하는것은 생각보다 간단했습니다. 우선 저는 [Astro](https://astro.build/) [Markdoc](https://markdoc.dev/)을 이용해 글을 작성하고 있습니다. 저는 코드 블럭에 언어를 `mermaid`로 작성할 시 Mermaid.js로 다이어그램을 렌더링하도록 하였습니다.
+
+코드 블럭에 mermaid를 추가하는 것은 이미 코드 블럭에 대한 컴포넌트에 분기를 추가하는 것이므로 간단하게 해결했습니다.
+
+```astro
+{
+  lang === "math" ? (
+    <MathComponent src={code} />
+  ) : lang === "mermaid" ? (
+    <Mermaid src={code} />
+  ) : (
+    <Code code={code} lang={lang} wrap={false} />
+  )
+}
+```
+
+Mermaid.js 컴포넌트도 굉장히 간단합니다. 코드 블럭의 코드를 받아와 마크업에 넣고, 클라이언트에서 `mermaid` 패키지를 이용해 다이어그램을 렌더링합니다.
+
+```astro
+---
+type Props = {
+  src: string;
+};
+const { src } = Astro.props;
+---
+
+<pre class="mermaid">
+  <Fragment set:html={src} />
+</pre>
+<script>
+  import mermaid from "mermaid";
+
+  (() => {
+    if (window.mermaid) {
+      return;
+    }
+
+    window.mermaid = mermaid;
+    window.mermaid.initialize({
+      theme: "default",
+    });
+  })();
+</script>
+```
+
+이제 코드블럭에 `mermaid`를 쓰면 Mermaid.js의 다이어그램을 사용할 수 있습니다.
+
+### 다이어그램 예제
+
+```text
+xychart-beta
+    title "Sales Revenue"
+    x-axis [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
+    y-axis "Revenue (in $)" 4000 --> 11000
+    bar [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+    line [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+```
+
+```mermaid
+xychart-beta
+    title "Sales Revenue"
+    x-axis [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
+    y-axis "Revenue (in $)" 4000 --> 11000
+    bar [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+    line [5000, 6000, 7500, 8200, 9500, 10500, 11000, 10200, 9200, 8500, 7000, 6000]
+```
+
+```text
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE-ITEM : contains
+    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+```
+
+```mermaid
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    ORDER ||--|{ LINE-ITEM : contains
+    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+```
+
+## 더 알아보려면?
+
+- [Mermaid.js Docs](https://mermaid.js.org/intro/)
