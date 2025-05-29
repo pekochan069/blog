@@ -24,6 +24,8 @@ const { src } = Astro.props;
     // @ts-ignore
     window.mermaid = mermaid;
     // @ts-ignore
-    window.mermaid.initialize({});
+    window.mermaid.initialize({
+      theme: "default",
+    });
   })();
 </script>

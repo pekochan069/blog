@@ -4,85 +4,85 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: 220 23% 95%;
-  --foreground: 234 16% 5%;
-  --muted: 220 12% 90%;
-  --muted-foreground: 220 12% 30%;
-  --popover: 220 23% 92%;
-  --popover-foreground: 234 16% 25%;
-  --card: 220 23% 93%;
-  --card-foreground: 234 16% 30%;
-  --border: 220 13% 90%;
-  --input: 220 13% 87%;
-  --primary: 266 85% 58%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 266 30% 75%;
-  --secondary-foreground: 266 30% 15%;
-  --accent: 220 23% 80%;
-  --accent-foreground: 220 23% 20%;
-  --destructive: 3 87% 37%;
-  --destructive-foreground: 3 87% 97%;
-  --ring: 266 85% 58%;
-  --chart-1: 266 85% 58%;
-  --chart-2: 266 30% 75%;
-  --chart-3: 220 23% 80%;
-  --chart-4: 266 30% 78%;
-  --chart-5: 266 88% 58%;
-  --rosewater: 11 59% 67%;
-  --flamingo: 0 60% 67%;
-  --pink: 316 73% 69%;
-  --mauve: 266 85% 58%;
-  --red: 347 87% 44%;
-  --maroon: 355 76% 59%;
-  --peach: 22 99% 52%;
-  --yellow: 35 77% 49%;
-  --green: 109 58% 40%;
-  --teal: 183 74% 35%;
-  --sky: 197 97% 46%;
-  --sapphire: 189 70% 42%;
-  --blue: 220 91% 54%;
-  --lavender: 231 97% 72%;
+  --background: hsl(220 23% 95%);
+  --foreground: hsl(234 16% 5%);
+  --muted: hsl(220 12% 90%);
+  --muted-foreground: hsl(220 12% 30%);
+  --popover: hsl(220 23% 92%);
+  --popover-foreground: hsl(234 16% 25%);
+  --card: hsl(220 23% 93%);
+  --card-foreground: hsl(234 16% 30%);
+  --border: hsl(220 13% 90%);
+  --input: hsl(220 13% 87%);
+  --primary: hsl(266 85% 58%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(266 30% 75%);
+  --secondary-foreground: hsl(266 30% 15%);
+  --accent: hsl(220 23% 80%);
+  --accent-foreground: hsl(220 23% 20%);
+  --destructive: hsl(3 87% 37%);
+  --destructive-foreground: hsl(3 87% 97%);
+  --ring: hsl(266 85% 58%);
+  --chart-1: hsl(266 85% 58%);
+  --chart-2: hsl(266 30% 75%);
+  --chart-3: hsl(220 23% 80%);
+  --chart-4: hsl(266 30% 78%);
+  --chart-5: hsl(266 88% 58%);
+  --rosewater: hsl(11 59% 67%);
+  --flamingo: hsl(0 60% 67%);
+  --pink: hsl(316 73% 69%);
+  --mauve: hsl(266 85% 58%);
+  --red: hsl(347 87% 44%);
+  --maroon: hsl(355 76% 59%);
+  --peach: hsl(22 99% 52%);
+  --yellow: hsl(35 77% 49%);
+  --green: hsl(109 58% 40%);
+  --teal: hsl(183 74% 35%);
+  --sky: hsl(197 97% 46%);
+  --sapphire: hsl(189 70% 42%);
+  --blue: hsl(220 91% 54%);
+  --lavender: hsl(231 97% 72%);
 }
 
 .dark {
-  --background: 232 23% 18%;
-  --foreground: 227 68% 88%;
-  --muted: 232 12% 22%;
-  --muted-foreground: 232 12% 72%;
-  --popover: 232 23% 15%;
-  --popover-foreground: 227 68% 98%;
-  --card: 232 23% 16%;
-  --card-foreground: 227 68% 93%;
-  --border: 232 13% 23%;
-  --input: 232 13% 26%;
-  --primary: 267 83% 80%;
-  --primary-foreground: 267 83% 20%;
-  --secondary: 267 30% 25%;
-  --secondary-foreground: 267 30% 85%;
-  --accent: 232 23% 33%;
-  --accent-foreground: 232 23% 93%;
-  --destructive: 1 85% 48%;
-  --destructive-foreground: 0 0% 100%;
-  --ring: 267 83% 80%;
-  --chart-1: 267 83% 80%;
-  --chart-2: 267 30% 25%;
-  --chart-3: 232 23% 33%;
-  --chart-4: 267 30% 28%;
-  --chart-5: 267 86% 80%;
-  --rosewater: 10 58% 90%;
-  --flamingo: 0 58% 86%;
-  --pink: 316 74% 85%;
-  --mauve: 267 83% 80%;
-  --red: 351 74% 73%;
-  --maroon: 355 71% 77%;
-  --peach: 21 86% 73%;
-  --yellow: 40 70% 78%;
-  --green: 105 48% 72%;
-  --teal: 171 47% 69%;
-  --sky: 189 59% 73%;
-  --sapphire: 199 66% 69%;
-  --blue: 220 83% 75%;
-  --lavender: 234 82% 85%;
+  --background: hsl(232 23% 18%);
+  --foreground: hsl(227 68% 88%);
+  --muted: hsl(232 12% 22%);
+  --muted-foreground: hsl(232 12% 72%);
+  --popover: hsl(232 23% 15%);
+  --popover-foreground: hsl(227 68% 98%);
+  --card: hsl(232 23% 16%);
+  --card-foreground: hsl(227 68% 93%);
+  --border: hsl(232 13% 23%);
+  --input: hsl(232 13% 26%);
+  --primary: hsl(267 83% 80%);
+  --primary-foreground: hsl(267 83% 20%);
+  --secondary: hsl(267 30% 25%);
+  --secondary-foreground: hsl(267 30% 85%);
+  --accent: hsl(232 23% 33%);
+  --accent-foreground: hsl(232 23% 93%);
+  --destructive: hsl(1 85% 48%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --ring: hsl(267 83% 80%);
+  --chart-1: hsl(267 83% 80%);
+  --chart-2: hsl(267 30% 25%);
+  --chart-3: hsl(232 23% 33%);
+  --chart-4: hsl(267 30% 28%);
+  --chart-5: hsl(267 86% 80%);
+  --rosewater: hsl(10 58% 90%);
+  --flamingo: hsl(0 58% 86%);
+  --pink: hsl(316 74% 85%);
+  --mauve: hsl(267 83% 80%);
+  --red: hsl(351 74% 73%);
+  --maroon: hsl(355 71% 77%);
+  --peach: hsl(21 86% 73%);
+  --yellow: hsl(40 70% 78%);
+  --green: hsl(105 48% 72%);
+  --teal: hsl(171 47% 69%);
+  --sky: hsl(189 59% 73%);
+  --sapphire: hsl(199 66% 69%);
+  --blue: hsl(220 83% 75%);
+  --lavender: hsl(234 82% 85%);
 }
 
 @theme {
@@ -93,54 +93,44 @@
   --radius-xl: calc(var(--radius) + 2px);
   --radius-2xl: calc(var(--radius) + 4px);
 
-  --color-foreground: hsl(var(--foreground));
-  --color-background: hsl(var(--background));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
-
-  --color-rosewater: hsl(var(--rosewater));
-  --color-flamingo: hsl(var(--flamingo));
-  --color-pink: hsl(var(--pink));
-  --color-mauve: hsl(var(--mauve));
-  --color-red: hsl(var(--red));
-  --color-maroon: hsl(var(--maroon));
-  --color-peach: hsl(var(--peach));
-  --color-yellow: hsl(var(--yellow));
-  --color-green: hsl(var(--green));
-  --color-teal: hsl(var(--teal));
-  --color-sky: hsl(var(--sky));
-  --color-sapphire: hsl(var(--sapphire));
-  --color-blue: hsl(var(--blue));
-  --color-lavender: hsl(var(--lavender));
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-rosewater: var(--rosewater);
+  --color-flamingo: var(--flamingo);
+  --color-pink: var(--pink);
+  --color-mauve: var(--mauve);
+  --color-red: var(--red);
+  --color-maroon: var(--maroon);
+  --color-peach: var(--peach);
+  --color-yellow: var(--yellow);
+  --color-green: var(--green);
+  --color-teal: var(--teal);
+  --color-sky: var(--sky);
+  --color-sapphire: var(--sapphire);
+  --color-blue: var(--blue);
+  --color-lavender: var(--lavender);
 
   @keyframes accordion-down {
     0% {
@@ -278,23 +268,30 @@
       @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
     }
 
-    pre.math, pre.mermaid {
+    pre.math,
+    pre.mermaid {
       @apply mt-4 mb-0 rounded-sm border px-2 text-lg shadow-[0.1rem_0.1rem_0.2rem_#e6e9ef80] dark:shadow-[0.1rem_0.1rem_0.2rem_#1e203080];
     }
 
     pre.mermaid {
-      @apply hidden; 
+      @apply hidden;
 
       &:has(svg) {
         @apply block;
       }
 
-      .arrowMarkerPath {
-        stroke: hsl(var(--foreground)) !important;
-      }
+      svg {
+        .edgePaths {
+          path {
+            @apply stroke-foreground!;
+          }
+        }
 
-      .flowchart-link {
-        stroke: hsl(var(--foreground)) !important;
+        .marker {
+          * {
+            @apply stroke-foreground;
+          }
+        }
       }
     }
 
@@ -411,12 +408,12 @@
     }
 
     .tree-item {
-      @apply px-[5px] py-0.5;
+      @apply py-0.5;
     }
 
     ul,
     ol {
-      @apply my-0 ml-0 list-none border-l [&>li]:mt-0;
+      @apply my-0 ml-2 list-none border-l [&>li]:mt-0;
     }
 
     .directory {
@@ -424,7 +421,7 @@
         @apply bg-transparent marker:text-muted-foreground;
 
         summary {
-          @apply mb-0.5 w-full transition-colors duration-75 hover:cursor-pointer hover:text-blue has-[.tree-item.highlight]:hover:[&_.highlight]:bg-accent/75;
+          @apply mb-0.5 w-full list-none transition-colors duration-75 hover:cursor-pointer hover:text-blue has-[.tree-item.highlight]:hover:[&_.highlight]:bg-accent/75;
 
           .tree-item {
             @apply inline-flex items-center gap-1;
@@ -441,7 +438,7 @@
         }
 
         ul {
-          @apply pl-7;
+          @apply pl-3;
         }
 
         &[open] {
@@ -467,9 +464,6 @@
 
     & > ul {
       @apply border-0;
-      & > .file {
-        @apply pl-3;
-      }
     }
   }
 }

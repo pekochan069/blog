@@ -40,3 +40,17 @@ export function getTags() {
 
   return sorted;
 }
+
+export const tags = getTags().keys().toArray();
+
+export type EntryWithTags = {
+  title: string;
+  url: string;
+  tags: string[];
+};
+
+export const entriesWithTags = contents.map((content) => ({
+  title: content.data.title,
+  url: `/posts/${content.id}`,
+  tags: content.data.tags,
+}));
