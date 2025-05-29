@@ -1,7 +1,18 @@
 import type { KbdKey } from "@solid-primitives/keyboard";
+import type { EntryWithTags } from "~/lib/content";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { debounce } from "@solid-primitives/scheduled";
-import { createResource, createSignal, For, onMount, Show, Suspense } from "solid-js";
+import {
+  createEffect,
+  createMemo,
+  createResource,
+  createSignal,
+  For,
+  onMount,
+  Show,
+  Suspense,
+} from "solid-js";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   CommandDialog,
@@ -76,6 +87,10 @@ async function search(query: string) {
     return [];
   }
 
+  if (query.startsWith("#")) {
+    return [];
+  }
+
   if (query.length < 2) {
     return [];
   }
@@ -100,11 +115,20 @@ async function search(query: string) {
   }
 }
 
-export function SearchDialog() {
+type SearchDialogProps = {
+  tags: string[];
+  entries: EntryWithTags[];
+};
+
+export function SearchDialog(props: SearchDialogProps) {
   const modifier = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) ? "⌘" : "Ctrl";
   const [input, setInput] = createSignal("");
   const debouncedInput = debounce(setInput, 200);
   const [results] = createResource(input, search);
+
+  const tagMatched = (tag: string) => {
+    return input().length > 1 && input().startsWith("#") && tag.includes(input().substring(1));
+  };
 
   return (
     <CommandDialog open={open()} onOpenChange={setOpen}>
@@ -121,8 +145,30 @@ export function SearchDialog() {
             <CommandShortcut>{modifier}+K</CommandShortcut>
           </CommandItem>
         </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup heading="글 목록">
+          <For each={props.entries}>
+            {(entry) => (
+              <CommandItem
+                keywords={entry.tags.map((t) => `#${t}`)}
+                onSelect={() => (window.location.assign(entry.url), setOpen(false))}
+              >
+                <div>
+                  <div class="text-sm font-medium">{entry.title}</div>
+                  <div class="mt-0.5 flex flex-wrap gap-x-1 gap-y-0.5">
+                    <For each={entry.tags}>
+                      {(tag) => (
+                        <Badge variant={tagMatched(tag) ? "green" : "default"}>{tag}</Badge>
+                      )}
+                    </For>
+                  </div>
+                </div>
+              </CommandItem>
+            )}
+          </For>
+        </CommandGroup>
         <Suspense>
-          <Show when={results() && results()!.length > 0}>
+          <Show when={!input().startsWith("#") && results() && results()!.length > 0}>
             <CommandSeparator />
             <CommandGroup heading="검색 결과">
               <For each={results()}>

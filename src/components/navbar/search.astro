@@ -1,9 +1,10 @@
 ---
 // https://spacemadness.dev/docs/configuring-search/
+import { entriesWithTags, tags } from "~/lib/content";
 import { SearchDialog } from "./search-dialog";
 ---
 
-<SearchDialog client:only="solid-js" />
+<SearchDialog tags={tags} entries={entriesWithTags} client:only="solid-js" />
 
 <script is:inline>
   window.pagefind = null;
