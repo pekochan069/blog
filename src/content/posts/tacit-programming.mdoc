@@ -1,0 +1,88 @@
+---
+title: Tacit 프로그래핑
+description: 매개변수 없이 함수 호출하기
+category: Functional Programming
+tags: ["프로그래밍", "함수형 프로그래밍"]
+published: 2025-05-29T04:00:10.065Z
+draft: false
+---
+
+## Tacit 프로그래밍
+
+Tacit 프로그래밍, 혹은 Point Free 프로그래밍은 함수를 사용할 때 암묵적으로 인자를 전달하는 방식의 프로그래밍 기법을 의미합니다. 일반적으로 우리는 함수를 호출할 때 다음과 같은 형식을 가지게 작성합니다.
+
+```
+f(x, y, z) # 일반적인 프로그래밍 언어들
+
+f x y z # 함수형 언어들
+```
+
+함수를 호출할 때 우리는 함수의 정의에 포함되어있는 매개변수에 인자를 전달을 해야하고, 이를 만족하지 않으면 타입 오류가 발생합니다.
+
+Tacit 프로그래밍은 이런 인자의 전달을 암묵적으로 처리합니다.
+
+```ts
+const list = [1, 2, 3, 4];
+const isOdd = (x: number) => x % 2;
+const result = filter(list, isOdd);
+```
+
+위에서 `isOdd`는 `filter`함수에 전달이 되는데 이때 isOdd에 인자를 어떻게 전해야하는지 지정하지 않고 함수의 시그니처만 `filter`함수에 전달했습니다.
+
+위와 같이 Tacit 프로그래밍은 함수를 합성해 다른 함수를 만드는 식으로 프로그래밍을 하는 함수형 프로그래밍에서 자주 사용하는 기법입니다. 인자를 명시적으로 적어주지 않아도 되기 때문에 굉장히 간결하면서 아름다운 코드를 작성할 수 있습니다.
+
+Tacit 프로그래밍은 [Combinator](/posts/combinators)와 조합할 시 굉장히 유용합니다. 
+
+```ts
+const isEqualArray = <T>(a: T[], b: T[]) => {
+  if (a.length !== b.length) return false;
+  return a.every((v, i) => v === b[i]);
+};
+const reverse = <T>(arr: T[]) => arr.toReversed();
+const isPalindrome = <T>(arr: T[]) => s(isEqualArray<T>, reverse, arr);
+// s = λabc.ac(bc)
+```
+
+자바스크립트는 함수를 자동으로 커링해주지 않기 때문에 위와 같이 작성을 하지만 Haskell과 같이 자동으로 커링을 하는 언어들은 더 깔끔하게 코드를 작성할 수 있습니다.
+
+```haskell
+isPalindrome = s (==) reverse
+```
+
+point-free 프로그래밍은 타입스크립트에서 사용하기 좋습니다. 특히 리액트나 solid-js와 같은 프론트엔드 프레임워크들과 결합하기 좋습니다.
+
+```tsx
+export function Component() {
+    const onClick = (e: MouseEvent) => {
+        console.log(e);
+    };
+
+    return (
+        <div>
+            <button onclick={(e) => onClick(e)}>Click</click>
+        </div>
+    );
+}
+```
+
+위에서 `button`을 클릭할 때 실행할 이벤트 리스너인 `onClick` 함수는 pointful 형태로 전달을 했습니다. 여기서 `button`에 `onClick`을 point-free 형태로 전달하면 다음과 같은 형태가 됩니다.
+
+```tsx
+export function Component() {
+    const onClick = (e: MouseEvent) => {
+        console.log(e);
+    };
+
+    return (
+        <div>
+            <button onclick={onClick}>Click</click>
+                             ^^^^^^^
+        </div>
+    );
+}
+```
+
+## 더 알아보려면?
+
+- [wikipedia](https://en.wikipedia.org/wiki/Tacit_programming)
+- [APL Wiki](https://aplwiki.com/wiki/Tacit_programming)
