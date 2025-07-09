@@ -1,8 +1,10 @@
 import type { PolymorphicProps } from "@kobalte/core";
 import type { ValidComponent } from "solid-js";
+
+import { mergeProps, splitProps } from "solid-js";
 import * as TextFieldPrimitive from "@kobalte/core/text-field";
 import { cva } from "class-variance-authority";
-import { mergeProps, splitProps } from "solid-js";
+
 import { cn } from "~/lib/utils";
 
 type TextFieldRootProps<T extends ValidComponent = "div"> =
@@ -81,7 +83,7 @@ const TextFieldTextArea = <T extends ValidComponent = "textarea">(
 };
 
 const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  "text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
   {
     variants: {
       variant: {

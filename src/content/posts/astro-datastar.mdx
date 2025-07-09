@@ -24,28 +24,11 @@ bun create astro@latest
 저는 `bun`을 좋아해 `bun`을 사용했지만, `npm`, `pnpm`, `yarn` 전부 사용 가능합니다.
 프로젝트를 만들었다면 다음과 같은 구조의 프로젝트가 생성됩니다.
 
-{% FileTree %}
-- .vscode
-  - extensions.json
-  - launch.json
-- public/
-  - favicon.svg
-- src/
-  - assets/
-    - astro.svg
-    - background.svg
-  - components/
-    - Welcome.astro
-  - layouts/
-    - Layout.astro
-  - pages/
-    - index.astro
-- .gitignore
-- bun.lock
-- package.json
-- README.md
-- tsconfig.json
-{% /FileTree %}
+<FileTree>
+  - .vscode - extensions.json - launch.json - public/ - favicon.svg - src/ - assets/ - astro.svg -
+  background.svg - components/ - Welcome.astro - layouts/ - Layout.astro - pages/ - index.astro -
+  .gitignore - bun.lock - package.json - README.md - tsconfig.json
+</FileTree>
 
 Astro 프로젝트를 생성했다면, `@pekochan069/astro-datastar` 패키지를 설치합니다.
 
@@ -59,7 +42,7 @@ bun add @pekochan069/astro-datastar
 ```js
 // astro.config.mjs
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({});
@@ -67,7 +50,7 @@ export default defineConfig({});
 
 이제 `@pekochan069/astro-datastar` 패키지를 추가하고 integration을 추가해줍니다.
 
-```js
+```js ins={4,8}
 // astro.config.mjs
 // @ts-check
 import { defineConfig } from "astro/config";
@@ -83,9 +66,8 @@ export default defineConfig({
 
 ```astro
 // src/pages/index.astro
----
+
 import Layout from "../layouts/Layout.astro";
----
 
 <Layout>
   <div>
@@ -95,4 +77,4 @@ import Layout from "../layouts/Layout.astro";
 </Layout>
 ```
 
-`bun run dev`로 프로젝트를 실행하면 `input` 태그에 입력한 값이 바로 아래에 있는 `div`에 실시간으로 업데이트됩니다. 
+`bun run dev`로 프로젝트를 실행하면 `input` 태그에 입력한 값이 바로 아래에 있는 `div`에 실시간으로 업데이트됩니다.

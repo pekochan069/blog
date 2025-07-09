@@ -1,6 +1,6 @@
 ---
 title: Effect를 react에서 사용하기
-description: 'Effect가 무엇인지 알아보고, react에서 어떻게 사용할 수 있는지 알아보자.'
+description: "Effect가 무엇인지 알아보고, react에서 어떻게 사용할 수 있는지 알아보자."
 category: Effect
 tags: ["프로그래밍", "react", "Effect", "typescript"]
 published: 2025-05-09T06:34:06.353Z
@@ -18,37 +18,36 @@ draft: false
 Effect의 가장 중요한 기능은 `Effect` 타입입니다. Effect의 시작은 `Effect`에서 시작해 `Effect`로 끝납니다. `Effect`는 다음과 같은 타입 시그니쳐를 가지고 있습니다.
 
 ```ts
-Effect<Success, Error, Requirements>
+Effect<Success, Error, Requirements>;
 ```
 
 `Success`는 `Effect`가 성공적으로 평가되었을 때 반환할 타입을, `Error`는 오류 타입을, `Requirements`는 해당 `Effect`가 평가되어야 할 때 필요한 의존성을 나타냅니다.
 
-`Effect`의 가장 큰 특징 중 하나는 `ZIO`와 마찬가지로 동기 API와 비동기 API를 하나의 `Effect`로 합친 것입니다. 다만 `Effect`를 평가할 때는 다른 함수를 사용해야 합니다. 
+`Effect`의 가장 큰 특징 중 하나는 `ZIO`와 마찬가지로 동기 API와 비동기 API를 하나의 `Effect`로 합친 것입니다. 다만 `Effect`를 평가할 때는 다른 함수를 사용해야 합니다.
 동기 `Effect`를 평가하기 위한 함수는 `runSync`이며, 비동기 `Effect`를 평가하기 위한 함수인 `runPromise`는 비공기 함수로 `Promise`를 반환합니다.
 
 ```ts
-Effect.runSync(effect) // 동기 Effect 평가
-Effect.runPromise(effect) // 비동기 Effect 평가
+Effect.runSync(effect); // 동기 Effect 평가
+Effect.runPromise(effect); // 비동기 Effect 평가
 ```
 
 Effect의 큰 장점 중 하나는 `Effect`의 합성이 굉장히 쉽고 강력하다는 것입니다. 모든 `Effect` 객체들은 `pipe`라는 합성을 하기 위한 메소드를 가지고 있고, 동일한 기능을 수행하는 `Effect.pipe` 함수도 존재합니다.
 
 ```ts
-const effect = Effect.succeed(1)
-  .pipe(
-    Effect.map((n) => n + 1),
-    Effect.map((n) => n > 1)
-  );
+const effect = Effect.succeed(1).pipe(
+  Effect.map((n) => n + 1),
+  Effect.map((n) => n > 1),
+);
 ```
 
 `pipe`와 함께 자주 자주 사용되는 기능은 `Effect.gen`입니다. `Effect.gen`은 제너레이터를 이용해 `Effect`를 평가해 쉽게 effectful한 코드를 작성할 수 있게 해주는 도구입니다. `Effect.gen`은 `pipe`와 다르게 일반 타입스크립트 제너레이터를 사용하므로 평범한 루프 및 분기 처리 등을 사용할 수 있습니다.
 
 ```ts
-const effect = Effect.succeed(1)
-const effect2 = Effect.succeed(2)
-const failedEffect = Effect.fail(3)
+const effect = Effect.succeed(1);
+const effect2 = Effect.succeed(2);
+const failedEffect = Effect.fail(3);
 
-const gen = Effect.gen(function*() {
+const gen = Effect.gen(function* () {
   const n1 = yield* effect; // 1
   const n2 = yield* effect2; // 2
   const n3 = yield* failedEffect; // 오류, 즉시 종료
@@ -59,7 +58,7 @@ const gen = Effect.gen(function*() {
   }
 
   return n1 + n2 + n3;
-})
+});
 ```
 
 위의 코드에서 `yield* failedEffect`는 실패하는 `Effect`를 평가하는 것을 알 수 있습니다. 이 때 `Effect.gen`은 실패하는 즉시 `Error`을 반환하는 short circuit 동작을 합니다.
@@ -74,7 +73,7 @@ Effect에 대해 간단히 알아봤는데, 그렇다면 왜 Effect를 사용하
 
 ```ts
 function mayFailParse<T>(jsonBlob: string): T {
-    return JSON.parse(jsonBlob) as T;
+  return JSON.parse(jsonBlob) as T;
 }
 ```
 
@@ -123,9 +122,7 @@ class JSONParseError {
 
 class TransformError {}
 
-function mayFailParse<T, U>(
-  jsonBlob: string,
-): U | JSONParseError | TransformError {
+function mayFailParse<T, U>(jsonBlob: string): U | JSONParseError | TransformError {
   try {
     const json = JSON.parse(jsonBlob) as T;
 
@@ -154,9 +151,7 @@ class JSONParseError {
 
 class TransformError {}
 
-function mayFailParse<T, U>(
-  jsonBlob: string,
-): U | JSONParseError | TransformError {
+function mayFailParse<T, U>(jsonBlob: string): U | JSONParseError | TransformError {
   try {
     const json = JSON.parse(jsonBlob) as T;
 
@@ -167,7 +162,7 @@ function mayFailParse<T, U>(
     } else if (e instanceof TypeError) {
       return new JSONParseError("TypeError");
     } else if (e instanceof SomeTransformError) {
-      return new TransformError("Some Transform Error") 
+      return new TransformError("Some Transform Error");
     }
     return new JSONParseError("UnknownError");
   }
@@ -224,7 +219,7 @@ Effect의 아름다운 점은 함수를 정의하고 나면 타입 추론으로 
 
 ## Effect를 React에서 사용하기
 
-Effect에 대해 간략히 알아봤으므로, 이제 본 주제인 **react**에서 **Effect**를 사용해보도록 하겠습니다. 
+Effect에 대해 간략히 알아봤으므로, 이제 본 주제인 **react**에서 **Effect**를 사용해보도록 하겠습니다.
 
 ### Effect로 안전하게 백엔드 호출하기
 
@@ -274,16 +269,14 @@ export function TodosProvider({ children }: { children: ReactNode }) {
 이 프로젝트의 데이터베이스는 간단하게 로컬 `sqlite` 파일을 `drizzle-orm`을 이용해 연결해 사용을 하고 있습니다. 이 경우에 데이터베이스는 File I/O 오류를 일으킬 수 있습니다. 데이터베이스가 별도의 서버, 혹은 외부의 서버리스 데이터베이스에서 연결을 할 수도 있습니다. 이 경우 데이터베이스에 연결을 할 때 네트워크 오류가 일어날 가능성이 있습니다. 이를 해결하기 위해선 데이터베이스 부분을 `try catch` 문으로 감싸야 합니다.
 
 ```ts
-export const getTodos = createServerFn().handler(
-  async () => {
-    try {
-      return await db.select().from(todos);
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
+export const getTodos = createServerFn().handler(async () => {
+  try {
+    return await db.select().from(todos);
+  } catch (e) {
+    console.error(e);
+    return [];
   }
-)
+});
 ```
 
 이 함수는 간단하지만, 스키마 검증이나 사용자 인증, JSON 역직렬화 등의 작업을 필요로 할 경우 위에서 설명한대로 훨씬 더 많은 `try catch`문이 필요하거나 오류와 동떨어진 위치에서 오류를 처리하게 됩니다.

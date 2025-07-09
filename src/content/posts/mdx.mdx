@@ -1,0 +1,48 @@
+---
+title: MDX로 전환
+description: Markdoc 대신 MDX로 전환을 했습니다.
+category: Blog
+tags: ["메타", "블로그"]
+published: 2025-07-09T01:04:27.283Z
+draft: false
+---
+
+## Markdoc에서 MDX로
+
+이번에 블로그의 글 마크업 언어를 `Markdoc`에서 `MDX`로 전환하였습니다. 사실 Markdoc에 퀀가 문제가 많다거나 MDX가 특별히 더 좋다거나 하지는 않다고 생각합니다. Markdoc을 쓰면서도 큰 불편함이 있다거나 문제가 되는 부분 딱히 없었어요.
+
+특히 [Markdoc 문서](https://markdoc.dev/)를 보면 알게 되겠지만, Markdoc은 굉장히 지원하는 기능들이 많습니다. 컴포넌트를 작성해 `markdoc.config.ts`에서 나만의 Tags를 작성할 수도 있습니다. 이 Tag들은 `{% Tag %}` 형태로 Markdoc 문서에서 사용이 가능합니다.
+
+```markdoc
+{% FileTree %}
+- .vscode
+  - extensions.json
+  - launch.json
+- public/
+  - favicon.svg
+- src/
+  - assets/
+    - astro.svg
+    - background.svg
+  - components/
+    - Welcome.astro
+  - layouts/
+    - Layout.astro
+  - pages/
+    - index.astro
+- .gitignore
+- bun.lock
+- package.json
+- README.md
+- tsconfig.json
+{% /FileTree %}
+```
+
+그리고 Markdoc을 써보고 싶게 만든 기능은 바로 Partials라는 마크다운 문서를 재사용 가능하게 만드는 기능과 문서 안에서 변수와 함수를 사용할 수 있다는 점입니다. 이러한 기능들은 Markdoc을 일종의 프로그래밍 언어처럼 모듈을 불러오고 사용하는 기능들을 사용이 가능하게 만들어 상당히 특이하고 꼭 써보고 싶다고 생각했습니다.
+
+그런데 막상 Markdoc을 사용하면서 느낀 점은 저에게 필요한 기능은 이런 강력한 기능이 아닌 기본적인 마크업 작성과 Solid.js와 Astro 컴포넌트들을 불러올 수 있는있는 기능이 전부라는 것임을 깨달았습니다. 강력한 기능을 위해 Markdoc을 사용하기보다 그냥 자바스크립트로 그런 요소들을 해결하고 마크업 언어는 마크업 언어로 사용하는 것이 결국 가장 좋다고 느꼈습니다.
+
+그리고 MDX는 Markdoc과 비교했을때 엄청난 장점이 있는데, 바로 생태계입니다. Markdoc은 Stripe에서 만든 프로젝트로 꽤 큰 회사가 만들었다는 점에서 미래가 나름 창창하다고 생각합니다. 하지만 MDX는 훨씬 더 많은 사람들이 사용하고 있고, 관련 예제들이 더 많아서 참고하기 좋습니다. 그리고 MDX는 [unified](https://unifiedjs.com/) 생태계의 일부로, `unified`를 비롯해 `remark`, `rehype`의 플러그인들을 바로 사용할 수 있어서 커스터마이징하기도 좋습니다. Markdoc에서는 이런 생태계가 없어서 커스터마이징을 하려면 직접 구현을 해야 하기 때문에 불편한 점이 있습니다.
+
+MDX로 전환을 하면서 크게 문제가 되는 부분은 없었습니다. 기존에 만들어놓은 수학식 등의 
+Markdoc 확장들을 MDX로 옮기는 작업이 필요하긴 했는데, `rehype`과 `remark` 플러그인들로 더 쉽게 구현이 가능해진 것이 상당히 좋았습니다. 다음 작업은 수학 차트를 작성할 수 있는 기능을 구현하려고 하는대 MDX로 전환해서 쉽게 구현이 가능할 것이라고 봅니다.

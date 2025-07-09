@@ -1,4 +1,5 @@
 import { getCollection } from "astro:content";
+
 import { POST_PER_PAGE } from "~/constants";
 import { env } from "~/env";
 

@@ -1,7 +1,9 @@
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { JSX, ValidComponent } from "solid-js";
-import * as PaginationPrimitive from "@kobalte/core/pagination";
+
 import { Show, splitProps } from "solid-js";
+import * as PaginationPrimitive from "@kobalte/core/pagination";
+
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
@@ -67,6 +69,7 @@ const PaginationEllipsis = <T extends ValidComponent = "div">(
         stroke-linejoin="round"
         class="size-4"
       >
+        <title>More Pages</title>
         <circle cx="12" cy="12" r="1" />
         <circle cx="19" cy="12" r="1" />
         <circle cx="5" cy="12" r="1" />
@@ -111,6 +114,7 @@ const PaginationPrevious = <T extends ValidComponent = "button">(
               stroke-linejoin="round"
               class="size-4"
             >
+              <title>Previous Page</title>
               <path d="M15 6l-6 6l6 6" />
             </svg>
             <span>이전</span>
@@ -159,6 +163,7 @@ const PaginationNext = <T extends ValidComponent = "button">(
               stroke-linejoin="round"
               class="size-4"
             >
+              <title>Next Page</title>
               <path d="M9 6l6 6l-6 6" />
             </svg>
           </>

@@ -1,7 +1,9 @@
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { Component, ComponentProps, JSX, ValidComponent } from "solid-js";
-import * as DialogPrimitive from "@kobalte/core/dialog";
+
 import { splitProps } from "solid-js";
+import * as DialogPrimitive from "@kobalte/core/dialog";
+
 import { cn } from "~/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -68,6 +70,7 @@ const DialogContent = <T extends ValidComponent = "div">(
             stroke-linejoin="round"
             class="size-4"
           >
+            <title>Close</title>
             <path d="M18 6l-12 12" />
             <path d="M6 6l12 12" />
           </svg>

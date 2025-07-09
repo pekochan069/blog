@@ -1,7 +1,9 @@
 import type { DialogRootProps } from "@kobalte/core/dialog";
 import type { Component, ComponentProps, ParentProps, VoidProps } from "solid-js";
-import * as CommandPrimitive from "cmdk-solid";
+
 import { splitProps } from "solid-js";
+import * as CommandPrimitive from "cmdk-solid";
+
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { cn } from "~/lib/utils";
 
@@ -48,6 +50,7 @@ const CommandInput: Component<VoidProps<CommandPrimitive.CommandInputProps>> = (
         stroke-linejoin="round"
         class="mr-2 size-4 shrink-0 opacity-50"
       >
+        <title>Search</title>
         <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
         <path d="M21 21l-6 -6" />
       </svg>

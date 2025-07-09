@@ -1,9 +1,11 @@
 ---
 import { render } from "astro:content";
+
 import Sidebar from "~/components/sidebar.astro";
 import Toc from "~/components/toc.astro";
-import { Badge } from "~/components/ui/badge";
 import BaseLayout from "~/layouts/base-layout.astro";
+import component from "~/components/mdx-components";
+import { Badge } from "~/components/ui/badge";
 import { contents } from "~/lib/content";
 
 const slug = Astro.params.slug;
@@ -32,7 +34,7 @@ const { Content, headings } = await render(content);
         <div class="mt-2 flex flex-wrap gap-x-2 gap-y-1">
           {content.data.tags.map((tag) => <Badge>{tag}</Badge>)}
         </div>
-        <Content />
+        <Content components={{ ...component }} />
       </main>
     </div>
     <Toc headings={headings.filter((h) => h.depth <= 4)} />

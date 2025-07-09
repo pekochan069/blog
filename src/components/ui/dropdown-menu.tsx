@@ -1,7 +1,9 @@
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { Component, ComponentProps, JSX, ValidComponent } from "solid-js";
-import * as DropdownMenuPrimitive from "@kobalte/core/dropdown-menu";
+
 import { splitProps } from "solid-js";
+import * as DropdownMenuPrimitive from "@kobalte/core/dropdown-menu";
+
 import { cn } from "~/lib/utils";
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
@@ -117,6 +119,7 @@ const DropdownMenuSubTrigger = <T extends ValidComponent = "div">(
         stroke-linejoin="round"
         class="ml-auto size-4"
       >
+        <title>Chevron Right</title>
         <path d="M9 6l6 6l-6 6" />
       </svg>
     </DropdownMenuPrimitive.SubTrigger>
@@ -135,7 +138,7 @@ const DropdownMenuSubContent = <T extends ValidComponent = "div">(
   return (
     <DropdownMenuPrimitive.SubContent
       class={cn(
-        "z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in",
+        "z-50 min-w-32 origin-[var(--kb-menu-content-transform-origin)] animate-in overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
         props.class,
       )}
       {...rest}
@@ -173,6 +176,7 @@ const DropdownMenuCheckboxItem = <T extends ValidComponent = "div">(
             stroke-linejoin="round"
             class="size-4"
           >
+            <title>Check</title>
             <path d="M5 12l5 5l10 -10" />
           </svg>
         </DropdownMenuPrimitive.ItemIndicator>
@@ -229,6 +233,7 @@ const DropdownMenuRadioItem = <T extends ValidComponent = "div">(
             stroke-linejoin="round"
             class="size-2 fill-current"
           >
+            <title>Radio</title>
             <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
           </svg>
         </DropdownMenuPrimitive.ItemIndicator>

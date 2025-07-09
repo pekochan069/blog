@@ -1,5 +1,7 @@
 import type { contents } from "~/lib/content";
+
 import { For } from "solid-js";
+
 import { Button } from "~/components/ui/button";
 import {
   Drawer,

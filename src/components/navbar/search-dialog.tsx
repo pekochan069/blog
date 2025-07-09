@@ -1,8 +1,10 @@
 import type { KbdKey } from "@solid-primitives/keyboard";
 import type { EntryWithTags } from "~/lib/content";
+
+import { createResource, createSignal, For, onMount, Show, Suspense } from "solid-js";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { debounce } from "@solid-primitives/scheduled";
-import { createResource, createSignal, For, onMount, Show, Suspense } from "solid-js";
+
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {

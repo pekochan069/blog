@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0-beta.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -13,16 +13,45 @@
   },
   "linter": {
     "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "useSemanticElements": "off"
+      }
+    },
     "domains": {
       "project": "recommended",
       "solid": "recommended"
-    },
-    "rules": {
-      "recommended": true,
-      "a11y": "off"
     }
   },
   "assist": {
     "enabled": false
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/icons/**/*.tsx", "src/components/ui/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -1,8 +1,8 @@
 ---
+import BaseLayout from "~/layouts/base-layout.astro";
 import { Pagination } from "~/components/pagination";
 import { Badge } from "~/components/ui/badge";
 import { POST_PER_PAGE } from "~/constants";
-import BaseLayout from "~/layouts/base-layout.astro";
 import { contents, totalPages } from "~/lib/content";
 
 export function getStaticPaths() {

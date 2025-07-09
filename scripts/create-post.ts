@@ -19,8 +19,8 @@ async function main() {
   }
 
   let postName = args[0];
-  if (!postName.endsWith(".mdoc")) {
-    postName += ".mdoc";
+  if (!postName.endsWith(".mdx")) {
+    postName += ".mdx";
   }
 
   const postDir = "./src/content/posts";

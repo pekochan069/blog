@@ -1,19 +1,5 @@
----
-type Props = {
-  src: string;
-};
-const { src } = Astro.props;
----
-
-<pre class="mermaid">
-  <Fragment set:html={src} />
-</pre>
 <script>
   import mermaid from "mermaid";
-
-  // mermaid.initialize({
-  //   "theme"
-  // })
 
   (() => {
     // @ts-ignore

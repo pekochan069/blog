@@ -6,8 +6,10 @@ import type {
   OverlayProps,
 } from "@corvu/drawer";
 import type { Component, ComponentProps, JSX, ValidComponent } from "solid-js";
-import DrawerPrimitive from "@corvu/drawer";
+
 import { splitProps } from "solid-js";
+import DrawerPrimitive from "@corvu/drawer";
+
 import { cn } from "~/lib/utils";
 
 const Drawer = DrawerPrimitive;

@@ -21,11 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-import { readFileSync } from "fs";
-import { resolve } from "path";
 import type { Element, ElementContent, Text } from "hast";
 import type { Child } from "hastscript";
+
 import { AstroError } from "astro/errors";
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import { fromHtml } from "hast-util-from-html";
 import { select } from "hast-util-select";
 import { toString as hastToString } from "hast-util-to-string";
@@ -33,6 +34,7 @@ import { h, s } from "hastscript";
 import { rehype } from "rehype";
 import { rootDir } from "root-dir";
 import { CONTINUE, SKIP, visit } from "unist-util-visit";
+
 import { env } from "~/env";
 import { defaultFileSvg, folderOpenSvg, folderSvg, mi } from "../markdown/file-tree-icons";
 

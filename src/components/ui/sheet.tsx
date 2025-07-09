@@ -1,9 +1,11 @@
 import type { PolymorphicProps } from "@kobalte/core/polymorphic";
 import type { VariantProps } from "class-variance-authority";
 import type { Component, ComponentProps, JSX, ValidComponent } from "solid-js";
+
+import { splitProps } from "solid-js";
 import * as SheetPrimitive from "@kobalte/core/dialog";
 import { cva } from "class-variance-authority";
-import { splitProps } from "solid-js";
+
 import { cn } from "~/lib/utils";
 
 const Sheet = SheetPrimitive.Root;
@@ -53,7 +55,7 @@ const SheetOverlay = <T extends ValidComponent = "div">(
 };
 
 const sheetVariants = cva(
-  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[closed=]:duration-300 data-[expanded=]:duration-500 data-[expanded=]:animate-in data-[closed=]:animate-out",
+  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[closed=]:animate-out data-[closed=]:duration-300 data-[expanded=]:animate-in data-[expanded=]:duration-500",
   {
     variants: {
       position: {
@@ -105,6 +107,7 @@ const SheetContent = <T extends ValidComponent = "div">(
             stroke-linejoin="round"
             class="size-4"
           >
+            <title>X</title>
             <path d="M18 6l-12 12" />
             <path d="M6 6l12 12" />
           </svg>
