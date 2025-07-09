@@ -281,6 +281,8 @@
       }
 
       svg {
+        @apply mx-auto;
+
         .edgePaths {
           path {
             @apply stroke-foreground!;

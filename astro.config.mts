@@ -9,27 +9,17 @@ import compressor from "astro-compressor";
 import expressiveCode from "astro-expressive-code";
 import icon from "astro-icon";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeMermaid from "rehype-mermaid";
 import rehypeSlug from "rehype-slug";
 import remarkFlexibleToc from "remark-flexible-toc";
 import remarkMath from "remark-math";
 
-// import { remarkAlert } from "remark-github-blockquote-alert";
+import rehypeMermaid from "./src/lib/markdown/rehype-mermaid";
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [icon(), sitemap(), expressiveCode(), mdx(), solidJs(), compressor()],
   markdown: {
-    remarkPlugins: [
-      [remarkFlexibleToc, {}],
-      remarkMath,
-      // [
-      //   remarkAlert,
-      //   {
-      //     tagName: "blockquote",
-      //   },
-      // ],
-    ],
+    remarkPlugins: [[remarkFlexibleToc, {}], remarkMath],
     rehypePlugins: [
       rehypeSlug,
       [
@@ -55,13 +45,8 @@ export default defineConfig({
           },
         },
       ],
-      [
-        rehypeMermaid,
-        {
-          strategy: "pre-mermaid",
-        },
-      ],
       rehypeMathML,
+      rehypeMermaid,
     ],
     remarkRehype: {},
     shikiConfig: {
