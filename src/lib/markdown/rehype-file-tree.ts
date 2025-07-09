@@ -185,7 +185,7 @@ function makeFileIcon(fileName: string) {
   } else {
     path = resolve(
       rootDir,
-      "../..",
+      "../../..",
       "node_modules",
       "material-icon-theme",
       "icons",
