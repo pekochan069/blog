@@ -1,0 +1,27 @@
+---
+import AboutMe from "./about-me.astro";
+---
+
+<aside id="sidebar" class="hidden invisible lg:visible lg:block">
+  <div
+    id="sidebar-container"
+    class="sticky top-36 transition-all duration-200 ease-out-cubic data-[scrolled=true]:top-20"
+  >
+    <AboutMe />
+  </div>
+</aside>
+
+<script>
+  (() => {
+    const container = document.querySelector<HTMLDivElement>("#sidebar-container");
+
+    function updateSidebarHeight() {
+      if (container) {
+        container.dataset.scrolled = String(window.scrollY > 40);
+      }
+    }
+
+    updateSidebarHeight();
+    window.addEventListener("scroll", updateSidebarHeight, { passive: true });
+  })();
+</script>

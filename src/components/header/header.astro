@@ -1,0 +1,61 @@
+---
+import { HouseIcon } from "#icons/runeicons/normal/house";
+import { ArrowRightIcon } from "#icons/runeicons/normal/arrow-right";
+import { ButtonAnchor } from "#components/ui/button";
+import { ThemeToggle } from "./theme-toggle";
+import { SquareArrowOutUpRightIcon } from "#icons/runeicons/normal/square-arrow-out-up-right";
+import { GithubIconIcon } from "#icons/logos/github-icon";
+---
+
+<header id="site-header" class="sticky top-0 h-20 z-50">
+	<div
+		class="flex justify-between bg-background max-w-6xl h-20 px-6 py-4 mx-auto items-center rounded-b-xl border-border w-full border md:w-[95%] data-[scrolled=true]:h-14 transition-[height,width] duration-200 ease-out-cubic shadow-sm motion-reduce:transition-none"
+		id="site-header-container"
+	>
+		<ButtonAnchor href="/" size="lg" variant="ghost" class="flex items-center group">
+			<div class="relative">
+				<HouseIcon class="size-6 transition-all group-hover:rotate-90 group-hover:opacity-0" />
+				<ArrowRightIcon
+					class="size-6 absolute top-0 left-0 -rotate-90 opacity-0 transition-all ease-out-cubic group-hover:rotate-0 group-hover:opacity-100"
+				/>
+			</div>
+			<h1 class="text-xl font-bold">pekochan069</h1>
+		</ButtonAnchor>
+		<div class="flex items-center gap-2">
+			<nav>
+				<ButtonAnchor
+					href="https://github.com/pekochan069/"
+					target="_blank"
+					class="size-9 md:w-full group"
+					variant="ghost"
+				>
+					<div class="relative">
+						<GithubIconIcon
+							class="size-5 rotate-0 opacity-100 transition-all md:group-hover:-rotate-45 md:group-hover:opacity-0"
+						/>
+						<SquareArrowOutUpRightIcon
+							class="hidden size-5 absolute top-0 left-0 rotate-45 opacity-0 transition-all md:block md:group-hover:rotate-0 md:group-hover:opacity-100"
+						/>
+					</div>
+					<span class="sr-only md:not-sr-only text-lg font-semibold">Github</span>
+				</ButtonAnchor>
+			</nav>
+			<ThemeToggle client:load />
+		</div>
+	</div>
+</header>
+
+<script>
+	(() => {
+		const container = document.querySelector<HTMLDivElement>("#site-header-container");
+
+		function updateHeaderHeight() {
+			if (container) {
+				container.dataset.scrolled = String(window.scrollY > 40);
+			}
+		}
+
+		updateHeaderHeight();
+		window.addEventListener("scroll", updateHeaderHeight, { passive: true });
+	})();
+</script>

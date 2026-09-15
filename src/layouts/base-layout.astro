@@ -1,24 +1,17 @@
 ---
-import Navbar from "~/components/navbar/navbar.astro";
-
-import "overlayscrollbars/overlayscrollbars.css";
-import "~/styles/global.css";
-
-type Props = {
-  title?: string;
-};
-
-const { title = "pekochan069" } = Astro.props;
+import "#styles/app.css";
+import Header from "#components/header/header.astro";
+import Sidebar from "#components/sidebar/sidebar.astro";
 ---
 
-<html lang="ko" data-overlayscrollbars-initialize>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>{title}</title>
+    <title>Astro</title>
     <script is:inline>
       const getThemePreference = () => {
         if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
@@ -27,46 +20,118 @@ const { title = "pekochan069" } = Astro.props;
         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       };
       const isDark = getThemePreference() === "dark";
-      document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-      document.documentElement.dataset["theme"] = isDark
-        ? "catppuccin-macchiato"
-        : "catppuccin-latte";
+      document.documentElement.classList.toggle("dark", isDark);
+      document.documentElement.dataset["theme"] = isDark ? "catppuccin-macchiato" : "catppuccin-latte";
 
       if (typeof localStorage !== "undefined") {
         const observer = new MutationObserver(() => {
-          const isDark = document.documentElement.classList.contains("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
+          const changedIsDark = document.documentElement.classList.contains("dark");
+          localStorage.setItem("theme", changedIsDark ? "dark" : "light");
         });
         observer.observe(document.documentElement, {
-          attributes: true,
           attributeFilter: ["class"],
+          attributes: true,
         });
       }
 
       document.addEventListener("astro:before-swap", (event) => {
-        const isDark = getThemePreference() === "dark";
-        event.newDocument.documentElement.classList[isDark ? "add" : "remove"]("dark");
-        event.newDocument.documentElement.dataset["theme"] = isDark
+        const changedIsDark = getThemePreference() === "dark";
+        event.newDocument.documentElement.classList.toggle("dark", changedIsDark);
+        event.newDocument.documentElement.dataset["theme"] = changedIsDark
           ? "catppuccin-macchiato"
           : "catppuccin-latte";
       });
     </script>
+    <style is:inline>
+      #main-placeholder[data-ready] {
+        height: var(--content-height);
+      }
+
+      #main-placeholder[data-ready] #main-card {
+        position: fixed;
+        left: var(--card-left);
+        width: var(--card-width);
+        top: var(--card-start);
+        animation: pin-main-card linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0px var(--pin-distance);
+      }
+
+      #main-placeholder[data-ready] #main-content {
+        animation: scroll-main-content linear both;
+        animation-timeline: scroll(root block);
+        animation-range: var(--pin-distance) 100%;
+      }
+
+      @keyframes pin-main-card {
+        from {
+          top: var(--card-start);
+        }
+        to {
+          top: 5rem;
+        }
+      }
+
+      @keyframes scroll-main-content {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(var(--content-end));
+        }
+      }
+    </style>
   </head>
-  <body data-overlayscrollbars-initialize>
-    <div id="app" class="relative">
-      <Navbar />
-      <div class="mt-20">
-        <slot />
+  <body class="text-foreground bg-catppuccin-peach">
+    <Header />
+    <div class="md:max-w-6xl grid gap-6 md:grid-cols-[16rem_1fr] mt-16 mx-auto md:w-[95%]">
+      <Sidebar />
+
+      <div id="main-placeholder" class="relative min-w-0">
+        <main id="main-card" class="overflow-clip bg-background rounded-xl">
+          <div id="main-content" class="p-4">
+            <slot />
+          </div>
+        </main>
       </div>
     </div>
   </body>
 </html>
-<script>
-  import { OverlayScrollbars } from "overlayscrollbars";
 
-  OverlayScrollbars(document.body, {
-    scrollbars: {
-      autoHide: "scroll",
-    },
-  });
+<script>
+  (() => {
+    const placeholder = document.querySelector<HTMLDivElement>("#main-placeholder");
+    const card = document.querySelector<HTMLDivElement>("#main-card");
+    const content = document.querySelector<HTMLDivElement>("#main-content");
+
+    function measureMainCard() {
+      if (!placeholder || !card || !content || !CSS.supports("animation-timeline", "scroll(root block)")) {
+        return;
+      }
+
+      const bounds = placeholder.getBoundingClientRect();
+      const start = bounds.top + window.scrollY;
+      // oxlint-disable-next-line unicorn/prefer-number-coercion
+      const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const pinDistance = Math.max(0, start - 5 * rem);
+
+      placeholder.style.setProperty("--card-left", `${bounds.left}px`);
+      placeholder.style.setProperty("--card-width", `${bounds.width}px`);
+      placeholder.style.setProperty("--card-start", `${start}px`);
+      placeholder.style.setProperty("--pin-distance", `${pinDistance}px`);
+      placeholder.style.setProperty("--content-height", `${content.offsetHeight}px`);
+      placeholder.dataset.ready = "";
+
+      const scrollDistance = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      placeholder.style.setProperty("--content-end", `${-Math.max(0, scrollDistance - pinDistance)}px`);
+    }
+
+    // Measure layout only; CSS owns all scroll-driven movement.
+    if (document.readyState === "complete") {
+      measureMainCard();
+    } else {
+      window.addEventListener("load", measureMainCard, { once: true });
+    }
+    window.addEventListener("resize", measureMainCard);
+  })();
 </script>

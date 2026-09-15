@@ -1,0 +1,56 @@
+---
+import "#styles/app.css";
+import Header from "#components/header/header.astro";
+import Sidebar from "#components/sidebar/sidebar.astro";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+    <script is:inline>
+      const getThemePreference = () => {
+        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+          return localStorage.getItem("theme");
+        }
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      };
+      const isDark = getThemePreference() === "dark";
+      document.documentElement.classList.toggle("dark", isDark);
+      document.documentElement.dataset["theme"] = isDark ? "catppuccin-macchiato" : "catppuccin-latte";
+
+      if (typeof localStorage !== "undefined") {
+        const observer = new MutationObserver(() => {
+          const changedIsDark = document.documentElement.classList.contains("dark");
+          localStorage.setItem("theme", changedIsDark ? "dark" : "light");
+        });
+        observer.observe(document.documentElement, {
+          attributeFilter: ["class"],
+          attributes: true,
+        });
+      }
+
+      document.addEventListener("astro:before-swap", (event) => {
+        const changedIsDark = getThemePreference() === "dark";
+        event.newDocument.documentElement.classList.toggle("dark", changedIsDark);
+        event.newDocument.documentElement.dataset["theme"] = changedIsDark
+          ? "catppuccin-macchiato"
+          : "catppuccin-latte";
+      });
+    </script>
+  </head>
+  <body class="text-foreground bg-catppuccin-peach">
+    <Header />
+    <div class="md:max-w-6xl grid gap-6 md:grid-cols-[16rem_1fr] mt-16 mx-auto md:w-[95%]">
+      <Sidebar />
+
+      <main class="p-4 bg-background rounded-xl">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+---
+import { MarkdownFileTree } from "./file-tree";
+
+interface Props {
+  source: string;
+}
+
+const { source } = Astro.props;
+---
+
+<MarkdownFileTree client:load source={source} />

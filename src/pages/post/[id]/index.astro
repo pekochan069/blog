@@ -1,0 +1,25 @@
+---
+import type { GetStaticPaths } from "astro";
+import { contents } from "#lib/contents";
+import BaseLayout from "#layouts/base-layout.astro";
+import { render } from "astro:content";
+import Toc from "#components/toc.astro";
+import { components } from "#components/markdown-components";
+
+export const getStaticPaths = (() =>
+  contents.map((content) => ({
+    params: { id: content.id },
+    props: { content },
+  }))) satisfies GetStaticPaths;
+
+const { content } = Astro.props;
+const { Content, headings } = await render(content);
+---
+
+<BaseLayout>
+  <div>
+    <h1>post</h1>
+    <Content components={components} />
+    <Toc headings={headings} />
+  </div></BaseLayout
+>

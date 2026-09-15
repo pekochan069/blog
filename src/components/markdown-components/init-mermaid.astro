@@ -1,0 +1,17 @@
+<script>
+  import mermaid from "mermaid";
+
+  (() => {
+    // @ts-expect-error: global mermaid
+    if (window.mermaid) {
+      return;
+    }
+
+    // @ts-expect-error: global mermaid
+    window.mermaid = mermaid;
+    // @ts-expect-error: global mermaid
+    window.mermaid.initialize({
+      theme: "default",
+    });
+  })();
+</script>
