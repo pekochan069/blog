@@ -1,5 +1,6 @@
 import { satteri } from "@astrojs/markdown-satteri";
 import mdx from "@astrojs/mdx";
+import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import expressiveCode from "astro-expressive-code";
 // @ts-expect-error: lib type error
@@ -15,7 +16,10 @@ import satteriPluginMermaid from "./satteri/satteri-plugin-mermaid";
 
 // https://astro.build/config
 export default defineConfig({
+  adapter: vercel(),
+
   integrations: [expressiveCode(ecConfig), mdx(), solidNext()],
+
   markdown: {
     processor: satteri({
       features: {
@@ -55,7 +59,9 @@ export default defineConfig({
       },
     },
   },
+
   output: "static",
+
   vite: {
     plugins: [tailwindcss()],
   },
