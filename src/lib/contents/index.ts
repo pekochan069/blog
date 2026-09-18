@@ -108,7 +108,13 @@ export function getPostsInYear(year: number) {
 
   const result = new Map<number, PostEntry[]>();
   for (const post of postsInYear) {
-    result.getOrInsert(post.data.published.getMonth(), []).push(post);
+    const month = post.data.published.getMonth();
+    const posts = result.get(month);
+    if (posts === undefined) {
+      result.set(month, [post]);
+    } else {
+      posts.push(post);
+    }
   }
 
   return result;
