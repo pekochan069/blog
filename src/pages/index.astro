@@ -1,40 +1,37 @@
 ---
-import BaseLayout from "~/layouts/base-layout.astro";
-import { Pagination } from "~/components/pagination";
-import { Badge } from "~/components/ui/badge";
-import { contents, totalPages } from "~/lib/content";
+import PostList from "#components/post-list/post-list.astro";
+import BaseLayout from "#layouts/base-layout.astro";
+import { getTotalPages, getCurrentPagePosts } from "#lib/contents";
+
+export const prerender = false;
+
+const category = Astro.url.searchParams.get("category");
+const tags = Astro.url.searchParams.getAll("tags");
+const page = Math.trunc(Number(Astro.url.searchParams.get("page") ?? "1"));
+
+const totalPages = getTotalPages(category, tags);
+
+if (page > totalPages) {
+	const url = new URL(Astro.url);
+	url.searchParams.delete("page");
+	return Astro.redirect(url);
+}
+
+const posts = getCurrentPagePosts(page, category, tags);
 ---
 
 <BaseLayout>
-  <div class="mx-auto w-full max-w-[80ch] p-4">
-    <ul class="flex flex-col gap-4">
-      {
-        contents.map((content) => (
-          <li class="rounded-md border border-accent p-4 transition-colors hover:border-foreground">
-            <a href={`/posts/${content.id}`}>
-              <div class="mb-0.5 flex gap-4">
-                <h2 class="inline-block text-xl font-semibold tracking-wide">
-                  {content.data.title}
-                </h2>
-              </div>
-              <p class="mb-2 h-5 text-sm">{content.data.category}</p>
-              <p class="mb-1 text-sm text-muted-foreground">
-                {content.data.published.toLocaleDateString()}
-              </p>
-              <ul class="flex flex-wrap gap-x-2 gap-y-0.5">
-                {content.data.tags.map((tag) => (
-                  <li>
-                    <Badge>{tag}</Badge>
-                  </li>
-                ))}
-              </ul>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-  <div class="my-4 flex justify-center">
-    <Pagination currentPage={1} totalPages={totalPages} />
-  </div>
+	<PostList
+		totalPages={totalPages}
+		currentPage={page}
+		items={posts.map((post) => ({
+			id: post.id,
+			category: post.data.category,
+			draft: post.data.draft,
+			description: post.data.description,
+			published: post.data.published,
+			tags: post.data.tags,
+			title: post.data.title,
+		}))}
+	/>
 </BaseLayout>

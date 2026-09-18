@@ -1,139 +1,169 @@
-import type { DialogRootProps } from "@kobalte/core/dialog";
-import type { Component, ComponentProps, ParentProps, VoidProps } from "solid-js";
+import type { ComponentProps, JSX } from "@solidjs/web";
+import { Command as CommandPrimitive } from "cmdk-solid";
+import { cn } from "cn";
+import { merge, omit } from "solid-js";
 
-import { splitProps } from "solid-js";
-import * as CommandPrimitive from "cmdk-solid";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "#components/ui/dialog";
+import { InputGroup, InputGroupAddon } from "#components/ui/input-group";
+import { CheckIcon } from "#icons/runeicons/normal/check";
+import { SearchIcon } from "#icons/runeicons/normal/search";
 
-import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { cn } from "~/lib/utils";
-
-const Command: Component<ParentProps<CommandPrimitive.CommandRootProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
+function Command(props: ComponentProps<typeof CommandPrimitive>) {
+  const rest = omit(props, "class");
   return (
-    <CommandPrimitive.CommandRoot
+    <CommandPrimitive
+      data-slot="command"
       class={cn(
-        "flex size-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground blur-none",
-        local.class,
+        "bg-popover text-popover-foreground flex size-full flex-col overflow-hidden rounded-xl! p-1",
+        props.class
       )}
-      {...others}
+      {...rest}
     />
   );
+}
+
+type CommandDialogProps = Omit<ComponentProps<typeof Dialog>, "children"> & {
+  title?: string;
+  description?: string;
+  class?: string;
+  showCloseButton?: boolean;
+  children: JSX.Element;
 };
 
-const CommandDialog: Component<ParentProps<DialogRootProps>> = (props) => {
-  const [local, others] = splitProps(props, ["children"]);
+function CommandDialog(props: CommandDialogProps) {
+  const merged = merge(
+    {
+      title: "Command Palette",
+      description: "Search for a command to run...",
+      showCloseButton: false,
+    } satisfies Partial<CommandDialogProps>,
+    props
+  );
+  const rest = omit(merged, "title", "description", "class", "showCloseButton", "children");
 
   return (
-    <Dialog {...others}>
-      <DialogContent class="overflow-hidden p-0">
-        <Command class="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
-          {local.children}
-        </Command>
+    <Dialog {...rest}>
+      <DialogHeader class="sr-only">
+        <DialogTitle>{merged.title}</DialogTitle>
+        <DialogDescription>{merged.description}</DialogDescription>
+      </DialogHeader>
+      <DialogContent
+        class={cn("top-1/3 translate-y-0 overflow-hidden rounded-xl! p-0", merged.class)}
+        showCloseButton={merged.showCloseButton}
+      >
+        {merged.children}
       </DialogContent>
     </Dialog>
   );
-};
+}
 
-const CommandInput: Component<VoidProps<CommandPrimitive.CommandInputProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
+function CommandInput(props: ComponentProps<typeof CommandPrimitive.Input>) {
+  const rest = omit(props, "class");
   return (
-    <div class="flex items-center border-b px-3" cmdk-input-wrapper="">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="mr-2 size-4 shrink-0 opacity-50"
-      >
-        <title>Search</title>
-        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-        <path d="M21 21l-6 -6" />
-      </svg>
-      <CommandPrimitive.CommandInput
-        class={cn(
-          "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-          local.class,
-        )}
-        {...others}
-      />
+    <div data-slot="command-input-wrapper" class="p-1 pb-0">
+      <InputGroup class="border-input/30 bg-input/30 h-8! rounded-lg! shadow-none! *:data-[slot=input-group-addon]:pl-2!">
+        <CommandPrimitive.Input
+          data-slot="command-input"
+          class={cn(
+            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+            props.class
+          )}
+          {...rest}
+        />
+        <InputGroupAddon>
+          <SearchIcon class="size-4 shrink-0 opacity-50" />
+        </InputGroupAddon>
+      </InputGroup>
     </div>
   );
-};
+}
 
-const CommandList: Component<ParentProps<CommandPrimitive.CommandListProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
+function CommandList(props: ComponentProps<typeof CommandPrimitive.List>) {
+  const rest = omit(props, "class");
   return (
-    <CommandPrimitive.CommandList
-      class={cn("max-h-[300px] overflow-x-hidden overflow-y-auto", local.class)}
-      {...others}
-    />
-  );
-};
-
-const CommandEmpty: Component<ParentProps<CommandPrimitive.CommandEmptyProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
-  return (
-    <CommandPrimitive.CommandEmpty
-      class={cn("py-6 text-center text-sm", local.class)}
-      {...others}
-    />
-  );
-};
-
-const CommandGroup: Component<ParentProps<CommandPrimitive.CommandGroupProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
-  return (
-    <CommandPrimitive.CommandGroup
+    <CommandPrimitive.List
+      data-slot="command-list"
       class={cn(
-        "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
-        local.class,
+        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        props.class
       )}
-      {...others}
+      {...rest}
     />
   );
-};
+}
 
-const CommandSeparator: Component<VoidProps<CommandPrimitive.CommandSeparatorProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
+function CommandEmpty(props: ComponentProps<typeof CommandPrimitive.Empty>) {
+  const rest = omit(props, "class");
   return (
-    <CommandPrimitive.CommandSeparator class={cn("h-px bg-border", local.class)} {...others} />
+    <CommandPrimitive.Empty
+      data-slot="command-empty"
+      class={cn("py-6 text-center text-sm", props.class)}
+      {...rest}
+    />
   );
-};
+}
 
-const CommandItem: Component<ParentProps<CommandPrimitive.CommandItemProps>> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
-
+function CommandGroup(props: ComponentProps<typeof CommandPrimitive.Group>) {
+  const rest = omit(props, "class");
   return (
-    <CommandPrimitive.CommandItem
-      cmdk-item=""
+    <CommandPrimitive.Group
+      data-slot="command-group"
       class={cn(
-        "relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
-        local.class,
+        "text-foreground **:[[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium",
+        props.class
       )}
-      {...others}
+      {...rest}
     />
   );
-};
+}
 
-const CommandShortcut: Component<ComponentProps<"span">> = (props) => {
-  const [local, others] = splitProps(props, ["class"]);
+function CommandSeparator(props: ComponentProps<typeof CommandPrimitive.Separator>) {
+  const rest = omit(props, "class");
+  return (
+    <CommandPrimitive.Separator
+      data-slot="command-separator"
+      class={cn("bg-border -mx-1 h-px", props.class)}
+      {...rest}
+    />
+  );
+}
 
+function CommandItem(props: ComponentProps<typeof CommandPrimitive.Item>) {
+  const rest = omit(props, "class", "children");
+  return (
+    <CommandPrimitive.Item
+      data-slot="command-item"
+      class={cn(
+        "group/command-item data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        props.class
+      )}
+      {...rest}
+    >
+      {props.children}
+      <CheckIcon class="ml-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100" />
+    </CommandPrimitive.Item>
+  );
+}
+
+function CommandShortcut(props: ComponentProps<"span">) {
+  const rest = omit(props, "class");
   return (
     <span
-      class={cn("ml-auto text-xs tracking-widest text-muted-foreground", local.class)}
-      {...others}
+      data-slot="command-shortcut"
+      class={cn(
+        "text-muted-foreground group-data-selected/command-item:text-foreground ml-auto text-xs tracking-widest",
+        props.class
+      )}
+      {...rest}
     />
   );
-};
+}
 
 export {
   Command,

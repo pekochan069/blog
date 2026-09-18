@@ -1,0 +1,22 @@
+---
+import type { PostListItemType } from "#lib/contents";
+import PostListItem from "./post-list-item.astro";
+import PostListPagination from "./post-list-pagination.astro";
+
+interface Props {
+  totalPages: number;
+  currentPage: number;
+  items: PostListItemType[];
+}
+
+const { totalPages, currentPage, items } = Astro.props;
+---
+
+<main class="h-full space-y-2 md:space-y-6">
+  <ul
+    class="flex flex-col border border-border shadow-sm rounded-xl overflow-hidden md:gap-6 md:border-none md:shadow-none md:rounded-none md:overflow-visible"
+  >
+    {items.map((item) => <PostListItem item={item} />)}
+  </ul>
+  <PostListPagination currentPage={currentPage} totalPages={totalPages} />
+</main>

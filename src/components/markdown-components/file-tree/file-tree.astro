@@ -1,0 +1,36 @@
+---
+import { themeToTreeStyles } from "@pierre/trees";
+
+import { codeThemes } from "#lib/code-themes";
+
+import { MarkdownFileTree } from "./file-tree";
+
+interface Props {
+  source: string;
+}
+
+const { source } = Astro.props;
+const themeCss = codeThemes
+  .map((theme) => {
+    const styles = themeToTreeStyles({
+      ...theme,
+      colors: {
+        ...theme.colors,
+        "sideBar.background": theme.colors?.["editor.background"] ?? "",
+        "sideBar.foreground": theme.colors?.["editor.foreground"] ?? "",
+      },
+    });
+    const declarations = Object.entries(styles)
+      .map(([property, value]) => {
+        const name = property.replaceAll(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`);
+        return `${name}:${value};`;
+      })
+      .join("");
+
+    return `html[data-theme="${theme.name}"] file-tree-container {${declarations}}`;
+  })
+  .join("\n");
+---
+
+<MarkdownFileTree client:load source={source} />
+<style is:global set:html={themeCss}></style>

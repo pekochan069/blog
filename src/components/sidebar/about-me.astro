@@ -1,0 +1,11 @@
+---
+import { Image } from "astro:assets";
+import AvatarImage from "#assets/images/avatar.png";
+---
+
+<section id="about-me" class="rounded-xl bg-background flex flex-col items-center p-2 border border-border shadow-sm">
+  <Image src={AvatarImage} alt="아바타" class="rounded-lg size-48 md:size-full" id="profile-avatar" />
+  <div class="mt-2">
+    <h2 class="text-xl font-bold">pekochan069</h2>
+  </div>
+</section>

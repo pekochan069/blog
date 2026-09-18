@@ -4,15 +4,11 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "baseUrl": ".",
+    "jsxImportSource": "@solidjs/web",
+    "strictNullChecks": true,
+    "allowJs": true,
     "paths": {
-      "~/*": ["./src/*"]
-    },
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ]
+      "#*": ["./src/*"]
+    }
   }
 }

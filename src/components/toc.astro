@@ -1,57 +1,60 @@
 ---
 import type { MarkdownHeading } from "astro";
+import { cn } from "cn";
 
-type Props = {
-  headings: MarkdownHeading[];
-};
+interface Props {
+	headings: MarkdownHeading[];
+}
 
 const { headings } = Astro.props;
 ---
 
-<aside
-  class="invisible top-20 hidden h-[calc(100%-5rem)] w-full max-w-60 xl:visible xl:sticky xl:block"
->
-  <div class="no-scrollbar h-full max-h-[calc(100svh-5rem)] w-full overflow-y-scroll pb-4">
-    <p class="mb-4 text-lg font-semibold">목차</p>
-    <ul>
-      {
-        headings.map((heading) => (
-          <li>
-            <a
-              id={`toc-${heading.slug}`}
-              href={`#${heading.slug}`}
-              style={`margin-left: ${heading.depth - 2}rem`}
-              class="toc-link inline-flex gap-2 text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-primary-foreground"
-            >
-              {heading.text.replace("#", "")}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-</aside>
-<script>
-  const { hash } = new URL(window.location.href);
-  document.querySelectorAll(".toc-link").forEach((link) => {
-    if (hash === link.getAttribute("href")) {
-      link.classList.remove("text-muted-foreground");
-      link.classList.add("text-foreground", "font-semibold", "underline");
-    }
+{
+	headings.length > 0 && (
+		<div class="rounded-xl bg-background flex flex-col py-2 px-3 border border-border shadow-sm">
+			<ul>
+				{headings
+					.filter((heading) => heading.depth < 5)
+					.map((heading) => (
+						<li>
+							<a
+								href={`#${heading.slug}`}
+								style={`margin-left: ${heading.depth - 2}rem`}
+								class="toc-link inline-flex gap-2 text-sm text-muted-foreground hover:text-foreground data-[current=true]:text-primary-foreground"
+								data-slug={heading.slug}
+							>
+								<span>{heading.text.slice(0, -1)}</span>
+							</a>
+						</li>
+					))}
+			</ul>
+		</div>
+	)
+}
 
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      const target = document.querySelector(link.getAttribute("href")!);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
-        window.history.pushState(null, "", link.getAttribute("href")!);
-        document.querySelectorAll(".toc-link").forEach((l) => {
-          l.classList.remove("text-foreground", "font-semibold", "underline");
-          l.classList.add("text-muted-foreground");
-        });
-        link.classList.remove("text-muted-foreground");
-        link.classList.add("text-foreground", "font-semibold", "underline");
-      }
-    });
-  });
+<script>
+	const { hash } = new URL(window.location.href);
+
+	for (const tocLink of document.querySelectorAll<HTMLAnchorElement>(".toc-link")) {
+		if (hash === tocLink.getAttribute("href")) {
+			tocLink.classList.remove("text-muted-foreground");
+			tocLink.classList.add("text-foreground", "font-semibold", "underline");
+		}
+
+		tocLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			const href = tocLink.getAttribute("href");
+			const target = href === null ? null : document.querySelector(href);
+			if (target) {
+				target.scrollIntoView({ behavior: "smooth" });
+				window.history.pushState(null, "", tocLink.getAttribute("href"));
+				for (const l of document.querySelectorAll<HTMLAnchorElement>(".toc-link")) {
+					l.classList.remove("text-foreground", "font-semibold", "underline");
+					l.classList.add("text-muted-foreground");
+				}
+				tocLink.classList.remove("text-muted-foreground");
+				tocLink.classList.add("text-foreground", "font-semibold", "underline");
+			}
+		});
+	}
 </script>

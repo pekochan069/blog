@@ -1,0 +1,24 @@
+<script>
+  import mermaid from "mermaid";
+
+  void (async () => {
+    const diagrams = document.querySelectorAll<HTMLElement>(".mermaid:not([data-processed])");
+    if (diagrams.length === 0) {
+      return;
+    }
+
+    for (const diagram of diagrams) {
+      diagram.dataset.mermaidSource = diagram.textContent ?? "";
+    }
+
+    // @ts-expect-error: mermaid
+    window.mermaid ??= mermaid;
+    // @ts-expect-error: mermaid
+    window.mermaid.initialize({
+      startOnLoad: false,
+      theme: document.documentElement.classList.contains("dark") ? "dark" : "default",
+    });
+    // @ts-expect-error: mermaid
+    await window.mermaid.run({ nodes: diagrams });
+  })();
+</script>

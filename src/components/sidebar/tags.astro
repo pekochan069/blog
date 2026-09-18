@@ -1,0 +1,28 @@
+---
+import ArrowRightIcon from "#icons/runeicons/normal/arrow-right";
+import { availableTags } from "#lib/contents";
+
+const currentTags = Astro.url.searchParams.getAll("tags");
+---
+
+<section id="years" class="rounded-xl bg-background flex flex-col items-start p-2 border border-border shadow-sm">
+  <h3 class="px-2 my-1 font-bold">태그</h3>
+  <ul class="w-full flex flex-wrap gap-1">
+    {
+      availableTags.map((tag) => {
+        const isInCurrentTags = currentTags.findIndex((t) => t === tag) !== -1;
+        return (
+          <li class="group">
+            <a
+              href={`/?tags=${encodeURIComponent(tag)}`}
+              class="rounded-lg bg-background flex items-center justify-between py-1 px-2 transition-colors duration-75 group-hover:bg-sidebar-accent group-hover:text-sidebar-accent-foreground data-[current=true]:bg-primary data-[current=true]:text-primary-foreground"
+              data-current={isInCurrentTags}
+            >
+              <span class="text-sm">#{tag}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>

@@ -1,0 +1,36 @@
+---
+import ArrowRightIcon from "#icons/runeicons/normal/arrow-right";
+import { availableYears } from "#lib/contents";
+
+const currentPath = Astro.url.pathname;
+---
+
+<section id="years" class="rounded-xl bg-background flex flex-col items-center p-2 border border-border shadow-sm">
+  <ul class="w-full">
+    {
+      availableYears.map((year) => {
+        const isCurrentPath = currentPath === `/year/${year.year}`;
+        return (
+          <li class="group w-full">
+            <a
+              href={`/year/${year.year}`}
+              class="w-full rounded-lg bg-background flex items-center justify-between p-2 transition-colors duration-75 group-hover:bg-sidebar-accent group-hover:text-sidebar-accent-foreground data-[current=true]:bg-primary data-[current=true]:text-primary-foreground"
+              data-current={isCurrentPath}
+            >
+              <span class="font-semibold">{year.year}년</span>
+              <span
+                class="relative bg-sidebar-accent text-sidebar-accent-foreground text-sm border border-border size-6 inline-flex justify-center items-center rounded-sm transition-colors duration-75 group-hover:border-none group-hover:border-transparent data-[current=true]:border-none data-[current=true]:bg-primary data-[current=true]:text-primary-foreground"
+                data-current={isCurrentPath}
+              >
+                <span class="transition-all duration-200 opacity-100 group-hover:-rotate-y-90 group-hover:-translate-x-1/2 group-hover:opacity-0">
+                  {year.posts}
+                </span>
+                <ArrowRightIcon class="absolute size-4 transition-all duration-200 translate-x-1/2 rotate-y-90 opacity-0 group-hover:rotate-y-0 group-hover:translate-x-0 group-hover:opacity-100" />
+              </span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>

@@ -1,0 +1,19 @@
+---
+import AboutMe from "./about-me.astro";
+import Categories from "./categories.astro";
+import Tags from "./tags.astro";
+import Years from "./years.astro";
+---
+
+<aside>
+  <div
+    id="sidebar-container"
+    class="space-y-2 md:sticky md:top-21 md:-m-1 md:max-h-[calc(100dvh-81px)] md:overflow-y-auto md:overscroll-y-contain md:space-y-6 md:p-1 md:pb-12 md:no-scrollbar"
+  >
+    <slot />
+    <AboutMe />
+    <Years />
+    <Categories />
+    <Tags />
+  </div>
+</aside>

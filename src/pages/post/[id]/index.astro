@@ -1,0 +1,75 @@
+---
+import type { GetStaticPaths } from "astro";
+import { contents } from "#lib/contents";
+import BaseLayout from "#layouts/base-layout.astro";
+import { render } from "astro:content";
+import { components } from "#components/markdown-components";
+import { CalendarIcon } from "#icons/runeicons/normal/calendar";
+import { LayoutGridIcon } from "#icons/runeicons/normal/layout-grid";
+import { ButtonAnchor } from "#components/ui/button";
+import Toc from "#components/toc.astro";
+import { Fa7SolidHashtag } from "#icons/fa7/solid/hashtag";
+
+export const getStaticPaths = (() =>
+  contents.map((content) => ({
+    params: { id: content.id },
+    props: { content },
+  }))) satisfies GetStaticPaths;
+
+const { content } = Astro.props;
+const { Content, headings } = await render(content);
+---
+
+<BaseLayout>
+  <Toc slot="sidebar" headings={headings} />
+  <main class="h-full rounded-xl bg-background p-6 border border-border shadow-sm">
+    <h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">{content.data.title}</h1>
+    <div class="flex flex-wrap items-center gap-4 mt-3">
+      <div class="flex items-center gap-1">
+        <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
+          <CalendarIcon class="size-4" />
+        </div>
+        <p class="text-sm px-2">{content.data.published.toISOString().slice(0, 10)}</p>
+      </div>
+      <div class="flex items-center gap-1">
+        <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
+          <LayoutGridIcon class="size-4" />
+        </div>
+        <ButtonAnchor
+          href={`/?category=${encodeURIComponent(content.data.category)}`}
+          class="relative z-10 h-7 px-2"
+          variant="ghostPrimary"
+          size="sm"
+        >
+          {content.data.category}
+        </ButtonAnchor>
+      </div>
+      {
+        content.data.tags.length > 0 && (
+          <div class="flex items-center gap-1">
+            <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
+              <Fa7SolidHashtag class="size-4" />
+            </div>
+            <ul class="flex">
+              {content.data.tags.map((tag) => (
+                <li>
+                  <ButtonAnchor
+                    href={`/?tags=${encodeURIComponent(tag)}`}
+                    class="relative z-10 h-7 px-2"
+                    variant="ghostPrimary"
+                    size="sm"
+                  >
+                    #{tag}
+                  </ButtonAnchor>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+    <div class="prose">
+      <Content components={components} />
+    </div>
+  </main>
+</BaseLayout>

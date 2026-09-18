@@ -1,17 +1,18 @@
 import { glob } from "astro/loaders";
-import { defineCollection, z } from "astro:content";
+import { z } from "astro/zod";
+import { defineCollection } from "astro:content";
 
 const postSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
   category: z.string().default(""),
+  description: z.string().optional(),
+  draft: z.coerce.boolean(),
+  published: z.coerce.date(),
   tags: z.array(z.string()).default([]),
-  published: z.date(),
-  draft: z.boolean(),
+  title: z.string(),
 });
 
 const posts = defineCollection({
-  loader: glob({ pattern: ["**/*.mdoc", "**/*.mdx"], base: "./src/content/posts" }),
+  loader: glob({ base: "./src/content/posts", pattern: "**/*.mdx" }),
   schema: postSchema,
 });
 

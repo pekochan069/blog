@@ -1,24 +1,18 @@
 ---
-import Navbar from "~/components/navbar/navbar.astro";
-
-import "overlayscrollbars/overlayscrollbars.css";
-import "~/styles/global.css";
-
-type Props = {
-  title?: string;
-};
-
-const { title = "pekochan069" } = Astro.props;
+import "#styles/app.css";
+import Header from "#components/header/header.astro";
+import Sidebar from "#components/sidebar/sidebar.astro";
+import { ScrollToTop } from "#components/scroll-to-top";
 ---
 
-<html lang="ko" data-overlayscrollbars-initialize>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <title>{title}</title>
+    <title>Astro</title>
     <script is:inline>
       const getThemePreference = () => {
         if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
@@ -27,46 +21,54 @@ const { title = "pekochan069" } = Astro.props;
         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       };
       const isDark = getThemePreference() === "dark";
-      document.documentElement.classList[isDark ? "add" : "remove"]("dark");
-      document.documentElement.dataset["theme"] = isDark
-        ? "catppuccin-macchiato"
-        : "catppuccin-latte";
+      document.documentElement.classList.toggle("dark", isDark);
+      document.documentElement.dataset["theme"] = isDark ? "catppuccin-macchiato" : "catppuccin-latte";
 
       if (typeof localStorage !== "undefined") {
         const observer = new MutationObserver(() => {
-          const isDark = document.documentElement.classList.contains("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
+          const changedIsDark = document.documentElement.classList.contains("dark");
+          localStorage.setItem("theme", changedIsDark ? "dark" : "light");
         });
         observer.observe(document.documentElement, {
-          attributes: true,
           attributeFilter: ["class"],
+          attributes: true,
         });
       }
 
       document.addEventListener("astro:before-swap", (event) => {
-        const isDark = getThemePreference() === "dark";
-        event.newDocument.documentElement.classList[isDark ? "add" : "remove"]("dark");
-        event.newDocument.documentElement.dataset["theme"] = isDark
+        const changedIsDark = getThemePreference() === "dark";
+        event.newDocument.documentElement.classList.toggle("dark", changedIsDark);
+        event.newDocument.documentElement.dataset["theme"] = changedIsDark
           ? "catppuccin-macchiato"
           : "catppuccin-latte";
       });
     </script>
   </head>
-  <body data-overlayscrollbars-initialize>
-    <div id="app" class="relative">
-      <Navbar />
-      <div class="mt-20">
+  <body class="text-foreground bg-catppuccin-base min-h-svh relative">
+    <Header />
+    <div
+      class="flex flex-col-reverse gap-2 md:max-w-6xl md:grid md:gap-6 md:grid-cols-[16rem_1fr] mt-26 mx-auto md:w-[95%]"
+    >
+      <Sidebar>
+        <slot name="sidebar" />
+      </Sidebar>
+      <div class="min-h-[calc(100svh-5rem-6.6rem-3rem)] pb-12">
         <slot />
       </div>
     </div>
+    <ScrollToTop client:load />
   </body>
 </html>
-<script>
-  import { OverlayScrollbars } from "overlayscrollbars";
 
-  OverlayScrollbars(document.body, {
-    scrollbars: {
-      autoHide: "scroll",
-    },
-  });
+<script is:inline>
+  (() => {
+    const siteHeaderContainer = document.querySelector("#site-header-container");
+
+    function updateSiteHeader() {
+      siteHeaderContainer.dataset.scrolled = String(window.scrollY > 40);
+    }
+
+    updateSiteHeader();
+    window.addEventListener("scroll", updateSiteHeader, { passive: true });
+  })();
 </script>
