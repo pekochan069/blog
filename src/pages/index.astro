@@ -1,6 +1,6 @@
 ---
 import PostList from "#components/post-list/post-list.astro";
-import BaseLayout from "#layouts/base-layout.astro";
+import MainLayout from "#layouts/main-layout.astro";
 import { getTotalPages, getCurrentPagePosts } from "#lib/contents";
 
 export const prerender = false;
@@ -12,26 +12,26 @@ const page = Math.trunc(Number(Astro.url.searchParams.get("page") ?? "1"));
 const totalPages = getTotalPages(category, tags);
 
 if (page > totalPages) {
-	const url = new URL(Astro.url);
-	url.searchParams.delete("page");
-	return Astro.redirect(url);
+  const url = new URL(Astro.url);
+  url.searchParams.delete("page");
+  return Astro.redirect(url);
 }
 
 const posts = getCurrentPagePosts(page, category, tags);
 ---
 
-<BaseLayout>
-	<PostList
-		totalPages={totalPages}
-		currentPage={page}
-		items={posts.map((post) => ({
-			id: post.id,
-			category: post.data.category,
-			draft: post.data.draft,
-			description: post.data.description,
-			published: post.data.published,
-			tags: post.data.tags,
-			title: post.data.title,
-		}))}
-	/>
-</BaseLayout>
+<MainLayout>
+  <PostList
+    totalPages={totalPages}
+    currentPage={page}
+    items={posts.map((post) => ({
+      id: post.id,
+      category: post.data.category,
+      draft: post.data.draft,
+      description: post.data.description,
+      published: post.data.published,
+      tags: post.data.tags,
+      title: post.data.title,
+    }))}
+  />
+</MainLayout>

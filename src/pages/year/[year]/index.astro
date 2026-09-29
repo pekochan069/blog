@@ -1,6 +1,6 @@
 ---
 import { availableYears, getPostsInYear } from "#lib/contents";
-import BaseLayout from "#layouts/base-layout.astro";
+import MainLayout from "#layouts/main-layout.astro";
 
 export const getStaticPaths = () =>
 	availableYears.map((year) => ({
@@ -15,7 +15,7 @@ const { year, posts } = Astro.props;
 const postsInYear = getPostsInYear(year);
 ---
 
-<BaseLayout>
+<MainLayout>
 	<main class="rounded-xl h-full px-6 py-8 bg-background border border-border shadow-sm">
 		<!-- <h2 class="text-4xl font-bold mb-4">{year}년</h2> -->
 		<div class="relative isolate flex flex-col gap-12">
@@ -55,4 +55,4 @@ const postsInYear = getPostsInYear(year);
 			}
 		</div>
 	</main>
-</BaseLayout>
+</MainLayout>

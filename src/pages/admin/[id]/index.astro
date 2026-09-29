@@ -1,0 +1,15 @@
+---
+import { EditorContainer } from "#components/admin/editor";
+import AdminLayout from "#layouts/admin-layout.astro";
+
+export const prerender = false;
+---
+
+<AdminLayout>
+  <div
+    class="flex flex-col-reverse gap-2 md:max-w-[1920px] md:grid md:gap-6 md:grid-cols-[1fr_1fr] mt-26 mx-auto md:w-[95%]"
+  >
+    <EditorContainer client:only="solid-js" />
+    <div class="bg-background h-120 w-full"></div>
+  </div>
+</AdminLayout>

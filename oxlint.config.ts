@@ -7,6 +7,7 @@ import solid from "ultracite/oxlint/solid";
 export default defineConfig({
   extends: [core, astro, solid, antiSlop],
   ignorePatterns: core.ignorePatterns,
+  jsPlugins: ["eslint-plugin-solid"],
   overrides: [
     {
       files: ["./src/components/ui/*.tsx"],
@@ -30,6 +31,10 @@ export default defineConfig({
   ],
   rules: {
     "func-style": "off",
+    "solid/jsx-no-undef": "error",
+    "solid/no-destructure": "error",
+    "solid/reactivity": "warn",
     "unicorn/custom-error-definition": "off",
   },
+  settings: { solid: { version: 2 } },
 });

@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from "astro";
 import { contents } from "#lib/contents";
-import BaseLayout from "#layouts/base-layout.astro";
+import MainLayout from "#layouts/main-layout.astro";
 import { render } from "astro:content";
 import { components } from "#components/markdown-components";
 import { CalendarIcon } from "#icons/runeicons/normal/calendar";
@@ -20,7 +20,7 @@ const { content } = Astro.props;
 const { Content, headings } = await render(content);
 ---
 
-<BaseLayout>
+<MainLayout>
   <Toc slot="sidebar" headings={headings} />
   <main class="h-full rounded-xl bg-background p-6 border border-border shadow-sm">
     <h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">{content.data.title}</h1>
@@ -72,4 +72,4 @@ const { Content, headings } = await render(content);
       <Content components={components} />
     </div>
   </main>
-</BaseLayout>
+</MainLayout>
