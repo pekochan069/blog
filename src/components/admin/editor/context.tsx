@@ -1,4 +1,7 @@
-import { createContext, createStore, useContext } from "solid-js";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { EditorView } from "@codemirror/view";
+import { basicSetup } from "codemirror";
+import { createContext, createStore, onSettled, useContext } from "solid-js";
 import type { ParentProps, StoreSetter } from "solid-js";
 
 interface EditorContextStore {
@@ -9,13 +12,13 @@ interface EditorContextStore {
   title: string;
 }
 
-const EditorContext = createContext<{
+const EditorContextContext = createContext<{
   editorContext: EditorContextStore;
   setEditorContext: StoreSetter<EditorContextStore>;
 }>();
 
 export function useEditorContext() {
-  const context = useContext(EditorContext);
+  const context = useContext(EditorContextContext);
 
   return context;
 }
@@ -30,13 +33,41 @@ export function EditorContextProvider(props: ParentProps) {
   });
 
   return (
-    <EditorContext
+    <EditorContextContext
       value={{
         editorContext,
         setEditorContext,
       }}
     >
       {props.children}
-    </EditorContext>
+    </EditorContextContext>
   );
 }
+
+export function createEditor() {}
+// const EditorContext = createContext<EditorView>();
+
+// export function useEditor() {
+//   const context = useContext(EditorContext);
+
+//   return context;
+// }
+
+// export function EditorProvider(
+//   props: ParentProps<{
+//     editorParentRef: HTMLElement;
+//   }>
+// ) {
+//   let editor: EditorView;
+
+//   onSettled(() => {
+//     editor = new EditorView({
+//       extensions: [basicSetup, markdown({ base: markdownLanguage })],
+//       parent: props.editorParentRef,
+//     });
+//   });
+
+//   return (
+//     <EditorContext value={editor}></EditorContext>
+//   )
+// }
