@@ -972,7 +972,7 @@ html {
     @apply relative max-w-[calc(100vw-2rem)]! overflow-x-auto;
   }
 
-  code {
+  :not(pre) > code {
     @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
   }
 
@@ -1054,9 +1054,34 @@ html {
   }
 }
 
+.editor-preview {
+  pre:not(.mermaid) {
+    @apply bg-catppuccin-mantle border-border my-6 max-w-full! rounded-lg border p-4;
+
+    code {
+      @apply bg-transparent p-0 font-mono text-sm;
+    }
+  }
+}
+
+.dark .editor-preview .shiki,
+.dark .editor-preview .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
 file-tree-container {
   @apply border-border my-8 overflow-hidden rounded-lg border pt-4;
 
   div[data-file-tree-search-container="true"] {
+  }
+}
+
+.cm-editor {
+  @apply border-border h-full rounded-lg border;
+
+  .cm-scroller {
+    @apply h-[90svh] overflow-auto;
+    overflow: auto;
   }
 }

@@ -1,13 +1,25 @@
 ---
 import { EditorContainer } from "#components/admin/editor";
 import AdminLayout from "#layouts/admin-layout.astro";
-import { availableCategories } from "#lib/contents";
+import { availableCategories, availableTags, getPostContents } from "#lib/contents";
 
 export const prerender = false;
+// oxlint-disable-next-line typescript/no-non-null-assertion
+const post = getPostContents(Astro.params.id!);
 ---
 
 <AdminLayout>
   <div class="">
-    <EditorContainer availableCategories={availableCategories.map((c) => c.category)} client:only="solid-js" />
+    <EditorContainer
+      availableCategories={availableCategories.map((c) => c.category)}
+      availableTags={availableTags}
+      category={post?.data.category ?? ""}
+      description={post?.data.description ?? ""}
+      draft={post?.data.draft ?? true}
+      tags={post?.data.tags ?? []}
+      title={post?.data.title ?? ""}
+      text={post?.body ?? ""}
+      client:only="solid-js"
+    />
   </div>
 </AdminLayout>

@@ -12,6 +12,7 @@ export default defineConfig({
     {
       files: ["./src/components/ui/*.tsx"],
       rules: {
+        "anti-slop/require-safety-comment-for-type-assertion": "off",
         "sort-keys": "off",
       },
     },

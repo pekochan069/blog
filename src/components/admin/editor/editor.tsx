@@ -34,6 +34,8 @@ export function Editor(props: EditorProps) {
 
         extensionsCompartment.of(props.extensions ?? []),
 
+        EditorView.lineWrapping,
+
         readOnlyCompartment.of([
           EditorState.readOnly.of(props.readOnly ?? false),
           EditorView.editable.of(!(props.readOnly ?? false)),

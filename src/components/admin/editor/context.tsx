@@ -1,8 +1,5 @@
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { EditorView } from "@codemirror/view";
-import { basicSetup } from "codemirror";
-import { createContext, createStore, onSettled, useContext } from "solid-js";
-import type { ParentProps, StoreSetter } from "solid-js";
+import { createContext, createSignal, createStore, useContext } from "solid-js";
+import type { Accessor, ParentProps, Setter, StoreSetter } from "solid-js";
 
 interface EditorContextStore {
   category: string;
@@ -15,6 +12,8 @@ interface EditorContextStore {
 const EditorContextContext = createContext<{
   editorContext: EditorContextStore;
   setEditorContext: StoreSetter<EditorContextStore>;
+  text: Accessor<string>;
+  setText: Setter<string>;
 }>();
 
 export function useEditorContext() {
@@ -23,51 +22,37 @@ export function useEditorContext() {
   return context;
 }
 
-export function EditorContextProvider(props: ParentProps) {
+export function EditorContextProvider(
+  props: ParentProps<
+    EditorContextStore & {
+      text: string;
+    }
+  >
+) {
   const [editorContext, setEditorContext] = createStore<EditorContextStore>({
-    category: "",
-    description: "",
-    draft: true,
-    tags: [],
-    title: "",
+    // oxlint-disable-next-line solid/reactivity
+    category: props.category,
+    // oxlint-disable-next-line solid/reactivity
+    description: props.description,
+    // oxlint-disable-next-line solid/reactivity
+    draft: props.draft,
+    // oxlint-disable-next-line solid/reactivity
+    tags: props.tags,
+    // oxlint-disable-next-line solid/reactivity
+    title: props.title,
   });
+  const [text, setText] = createSignal(() => props.text);
 
   return (
     <EditorContextContext
       value={{
         editorContext,
         setEditorContext,
+        setText,
+        text,
       }}
     >
       {props.children}
     </EditorContextContext>
   );
 }
-
-export function createEditor() {}
-// const EditorContext = createContext<EditorView>();
-
-// export function useEditor() {
-//   const context = useContext(EditorContext);
-
-//   return context;
-// }
-
-// export function EditorProvider(
-//   props: ParentProps<{
-//     editorParentRef: HTMLElement;
-//   }>
-// ) {
-//   let editor: EditorView;
-
-//   onSettled(() => {
-//     editor = new EditorView({
-//       extensions: [basicSetup, markdown({ base: markdownLanguage })],
-//       parent: props.editorParentRef,
-//     });
-//   });
-
-//   return (
-//     <EditorContext value={editor}></EditorContext>
-//   )
-// }
