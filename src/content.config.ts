@@ -9,6 +9,7 @@ const postSchema = z.object({
   published: z.coerce.date(),
   tags: z.array(z.string()).default([]),
   title: z.string(),
+  updated: z.coerce.date(),
 });
 
 const posts = defineCollection({

@@ -1,11 +1,10 @@
-import { z } from "astro/zod";
 import { defineAction } from "astro:actions";
 
-import { renderMarkdown } from "#lib/markdown/render-markdown";
+import { savePost, savePostParamsSchema } from "#lib/server/admin/save-post";
 
 export const server = {
-  renderMarkdown: defineAction({
-    handler: (input) => renderMarkdown(input),
-    input: z.string(),
+  savePost: defineAction({
+    handler: savePost,
+    input: savePostParamsSchema,
   }),
 };
