@@ -1,0 +1,18 @@
+---
+import BaseLayout from "./base-layout.astro";
+import "#styles/app.css";
+import Sidebar from "#components/sidebar/sidebar.astro";
+---
+
+<BaseLayout>
+  <div
+    class="flex flex-col-reverse gap-2 md:max-w-6xl md:grid md:gap-6 md:grid-cols-[16rem_1fr] mt-26 mx-auto md:w-[95%]"
+  >
+    <Sidebar>
+      <slot name="sidebar" />
+    </Sidebar>
+    <div class="min-h-[calc(100svh-5rem-6.6rem-3rem)] pb-12">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

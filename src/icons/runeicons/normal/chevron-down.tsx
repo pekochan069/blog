@@ -1,6 +1,6 @@
 import type { JSX } from "@solidjs/web";
 
-export function CheckIcon(props: JSX.IntrinsicElements["svg"]) {
+export function ChevronDownIcon(props: JSX.IntrinsicElements["svg"]) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +22,7 @@ export function CheckIcon(props: JSX.IntrinsicElements["svg"]) {
           stroke-linejoin="round"
         >
           <g class="icon-anim-container icon-anim-group">
-            <path d="M20 6L9 17L4 12" stroke="currentColor" />
+            <path d="M6 9L12 15L18 9" stroke="black" />
           </g>
         </g>
       </g>

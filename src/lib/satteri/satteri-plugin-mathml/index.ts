@@ -16,24 +16,23 @@ const errorSpan = (source: string, message: string, color: string): string =>
 export const satteriMathML = (options: SatteriMathMLOptions = {}): MdastPluginInput => {
   const { errorColor = "#b22222" } = options;
 
-  const render = (source: string, displayMode: boolean) => {
+  const render = (source: string, displayMode: boolean, sourceFormat: "markdown" | "mdx") => {
+    let value: string;
     try {
-      return {
-        mdxExpressions: false as const,
-        raw: Temml.renderToString(source, { ...options, displayMode }),
-      };
+      value = Temml.renderToString(source, { ...options, displayMode });
     } catch (error) {
-      return {
-        mdxExpressions: false as const,
-        raw: errorSpan(source, String(error), errorColor),
-      };
+      value = errorSpan(source, String(error), errorColor);
     }
+
+    return sourceFormat === "mdx"
+      ? { mdxExpressions: false as const, raw: value }
+      : { type: "html" as const, value };
   };
 
   return () =>
     defineMdastPlugin({
-      inlineMath: (node) => render(node.value, false),
-      math: (node) => render(node.value, true),
+      inlineMath: (node, context) => render(node.value, false, context.sourceFormat),
+      math: (node, context) => render(node.value, true, context.sourceFormat),
       name: "satteri-mathml",
     });
 };

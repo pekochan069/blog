@@ -47,7 +47,6 @@ function Toggle(props: ToggleProps) {
     <ToggleButtonPrimitive.Root
       data-slot="toggle"
       class={cn(toggleVariants({ variant: merged.variant, size: merged.size }), merged.class)}
-
       {...rest}
     />
   );

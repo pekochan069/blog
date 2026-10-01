@@ -34,7 +34,7 @@ function PaginationContent(props: ComponentProps<"ul">) {
   );
 }
 
-function PaginationItem({ ...props }: ComponentProps<"li">) {
+function PaginationItem(props: ComponentProps<"li">) {
   return <li data-slot="pagination-item" {...props} />;
 }
 
