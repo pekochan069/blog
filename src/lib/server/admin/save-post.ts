@@ -1,5 +1,7 @@
 import { z } from "astro/zod";
 
+import { serverEnv } from "#env";
+
 export const savePostParamsSchema = z.object({
   body: z.string(),
   category: z.string().default(""),
@@ -12,6 +14,16 @@ export const savePostParamsSchema = z.object({
 
 type SavePostParams = z.infer<typeof savePostParamsSchema>;
 
-export async function savePost(_params: SavePostParams) {
-  //
+export function savePost(_params: SavePostParams) {
+  if (!serverEnv.GITHUB_OWNER || !serverEnv.GITHUB_REPO || !serverEnv.GITHUB_TOKEN) {
+    return {
+      error: "깃허브 환경변수가 존재하지 않습니다.",
+      ok: false,
+    };
+  }
+
+  return {
+    data: true,
+    ok: true,
+  };
 }

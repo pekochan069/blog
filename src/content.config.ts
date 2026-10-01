@@ -1,8 +1,8 @@
+import { defineCollection } from "astro/content/config";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-import { defineCollection } from "astro:content";
 
-const postSchema = z.object({
+export const postSchema = z.object({
   category: z.string().default(""),
   description: z.string().optional(),
   draft: z.coerce.boolean(),

@@ -2,24 +2,25 @@
 import { EditorContainer } from "#components/admin/editor";
 import AdminLayout from "#layouts/admin-layout.astro";
 import { availableCategories, availableTags, getPostContents } from "#lib/contents";
+import { parseRawMarkdown } from "#lib/markdown/parse-raw-markdown";
+import { getPost } from "#lib/server/admin/get-post";
 
 export const prerender = false;
 // oxlint-disable-next-line typescript/no-non-null-assertion
-const post = getPostContents(Astro.params.id!);
+const rawPost = await getPost(Astro.params.id!);
+const post = parseRawMarkdown(rawPost.ok ? rawPost.data.body : undefined);
 ---
 
 <AdminLayout>
-  <div class="">
-    <EditorContainer
-      availableCategories={availableCategories.map((c) => c.category)}
-      availableTags={availableTags}
-      category={post?.data.category ?? ""}
-      description={post?.data.description ?? ""}
-      draft={post?.data.draft ?? true}
-      tags={post?.data.tags ?? []}
-      title={post?.data.title ?? ""}
-      text={post?.body ?? ""}
-      client:only="solid-js"
-    />
-  </div>
+  <EditorContainer
+    availableCategories={availableCategories.map((c) => c.category)}
+    availableTags={availableTags}
+    category={post?.frontmatter.category ?? ""}
+    description={post?.frontmatter.description ?? ""}
+    draft={post?.frontmatter.draft ?? true}
+    tags={post?.frontmatter.tags ?? []}
+    title={post?.frontmatter.title ?? ""}
+    text={post?.body ?? ""}
+    client:only="solid-js"
+  />
 </AdminLayout>
