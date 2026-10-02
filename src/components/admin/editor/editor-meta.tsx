@@ -2,11 +2,14 @@ import { CommandInput } from "cmdk-solid";
 import { createSignal, For, Show } from "solid-js";
 import type { StoreSetter } from "solid-js";
 
-import { Button } from "#components/ui/button";
+import { Badge } from "#components/ui/badge";
+import { Button, ButtonAnchor } from "#components/ui/button";
 import { Checkbox } from "#components/ui/checkbox";
 import { Command, CommandEmpty, CommandItem, CommandList } from "#components/ui/command";
 import { Input } from "#components/ui/input";
 import { Label } from "#components/ui/label";
+import { ArrowLeftIcon } from "#icons/runeicons/normal/arrow-left";
+import { XIcon } from "#icons/runeicons/normal/x";
 
 import type { EditorContextStore } from ".";
 
@@ -24,6 +27,12 @@ export function EditorMeta(props: EditorMetaProps) {
 
   return (
     <div class="bg-background border-border mx-auto mt-4 flex w-full flex-col gap-4 rounded-xl border p-4 shadow-sm md:w-[95%] md:max-w-6xl">
+      <div>
+        <ButtonAnchor href="/admin">
+          <ArrowLeftIcon />
+          <span>어드민으로 이동</span>
+        </ButtonAnchor>
+      </div>
       <div class="flex flex-col gap-1">
         <Label for="title">제목</Label>
         <Input
@@ -144,8 +153,24 @@ export function EditorMeta(props: EditorMetaProps) {
             추가
           </Button>
         </div>
-        <ul>
-          <For each={props.editorContext.tags}>{(tag) => <li>{tag}</li>}</For>
+        <ul class="flex flex-wrap gap-1">
+          <For each={props.editorContext.tags}>
+            {(tag) => (
+              <li>
+                <Badge
+                  variant="primaryButton"
+                  onClick={() =>
+                    props.setEditorContext((ctx) => {
+                      ctx.tags = ctx.tags.filter((t) => t !== tag);
+                    })
+                  }
+                >
+                  <span>{tag}</span>
+                  <XIcon />
+                </Badge>
+              </li>
+            )}
+          </For>
         </ul>
       </div>
       <div class="flex gap-2">

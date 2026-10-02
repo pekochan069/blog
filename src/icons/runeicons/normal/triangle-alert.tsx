@@ -1,7 +1,7 @@
 import type { JSX } from "@solidjs/web";
 
 /** Icon from Rune Icons by Rune Icons team - https://github.com/Runeicons/runeicons/blob/main/LICENSE */
-export function SunIcon(props: JSX.IntrinsicElements["svg"]) {
+export function TriangleAlertIcon(props: JSX.IntrinsicElements["svg"]) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +10,7 @@ export function SunIcon(props: JSX.IntrinsicElements["svg"]) {
       fill="none"
       width="100%"
       height="100%"
-      class={props.class}
+      {...props}
     >
       <rect x="0" y="0" width="24" height="24" rx="2.250" ry="2.250" fill="transparent" />
       <g transform="translate(0.75, 0.75) scale(0.9375)">
@@ -24,7 +24,7 @@ export function SunIcon(props: JSX.IntrinsicElements["svg"]) {
         >
           <g class="icon-anim-container icon-anim-group">
             <path
-              d="M12 2V4M12 20V22M4.93005 4.93018L6.34005 6.34018M17.66 17.6602L19.07 19.0702M2 12H4M20 12H22M6.34005 17.6602L4.93005 19.0702M19.07 4.93018L17.66 6.34018M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z"
+              d="M12 9V13M12 17H12.01M21.7301 18.0002L13.7301 4.00022C13.5556 3.69243 13.3027 3.43641 12.997 3.25829C12.6913 3.08017 12.3438 2.98633 11.9901 2.98633C11.6363 2.98633 11.2888 3.08017 10.9831 3.25829C10.6774 3.43641 10.4245 3.69243 10.2501 4.00022L2.25005 18.0002C2.07373 18.3056 1.98128 18.6521 1.98206 19.0047C1.98284 19.3573 2.07683 19.7035 2.2545 20.008C2.43217 20.3126 2.6872 20.5648 2.99375 20.7391C3.30029 20.9133 3.64746 21.0034 4.00005 21.0002H20.0001C20.351 20.9999 20.6956 20.9072 20.9993 20.7315C21.3031 20.5558 21.5553 20.3033 21.7306 19.9993C21.9059 19.6954 21.9981 19.3506 21.998 18.9997C21.9979 18.6488 21.9055 18.3041 21.7301 18.0002Z"
               stroke="currentColor"
             />
           </g>
