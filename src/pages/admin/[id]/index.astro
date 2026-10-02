@@ -9,10 +9,12 @@ export const prerender = false;
 // oxlint-disable-next-line typescript/no-non-null-assertion
 const rawPost = await getPost(Astro.params.id!);
 const post = parseRawMarkdown(rawPost.ok ? rawPost.data.body : undefined);
+const sha = rawPost.ok ? rawPost.data.sha : undefined;
 ---
 
 <AdminLayout>
   <EditorContainer
+    id={Astro.params.id!}
     availableCategories={availableCategories.map((c) => c.category)}
     availableTags={availableTags}
     category={post?.frontmatter.category ?? ""}
@@ -20,7 +22,9 @@ const post = parseRawMarkdown(rawPost.ok ? rawPost.data.body : undefined);
     draft={post?.frontmatter.draft ?? true}
     tags={post?.frontmatter.tags ?? []}
     title={post?.frontmatter.title ?? ""}
-    text={post?.body ?? ""}
+    body={post?.body ?? ""}
+    published={post?.frontmatter.published}
+    sha={sha}
     client:only="solid-js"
   />
 </AdminLayout>

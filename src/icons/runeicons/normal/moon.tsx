@@ -1,5 +1,6 @@
 import type { JSX } from "@solidjs/web";
 
+/** Icon from Rune Icons by Rune Icons team - https://github.com/Runeicons/runeicons/blob/main/LICENSE */
 export function MoonIcon(props: JSX.IntrinsicElements["svg"]) {
   return (
     <svg

@@ -1,5 +1,6 @@
 import type { JSX } from "@solidjs/web";
 
+/** Icon from Font Awesome Solid by Dave Gandy - https://creativecommons.org/licenses/by/4.0/ */
 export function Fa7SolidHashtag(props: JSX.IntrinsicElements["svg"]) {
   return (
     <svg

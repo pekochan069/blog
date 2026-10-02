@@ -9,3 +9,9 @@ const serverEnvSchema = z.object({
 });
 
 export const serverEnv = serverEnvSchema.parse(import.meta.env);
+
+const publicEnvSchema = z.object({
+  VITE_PUBLIC_FRONTEND_URL: z.string().default("http://localhost:4321"),
+});
+
+export const publicEnv = publicEnvSchema.parse(import.meta.env);

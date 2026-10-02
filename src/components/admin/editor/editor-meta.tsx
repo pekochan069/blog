@@ -2,12 +2,14 @@ import { CommandInput } from "cmdk-solid";
 import { createSignal, For, Show } from "solid-js";
 import type { StoreSetter } from "solid-js";
 
+import { Badge } from "#components/ui/badge";
 import { Button, ButtonAnchor } from "#components/ui/button";
 import { Checkbox } from "#components/ui/checkbox";
 import { Command, CommandEmpty, CommandItem, CommandList } from "#components/ui/command";
 import { Input } from "#components/ui/input";
 import { Label } from "#components/ui/label";
 import { ArrowLeftIcon } from "#icons/runeicons/normal/arrow-left";
+import { XIcon } from "#icons/runeicons/normal/x";
 
 import type { EditorContextStore } from ".";
 
@@ -151,8 +153,24 @@ export function EditorMeta(props: EditorMetaProps) {
             추가
           </Button>
         </div>
-        <ul>
-          <For each={props.editorContext.tags}>{(tag) => <li>{tag}</li>}</For>
+        <ul class="flex flex-wrap gap-1">
+          <For each={props.editorContext.tags}>
+            {(tag) => (
+              <li>
+                <Badge
+                  variant="primaryButton"
+                  onClick={() =>
+                    props.setEditorContext((ctx) => {
+                      ctx.tags = ctx.tags.filter((t) => t !== tag);
+                    })
+                  }
+                >
+                  <span>{tag}</span>
+                  <XIcon />
+                </Badge>
+              </li>
+            )}
+          </For>
         </ul>
       </div>
       <div class="flex gap-2">

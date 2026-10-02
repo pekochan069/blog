@@ -1,3 +1,4 @@
+/** Icon from SVG Logos by Gil Barbara - https://raw.githubusercontent.com/gilbarbara/logos/master/LICENSE.txt */
 export function GithubIconIcon(props: { class?: string }) {
   return (
     <svg

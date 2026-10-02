@@ -17,7 +17,7 @@ export function EditorPreview(props: { text: string }) {
 
   return (
     <Loading fallback={<div>Loading</div>}>
-      <div class="prose editor-preview min-w-0" innerHTML={renderedHtml().html}></div>
+      <div class="prose editor-preview min-w-0 overflow-auto" innerHTML={renderedHtml().html}></div>
     </Loading>
   );
 }

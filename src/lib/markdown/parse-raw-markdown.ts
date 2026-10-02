@@ -1,6 +1,6 @@
 import { parseFrontmatter } from "astro/markdown";
 
-import { postSchema } from "../../content.config";
+import { frontmatterSchema } from "../../content.config";
 
 export function parseRawMarkdown(body: string | undefined) {
   if (!body) {
@@ -8,5 +8,5 @@ export function parseRawMarkdown(body: string | undefined) {
   }
 
   const { frontmatter, content } = parseFrontmatter(body);
-  return { body: content, frontmatter: postSchema.parse(frontmatter) };
+  return { body: content, frontmatter: frontmatterSchema.parse(frontmatter) };
 }
