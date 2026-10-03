@@ -1,0 +1,32 @@
+---
+import { Button } from "#components/ui/button";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "#components/ui/field";
+import { Input } from "#components/ui/input";
+import AdminLayout from "#layouts/admin-layout.astro";
+
+export const prerender = false;
+---
+
+<AdminLayout>
+	<div>
+		<form>
+			<FieldGroup>
+				<FieldSet>
+					<FieldGroup>
+						<Field>
+							<FieldLabel for="admin-id">ID</FieldLabel>
+							<Input id="admin-id" />
+						</Field>
+						<Field>
+							<FieldLabel for="admin-password">패스워드</FieldLabel>
+							<Input id="admin-password" type="password" />
+						</Field>
+					</FieldGroup>
+				</FieldSet>
+				<Field>
+					<Button id="login">로그인</Button>
+				</Field>
+			</FieldGroup>
+		</form>
+	</div>
+</AdminLayout>

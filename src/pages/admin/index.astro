@@ -4,6 +4,8 @@ import { EditorContainer } from "#components/admin/editor";
 import AdminLayout from "#layouts/admin-layout.astro";
 import { GetPostList } from "#lib/server/admin/get-post-list";
 
+export const prerender = false;
+
 const posts = await GetPostList();
 ---
 
