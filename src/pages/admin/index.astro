@@ -1,12 +1,17 @@
 ---
 import { CreateNewPost } from "#components/admin/create-new-post";
-import { EditorContainer } from "#components/admin/editor";
 import AdminLayout from "#layouts/admin-layout.astro";
-import { GetPostList } from "#lib/server/admin/get-post-list";
+import { getPostList } from "#lib/server/admin/get-post-list";
+import { authCookieName, isLoggedIn } from "#lib/server/auth/is-logged-in";
 
 export const prerender = false;
 
-const posts = await GetPostList();
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!isLoggedIn(Astro.cookies.get(authCookieName)?.value)) {
+  return Astro.redirect("/admin/login", 303);
+}
+
+const posts = await getPostList();
 ---
 
 <AdminLayout>
@@ -23,14 +28,19 @@ const posts = await GetPostList();
         <div>
           <ul class="flex flex-col gap-2">
             {posts.data.map((post) => {
-              const id = post.name.split(".").slice(0, -1).join(".");
               return (
                 <li class="group w-full">
                   <a
-                    href={`/admin/${encodeURIComponent(id)}`}
-                    class="w-full rounded-lg bg-background flex items-center justify-between p-2 transition-colors duration-75 group-hover:bg-sidebar-accent group-hover:text-sidebar-accent-foreground data-[current=true]:bg-primary data-[current=true]:text-primary-foreground"
+                    href={`/admin/${encodeURIComponent(post.name)}`}
+                    class="w-full rounded-lg bg-background flex flex-col items-start justify-between p-2 transition-colors duration-75 group-hover:bg-sidebar-accent group-hover:text-sidebar-accent-foreground data-[current=true]:bg-primary data-[current=true]:text-primary-foreground"
                   >
-                    <span class="font-medium">{id}</span>
+                    <h2 class="font-semibold">{post.name}</h2>
+                    {post.frontmatter && (
+                      <div>
+                        <p class="text-sm">{post.frontmatter.category}</p>
+                        <p class="text-sm">{post.frontmatter.published.toISOString()}</p>
+                      </div>
+                    )}
                   </a>
                 </li>
               );

@@ -20,9 +20,7 @@ function DropdownMenuTrigger(props: DropdownMenuPrimitive.DropdownMenuTriggerPro
 }
 
 function DropdownMenuContent(
-  props: DropdownMenuPrimitive.DropdownMenuContentProps & {
-    class?: string;
-  }
+  props: PolymorphicProps<"div", DropdownMenuPrimitive.DropdownMenuContentProps<"div">>
 ) {
   const rest = omit(props, "class");
 

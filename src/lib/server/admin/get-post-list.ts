@@ -1,8 +1,10 @@
 import { z } from "astro/zod";
 
 import { postsDirectory } from "#constants";
+import type { Frontmatter } from "#content.config";
 import { serverEnv } from "#env";
-import { createBearerToken } from "#lib/auth/bearer-token";
+import { contents as localContents } from "#lib/contents";
+import { createBearerToken } from "#lib/server/auth/bearer-token";
 import { apiError, apiSuccess } from "#lib/server/response";
 
 const postListItemSchema = z.object({
@@ -19,14 +21,18 @@ const postListItemSchema = z.object({
 
 type PostListItem = z.infer<typeof postListItemSchema>;
 
-export async function GetPostList(): Promise<
+type PostWithFrontmatter = PostListItem & {
+  frontmatter: Frontmatter | undefined;
+};
+
+export async function getPostList(): Promise<
   | {
       error: string;
       ok: false;
       data?: never;
     }
   | {
-      data: PostListItem[];
+      data: PostWithFrontmatter[];
       ok: true;
       error?: never;
     }
@@ -84,5 +90,33 @@ export async function GetPostList(): Promise<
     return apiError("스키마 변환 실패", error, data);
   }
 
-  return apiSuccess(parsedData);
+  const postsWithMetadata: PostWithFrontmatter[] = [];
+  for (const post of parsedData) {
+    const postWithMetadata: PostWithFrontmatter = {
+      frontmatter: undefined,
+      name: post.name.slice(0, -4),
+      sha: post.sha,
+    };
+    for (const localContent of localContents) {
+      if (postWithMetadata.name === localContent.id) {
+        postWithMetadata.frontmatter = localContent.data;
+        break;
+      }
+    }
+    postsWithMetadata.push(postWithMetadata);
+  }
+
+  return apiSuccess(
+    postsWithMetadata.toSorted((a, b) => {
+      if (a.frontmatter === undefined && b.frontmatter === undefined) {
+        return -1;
+      }
+      if (a.frontmatter === undefined) {
+        return 1;
+      } else if (b.frontmatter === undefined) {
+        return -1;
+      }
+      return b.frontmatter.published.getTime() - a.frontmatter.published.getTime();
+    })
+  );
 }

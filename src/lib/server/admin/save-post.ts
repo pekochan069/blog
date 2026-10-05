@@ -1,8 +1,8 @@
 import { postsDirectory } from "#constants";
 import { serverEnv } from "#env";
-import { createBearerToken } from "#lib/auth/bearer-token";
 import { buildRawMarkdown } from "#lib/markdown/build-raw-markdown";
 import type { BuildRawMarkdownParams } from "#lib/markdown/build-raw-markdown";
+import { createBearerToken } from "#lib/server/auth/bearer-token";
 
 import { apiError, apiSuccess } from "../response";
 
