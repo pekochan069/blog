@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 const serverEnvSchema = z.object({
+  ADMIN_AUTH_SECRET: z.string().optional(),
+  ADMIN_ID: z.string().optional(),
+  ADMIN_PASSWORD: z.string().optional(),
   ENV_TYPE: z.enum(["dev", "build", "vercel"]).default("dev"),
   GITHUB_OWNER: z.string().optional(),
   GITHUB_REPO: z.string().optional(),

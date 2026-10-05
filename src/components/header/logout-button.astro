@@ -1,0 +1,21 @@
+---
+import { Button, ButtonAnchor } from "#components/ui/button";
+import { LogOutIcon } from "#icons/runeicons/normal/log-out";
+import { authCookieName, isLoggedIn } from "#lib/server/auth/is-logged-in";
+
+Astro.response.headers.set("Cache-Control", "private, no-store");
+const loggedIn = isLoggedIn(Astro.cookies.get(authCookieName)?.value);
+---
+
+{
+  loggedIn && (
+    <form method="post" action="/admin/logout">
+      <Button type="submit" variant="ghost">
+        로그아웃
+      </Button>
+    </form>
+    <ButtonAnchor href="/admin" variant="ghost">
+      어드민
+    </ButtonAnchor>
+  )
+}

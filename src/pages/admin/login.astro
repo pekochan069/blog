@@ -1,0 +1,75 @@
+---
+import { z } from "astro/zod";
+
+import { Button } from "#components/ui/button";
+import { Field, FieldGroup, FieldLabel, FieldSet } from "#components/ui/field";
+import { Input } from "#components/ui/input";
+import BaseLayout from "#layouts/base-layout.astro";
+import { authCookieName, authCookieOptions, isLoggedIn } from "#lib/server/auth/is-logged-in";
+import { login } from "#lib/server/auth/login";
+
+export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", "no-store");
+if (isLoggedIn(Astro.cookies.get(authCookieName)?.value)) {
+  return Astro.redirect("/admin", 303);
+}
+
+let error = "";
+if (Astro.request.method === "POST") {
+  if (Astro.request.headers.get("Origin") !== Astro.url.origin) {
+    return new Response("Forbidden", { status: 403 });
+  }
+  const form = await Astro.request.formData().catch(() => null);
+  const credentials = z
+    .object({
+      id: z.string().min(3).max(256),
+      password: z.string().min(12).max(1024),
+    })
+    .safeParse({ id: form?.get("id"), password: form?.get("password") });
+  const result = credentials.success
+    ? login(credentials.data.id, credentials.data.password)
+    : { error: "올바르지 않은 계정입니다", ok: false as const };
+  if (result.ok) {
+    Astro.cookies.set(authCookieName, result.data, authCookieOptions);
+    return Astro.redirect("/admin", 303);
+  }
+  Astro.response.status = 401;
+  ({ error } = result);
+}
+---
+
+<BaseLayout>
+  <div
+    class="md:max-w-6xl mt-26 mx-auto md:w-[95%] rounded-xl bg-background flex flex-col p-2 border border-border shadow-sm"
+  >
+    <form method="post" action="/admin/login">
+      {error && <p role="alert">{error}</p>}
+      <FieldGroup>
+        <FieldSet>
+          <FieldGroup>
+            <Field>
+              <FieldLabel for="admin-id">ID</FieldLabel>
+              <Input id="admin-id" name="id" autocomplete="username" minlength={3} maxlength={256} required />
+            </Field>
+            <Field>
+              <FieldLabel for="admin-password">패스워드</FieldLabel>
+              <Input
+                id="admin-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                minlength={12}
+                maxlength={1024}
+                required
+              />
+            </Field>
+          </FieldGroup>
+        </FieldSet>
+        <Field>
+          <Button id="login" type="submit">로그인</Button>
+        </Field>
+      </FieldGroup>
+    </form>
+  </div>
+</BaseLayout>

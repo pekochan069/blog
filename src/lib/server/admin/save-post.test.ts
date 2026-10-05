@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { serverEnv } from "#env";
+
 const params = {
   body: "Post body",
   frontmatter: {
@@ -20,10 +22,9 @@ test("savePost sends SHA for updates, omits it for creation, and reports failure
     GITHUB_OWNER: "test-owner",
     GITHUB_REPO: "test-repo",
     GITHUB_TOKEN: "test-token",
-    NODE_ENV: "development",
   };
-  const previousEnv = Object.fromEntries(Object.keys(env).map((key) => [key, process.env[key]]));
-  Object.assign(process.env, env);
+  const previousEnv = { ...serverEnv };
+  Object.assign(serverEnv, env);
 
   let response: Response | Error = Response.json({ commit: { sha: "new-sha" } });
   const bodies: string[] = [];
@@ -75,12 +76,6 @@ test("savePost sends SHA for updates, omits it for creation, and reports failure
     const invalidJson = await savePost(params);
     assert.equal(invalidJson.ok, false);
   } finally {
-    for (const [key, value] of Object.entries(previousEnv)) {
-      if (value === undefined) {
-        Reflect.deleteProperty(process.env, key);
-      } else {
-        process.env[key] = value;
-      }
-    }
+    Object.assign(serverEnv, previousEnv);
   }
 });

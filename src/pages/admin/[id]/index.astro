@@ -4,8 +4,15 @@ import AdminLayout from "#layouts/admin-layout.astro";
 import { availableCategories, availableTags, getPostContents } from "#lib/contents";
 import { parseRawMarkdown } from "#lib/markdown/parse-raw-markdown";
 import { getPost } from "#lib/server/admin/get-post";
+import { authCookieName, isLoggedIn } from "#lib/server/auth/is-logged-in";
 
 export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!isLoggedIn(Astro.cookies.get(authCookieName)?.value)) {
+  return Astro.redirect("/admin/login", 303);
+}
+
 // oxlint-disable-next-line typescript/no-non-null-assertion
 const rawPost = await getPost(Astro.params.id!);
 const post = parseRawMarkdown(rawPost.ok ? rawPost.data.body : undefined);
