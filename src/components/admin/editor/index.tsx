@@ -145,7 +145,7 @@ export function EditorContainer(props: EditorContainerProps) {
         throw new Error(result.error);
       }
 
-      globalThis.window.location.href = `${publicEnv.VITE_PUBLIC_FRONTEND_URL}/admin`;
+      globalThis.window.location.href = `${publicEnv.PUBLIC_FRONTEND_URL}/admin`;
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error));
     } finally {
