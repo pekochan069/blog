@@ -14,7 +14,11 @@ const { id, category, draft, description, published, tags, title } = item;
 const currentPath = Astro.url.pathname;
 ---
 
-<li>
+<li
+  style={{
+    viewTransitionName: `post-item-${id}`,
+  }}
+>
   <div
     class="group relative flex items-center justify-between p-4 md:rounded-xl bg-background overflow-hidden transition-all duration-100 border-b md:border border-border md:shadow-sm md:hover:ring-2 md:hover:ring-primary"
   >
@@ -23,22 +27,49 @@ const currentPath = Astro.url.pathname;
         class="text-2xl font-semibold"
         style={{
           viewTransitionName: `post-title-${id}`,
+          viewTransitionClass: "post-title",
         }}
       >
         <a
-          class="hover:text-primary md:hover:text-foreground md:after:absolute md:after:inset-0 md:after:z-0"
+          class="hover:text-primary md:hover:text-foreground md:after:absolute md:after:inset-0 md:after:z-2 md:after:opacity-0"
           href={`/post/${id}`}>{title}</a
         >
       </h2>
-      {description !== undefined && description !== "" && <p class="text-sm mt-1">{description}</p>}
+      {
+        description !== undefined && description !== "" && (
+          <p
+            class="text-sm mt-1"
+            style={{
+              viewTransitionName: `post-description-${id}`,
+              viewTransitionClass: "post-meta",
+            }}
+          >
+            <a class="block" href={`/post/${id}`}>
+              {description}
+            </a>
+          </p>
+        )
+      }
       <div class="flex flex-wrap items-center gap-4 mt-3">
-        <div class="flex items-center gap-1">
+        <div
+          class="flex items-center gap-1"
+          style={{
+            viewTransitionName: `post-published-${id}`,
+            viewTransitionClass: "post-meta",
+          }}
+        >
           <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
             <CalendarIcon class="size-4" />
           </div>
           <p class="text-sm px-2">{published.toISOString().slice(0, 10)}</p>
         </div>
-        <div class="flex items-center gap-1">
+        <div
+          class="flex items-center gap-1"
+          style={{
+            viewTransitionName: `post-category-${id}`,
+            viewTransitionClass: "post-meta",
+          }}
+        >
           <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
             <LayoutGridIcon class="size-4" />
           </div>
@@ -53,7 +84,13 @@ const currentPath = Astro.url.pathname;
         </div>
         {
           tags.length > 0 && (
-            <div class="flex items-center gap-1">
+            <div
+              class="flex items-center gap-1"
+              style={{
+                viewTransitionName: `post-tags-${id}`,
+                viewTransitionClass: "post-meta",
+              }}
+            >
               <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
                 <Fa7SolidHashtag class="size-4" />
               </div>

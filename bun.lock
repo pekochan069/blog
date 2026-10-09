@@ -17,6 +17,7 @@
         "@pierre/trees": "^1.0.0-beta.6",
         "@shikijs/themes": "^4.4.3",
         "@solid-primitives/scheduled": "^2.0.0-next.2",
+        "@solid-primitives/spring": "^1.0.0-next.3",
         "@solidjs/web": "^2.0.0-rc.11",
         "@tailwindcss/vite": "^4.3.3",
         "astro": "^7.3.5",
@@ -565,6 +566,8 @@
     "@solid-primitives/scheduled": ["@solid-primitives/scheduled@2.0.0-next.2", "", { "peerDependencies": { "@solidjs/web": "^2.0.0-rc.0", "solid-js": "^2.0.0-rc.0" } }, "sha512-vf1yRmo9gAIl/FirPlb3uE3MKtfJ/yY5MjE29PLk/hpdfcqI0n2EZVKAXyBepsW2qxBsIBKjug1eczLYaydNrw=="],
 
     "@solid-primitives/scroll": ["@solid-primitives/scroll@3.0.0-next.4", "", { "dependencies": { "@solid-primitives/event-listener": "^3.0.0-next.3", "@solid-primitives/rootless": "^2.0.0-next.2", "@solid-primitives/static-store": "^1.0.0-next.2", "@solid-primitives/utils": "^7.0.0-next.4" }, "peerDependencies": { "@solidjs/web": "^2.0.0-rc.0", "solid-js": "^2.0.0-rc.0" } }, "sha512-6Zod2Q2YPnkZhijVMSOhU2e1ip5hzOSQNhZIaKh7Kx7HcocYrzhn1NqYJlaUr464o1hFZweEQVkhALi9EHvt/Q=="],
+
+    "@solid-primitives/spring": ["@solid-primitives/spring@1.0.0-next.3", "", { "peerDependencies": { "@solid-primitives/utils": "^7.0.0-next.4", "@solidjs/web": "^2.0.0-rc.0", "solid-js": "^2.0.0-rc.0" } }, "sha512-CiEgYEu4kyPitDOkLGUd/yTi3wRFguiNIu2ctcuX7mMkCr/4tp3sqLUmIzcDzxK4UaSiJst0pzyo0Seq6R6qdQ=="],
 
     "@solid-primitives/static-store": ["@solid-primitives/static-store@1.0.0-next.2", "", { "dependencies": { "@solid-primitives/utils": "^7.0.0-next.4" }, "peerDependencies": { "@solidjs/web": "^2.0.0-rc.0", "solid-js": "^2.0.0-rc.0" } }, "sha512-cyMzFe39VMVF9zVYgZEck1TESbIB4Tnpp00vNQlaOYuhOr4nstRBSS3zsBqZMuF+a5qWlKqS0RHO48FwLScX9w=="],
 

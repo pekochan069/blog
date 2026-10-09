@@ -1086,3 +1086,35 @@ file-tree-container {
 #sidebar-tags {
   view-transition-name: sidebar-tags;
 }
+
+::view-transition-group(*.post-title),
+::view-transition-group(*.post-meta) {
+  z-index: 1;
+}
+
+::view-transition-group(*) {
+  animation-duration: 300ms;
+  animation-timing-function: linear(
+    0,
+    0.0617,
+    0.1918,
+    0.3384,
+    0.4765,
+    0.5958,
+    0.6937,
+    0.7713,
+    0.8313,
+    0.877,
+    0.9112,
+    0.9365,
+    0.9552,
+    0.9687,
+    0.9785,
+    0.9856,
+    0.9907,
+    0.9943,
+    0.9969,
+    0.9987,
+    1
+  );
+}

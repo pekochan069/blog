@@ -18,7 +18,7 @@ export function ScrollToTop() {
   return (
     <Button
       id="scroll-to-top"
-      class="ease-out-circ data-[show=true]:ease-spring fixed right-8 bottom-8 size-12 translate-y-20 transition-transform duration-200 data-[show=true]:translate-y-0 data-[show=true]:duration-300 motion-reduce:transition-none"
+      class="ease-out-circ data-[show=true]:ease-spring fixed right-8 bottom-8 size-12 translate-y-20 transition-transform duration-180 data-[show=true]:translate-y-0 data-[show=true]:duration-300 motion-reduce:transition-none"
       variant="primary"
       onClick={() => {
         globalThis.window.scrollTo(0, 0);
