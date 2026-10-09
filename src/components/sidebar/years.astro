@@ -5,7 +5,10 @@ import { availableYears } from "#lib/contents";
 const currentPath = Astro.url.pathname;
 ---
 
-<section id="years" class="rounded-xl bg-background flex flex-col items-center p-2 border border-border shadow-sm">
+<section
+  id="sidebar-years"
+  class="rounded-xl bg-background flex flex-col items-center p-2 border border-border shadow-sm"
+>
   <ul class="w-full">
     {
       availableYears.map((year) => {

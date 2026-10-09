@@ -19,7 +19,12 @@ const currentPath = Astro.url.pathname;
     class="group relative flex items-center justify-between p-4 md:rounded-xl bg-background overflow-hidden transition-all duration-100 border-b md:border border-border md:shadow-sm md:hover:ring-2 md:hover:ring-primary"
   >
     <div>
-      <h2 class="text-2xl font-semibold">
+      <h2
+        class="text-2xl font-semibold"
+        style={{
+          viewTransitionName: `post-title-${id}`,
+        }}
+      >
         <a
           class="hover:text-primary md:hover:text-foreground md:after:absolute md:after:inset-0 md:after:z-0"
           href={`/post/${id}`}>{title}</a

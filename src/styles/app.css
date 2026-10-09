@@ -3,29 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* @view-transition {
-  navigation: auto;
-}
-
-#site-header-container {
-  view-transition-name: site-header;
-}
-
-#profile-avatar {
-  view-transition-name: profile-avatar;
-}
-
-::view-transition-old(site-header),
-::view-transition-old(profile-avatar) {
-  animation: none;
-  opacity: 0;
-}
-
-::view-transition-new(site-header),
-::view-transition-new(profile-avatar) {
-  animation: none;
-} */
-
 html {
   scroll-behavior: smooth;
 }
@@ -1084,4 +1061,28 @@ file-tree-container {
     @apply h-[90svh] overflow-auto;
     overflow: auto;
   }
+}
+
+#site-header-container {
+  view-transition-name: site-header;
+}
+
+#sidebar-about-me {
+  view-transition-name: sidebar-about-me;
+}
+
+#sidebar-profile-avatar {
+  view-transition-name: sidebar-profile-avatar;
+}
+
+#sidebar-years {
+  view-transition-name: sidebar-years;
+}
+
+#sidebar-categories {
+  view-transition-name: sidebar-categories;
+}
+
+#sidebar-tags {
+  view-transition-name: sidebar-tags;
 }

@@ -8,6 +8,13 @@ import { ScrollToTop } from "#components/scroll-to-top";
 
 <html lang="en">
   <head>
+    <style is:inline>
+      @media (prefers-reduced-motion: no-preference) {
+        @view-transition {
+          navigation: auto;
+        }
+      }
+    </style>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />

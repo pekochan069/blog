@@ -23,7 +23,12 @@ const { Content, headings } = await render(content);
 <MainLayout>
   <Toc slot="sidebar" headings={headings} />
   <main class="h-full rounded-xl bg-background p-6 border border-border shadow-sm">
-    <h1 class="text-4xl font-extrabold tracking-tight lg:text-5xl">{content.data.title}</h1>
+    <h1
+      class="text-4xl font-extrabold tracking-tight lg:text-5xl"
+      style={{ viewTransitionName: `post-title-${content.id}` }}
+    >
+      {content.data.title}
+    </h1>
     <div class="flex flex-wrap items-center gap-4 mt-3">
       <div class="flex items-center gap-1">
         <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
