@@ -66,6 +66,7 @@ export function EditorMeta(props: EditorMetaProps) {
           }}
           onFocusOut={(event) => {
             const nextTarget = event.relatedTarget;
+
             if (!(nextTarget instanceof Node && event.currentTarget.contains(nextTarget))) {
               setOpenCategoryList(false);
             }
@@ -83,7 +84,7 @@ export function EditorMeta(props: EditorMetaProps) {
           />
           <Show when={openCategoryList()}>
             <CommandList class="bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-10 z-10 mt-1 w-full rounded-md border shadow-md">
-              <CommandEmpty class="py-2"></CommandEmpty>
+              <CommandEmpty class="py-2" />
               <For each={props.availableCategories}>
                 {(category) => (
                   <CommandItem
@@ -113,6 +114,7 @@ export function EditorMeta(props: EditorMetaProps) {
             }}
             onFocusOut={(event) => {
               const nextTarget = event.relatedTarget;
+
               if (!(nextTarget instanceof Node && event.currentTarget.contains(nextTarget))) {
                 setOpenTagsList(false);
               }
@@ -126,7 +128,7 @@ export function EditorMeta(props: EditorMetaProps) {
             />
             <Show when={openTagsList()}>
               <CommandList class="bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-10 z-10 mt-1 w-full rounded-md border shadow-md">
-                <CommandEmpty class="py-2"></CommandEmpty>
+                <CommandEmpty class="py-2" />
                 <For each={props.availableTags}>
                   {(tag) => (
                     <CommandItem

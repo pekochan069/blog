@@ -7,7 +7,7 @@ import type {
   FileTreeSsrPayload,
 } from "@pierre/trees";
 import type { JSX } from "@solidjs/web";
-import { Dynamic, isServer } from "@solidjs/web";
+import { dynamic, isServer } from "@solidjs/web";
 import { createEffect, createMemo, createSignal, omit, Show, untrack } from "solid-js";
 import type { Element } from "solid-js";
 
@@ -104,9 +104,11 @@ export function FileTree(props: FileTreeProps) {
   let host: HTMLElement | undefined;
   let baselineModel: FileTreeModel | undefined;
   let baselineComposition: FileTreeCompositionOptions | undefined;
+
   const [activeContextMenu, setActiveContextMenu] = createSignal<ActiveContextMenuState | null>(
     null
   );
+
   const hostProps = omit(
     props,
     "header",
@@ -130,8 +132,10 @@ export function FileTree(props: FileTreeProps) {
   });
 
   const closeContextMenu = () => setActiveContextMenu(null);
+
   const openContextMenu = (item: ContextMenuItem, context: ContextMenuOpenContext) =>
     setActiveContextMenu({ context, item });
+
   const composition = createMemo(() => {
     const current = attachment();
 
@@ -180,9 +184,10 @@ export function FileTree(props: FileTreeProps) {
     }
   );
 
+  const Container = dynamic(() => "file-tree-container");
+
   return (
-    <Dynamic
-      component="file-tree-container"
+    <Container
       {...hostProps}
       id={props.id ?? props.preloadedData?.id}
       ref={(element) => {
@@ -191,6 +196,7 @@ export function FileTree(props: FileTreeProps) {
       style={resolveHostStyle(props.model, props.style)}
     >
       {isServer && props.preloadedData !== undefined ? (
+        // oxlint-disable-next-line solid/no-innerhtml -- @pierre/trees SSR output must retain its declarative shadow DOM markup.
         <template innerHTML={props.preloadedData.shadowHtml} shadowrootmode="open" />
       ) : null}
       <Show when={props.header !== undefined && props.header !== null}>
@@ -203,7 +209,7 @@ export function FileTree(props: FileTreeProps) {
           </div>
         )}
       </Show>
-    </Dynamic>
+    </Container>
   );
 }
 

@@ -43,12 +43,15 @@ export async function getPostList(): Promise<
 
   if (owner === undefined || repo === undefined || token === undefined) {
     const missingEnvs = [];
+
     if (!owner) {
       missingEnvs.push("owner");
     }
+
     if (!repo) {
       missingEnvs.push("repo");
     }
+
     if (!token) {
       missingEnvs.push("token");
     }
@@ -60,6 +63,7 @@ export async function getPostList(): Promise<
   }
 
   let result: Response;
+
   try {
     result = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${postsDirectory}`,
@@ -77,6 +81,7 @@ export async function getPostList(): Promise<
   }
 
   let data: unknown;
+
   try {
     data = await result.json();
   } catch (error) {
@@ -84,6 +89,7 @@ export async function getPostList(): Promise<
   }
 
   let parsedData: PostListItem[];
+
   try {
     parsedData = await z.array(postListItemSchema).parseAsync(data);
   } catch (error) {
@@ -91,18 +97,21 @@ export async function getPostList(): Promise<
   }
 
   const postsWithMetadata: PostWithFrontmatter[] = [];
+
   for (const post of parsedData) {
     const postWithMetadata: PostWithFrontmatter = {
       frontmatter: undefined,
       name: post.name.slice(0, -4),
       sha: post.sha,
     };
+
     for (const localContent of localContents) {
       if (postWithMetadata.name === localContent.id) {
         postWithMetadata.frontmatter = localContent.data;
         break;
       }
     }
+
     postsWithMetadata.push(postWithMetadata);
   }
 
@@ -111,11 +120,13 @@ export async function getPostList(): Promise<
       if (a.frontmatter === undefined && b.frontmatter === undefined) {
         return -1;
       }
+
       if (a.frontmatter === undefined) {
         return 1;
       } else if (b.frontmatter === undefined) {
         return -1;
       }
+
       return b.frontmatter.published.getTime() - a.frontmatter.published.getTime();
     })
   );

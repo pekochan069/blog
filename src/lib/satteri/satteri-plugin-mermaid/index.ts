@@ -12,12 +12,14 @@ export const satteriMermaid = (): HastPluginInput => () =>
         const contentChildren = node.children.filter(
           (child) => child.type !== "text" || nonWhitespacePattern.test(child.value)
         );
+
         if (contentChildren.length !== 1) {
           return;
         }
 
         // oxlint-disable-next-line prefer-destructuring
         const code = contentChildren[0];
+
         if (
           node.properties.dataLanguage !== "mermaid" ||
           code?.type !== "element" ||

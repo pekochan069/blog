@@ -1,11 +1,10 @@
+import solidv2 from "eslint-plugin-solid/configs/v2-strict";
 import { defineConfig } from "oxlint";
 import antiSlop from "ultracite/oxlint/anti-slop";
-import astro from "ultracite/oxlint/astro";
 import core from "ultracite/oxlint/core";
-import solid from "ultracite/oxlint/solid";
 
 export default defineConfig({
-  extends: [core, astro, solid, antiSlop],
+  extends: [core, antiSlop],
   ignorePatterns: core.ignorePatterns,
   jsPlugins: ["eslint-plugin-solid"],
   overrides: [
@@ -31,10 +30,12 @@ export default defineConfig({
     },
   ],
   rules: {
+    ...solidv2.rules,
     "func-style": "off",
     "solid/jsx-no-undef": "error",
     "solid/no-destructure": "error",
     "solid/reactivity": "warn",
+    "typescript/no-deprecated": "error",
     "unicorn/custom-error-definition": "off",
   },
   settings: { solid: { version: 2 } },

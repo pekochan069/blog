@@ -18,6 +18,7 @@ export const satteriMathML = (options: SatteriMathMLOptions = {}): MdastPluginIn
 
   const render = (source: string, displayMode: boolean, sourceFormat: "markdown" | "mdx") => {
     let value: string;
+
     try {
       value = Temml.renderToString(source, { ...options, displayMode });
     } catch (error) {

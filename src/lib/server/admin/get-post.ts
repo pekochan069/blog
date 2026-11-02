@@ -21,12 +21,15 @@ export async function getPost(id: string) {
 
   if (owner === undefined || repo === undefined || token === undefined) {
     const missingEnvs = [];
+
     if (!owner) {
       missingEnvs.push("owner");
     }
+
     if (!repo) {
       missingEnvs.push("repo");
     }
+
     if (!token) {
       missingEnvs.push("token");
     }
@@ -38,6 +41,7 @@ export async function getPost(id: string) {
   }
 
   let result: Response;
+
   try {
     result = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${postsDirectory}/${id}.mdx`,
@@ -55,6 +59,7 @@ export async function getPost(id: string) {
   }
 
   let data: unknown;
+
   try {
     data = await result.json();
   } catch (error) {
@@ -62,6 +67,7 @@ export async function getPost(id: string) {
   }
 
   let parsedData: PostItem;
+
   try {
     parsedData = await postItemSchema.parseAsync(data);
   } catch (error) {

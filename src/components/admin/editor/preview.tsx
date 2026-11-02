@@ -17,7 +17,8 @@ export function EditorPreview(props: { text: string }) {
 
   return (
     <Loading fallback={<div>Loading</div>}>
-      <div class="prose editor-preview min-w-0 overflow-auto" innerHTML={renderedHtml().html}></div>
+      {/* oxlint-disable-next-line solid/no-innerhtml -- The admin preview intentionally renders HTML from the author's Markdown. */}
+      <div class="prose editor-preview min-w-0 overflow-auto" innerHTML={renderedHtml().html} />
     </Loading>
   );
 }

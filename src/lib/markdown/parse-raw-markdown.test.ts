@@ -18,9 +18,11 @@ test("extracts post frontmatter and preserves the Markdown body", () => {
     updated: new Date("2025-01-28T17:55:12.088Z"),
   });
   assert.equal(body, source.slice(source.indexOf("\n---\n") + 4));
+
   const minimal = parseRawMarkdown(
     "---\ntitle: Minimal\ndraft: false\npublished: 2025-01-28\nupdated: 2025-01-28\n---\n## Body\n"
   );
+
   assert.equal(minimal.frontmatter.category, "");
   assert.deepEqual(minimal.frontmatter.tags, []);
   assert.ok(minimal.frontmatter.published instanceof Date);

@@ -41,6 +41,7 @@ function Toggle(props: ToggleProps) {
     } satisfies Partial<ToggleProps>,
     props
   );
+
   const rest = omit(merged, "class");
 
   return (

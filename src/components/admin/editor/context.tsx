@@ -41,6 +41,7 @@ export function EditorContextProvider(
     // oxlint-disable-next-line solid/reactivity
     title: props.title,
   });
+
   const [text, setText] = createSignal(() => props.text);
 
   return (

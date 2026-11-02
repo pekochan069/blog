@@ -9,6 +9,7 @@ export function parseFileTree(source: string) {
       for (let i = 0; i < part.length; ++i) {
         // oxlint-disable-next-line typescript/no-non-null-assertion
         const c = part[i]!;
+
         if (c !== " ") {
           start = i;
           break;

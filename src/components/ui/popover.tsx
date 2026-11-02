@@ -37,6 +37,7 @@ type PopoverProps = PopoverPrimitive.PopoverRootProps;
 
 const Popover = (props: PopoverProps) => {
   const mergedProps = merge({ gutter: 4, placement: "bottom" } as const, props);
+
   return <PopoverPrimitive.Root data-slot="popover" {...mergedProps} />;
 };
 
@@ -86,6 +87,7 @@ type PopoverCloseButtonProps = PolymorphicProps<
 
 const PopoverCloseButton = (props: PopoverCloseButtonProps) => {
   const rest = omit(props, "class");
+
   return (
     <PopoverPrimitive.CloseButton
       data-slot="popover-close-button"
@@ -101,6 +103,7 @@ type PopoverHeaderProps = ComponentProps<"div"> & {
 
 const PopoverHeader = (props: PopoverHeaderProps) => {
   const rest = omit(props, "class");
+
   return (
     <div
       data-slot="popover-header"
@@ -114,6 +117,7 @@ type PopoverTitleProps = PolymorphicProps<"h2", PopoverPrimitive.PopoverTitlePro
 
 const PopoverTitle = (props: PopoverTitleProps) => {
   const rest = omit(props, "class");
+
   return (
     <PopoverPrimitive.Title
       data-slot="popover-title"
@@ -127,6 +131,7 @@ type PopoverDescriptionProps = PolymorphicProps<"p", PopoverPrimitive.PopoverDes
 
 const PopoverDescription = (props: PopoverDescriptionProps) => {
   const rest = omit(props, "class");
+
   return (
     <PopoverPrimitive.Description
       data-slot="popover-description"
@@ -140,6 +145,7 @@ type PopoverArrowProps = PolymorphicProps<"div", PopoverPrimitive.PopoverArrowPr
 
 const PopoverArrow = (props: PopoverArrowProps) => {
   const rest = omit(props, "class");
+
   return <PopoverPrimitive.Arrow data-slot="popover-arrow" class={cn("", props.class)} {...rest} />;
 };
 

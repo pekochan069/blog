@@ -23,6 +23,7 @@ test("savePost sends SHA for updates, omits it for creation, and reports failure
     GITHUB_REPO: "test-repo",
     GITHUB_TOKEN: "test-token",
   };
+
   const previousEnv = { ...serverEnv };
   Object.assign(serverEnv, env);
 
@@ -38,6 +39,7 @@ test("savePost sends SHA for updates, omits it for creation, and reports failure
       );
       assert.equal(init?.method, "PUT");
       bodies.push(String(init?.body));
+
       return response instanceof Error ? Promise.reject(response) : Promise.resolve(response);
     }
   );
@@ -63,6 +65,7 @@ test("savePost sends SHA for updates, omits it for creation, and reports failure
       // oxlint-disable-next-line no-await-in-loop
       const rejected = await savePost(params);
       assert.equal(rejected.ok, false);
+
       if (!rejected.ok) {
         assert.match(rejected.error, new RegExp(`HTTP ${status}`, "u"));
         assert.match(rejected.error, /GitHub rejected save/u);

@@ -3,6 +3,7 @@ import { createSignal, onCleanup } from "solid-js";
 import type { Accessor } from "solid-js";
 
 export type FileTreeSelector<TSelected> = (model: FileTree) => TSelected;
+
 export type FileTreeSelectorEquality<TSelected> = (previous: TSelected, next: TSelected) => boolean;
 
 export function areArraysEqual<TValue>(

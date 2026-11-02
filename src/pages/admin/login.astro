@@ -11,29 +11,37 @@ import { login } from "#lib/server/auth/login";
 export const prerender = false;
 
 Astro.response.headers.set("Cache-Control", "no-store");
+
 if (isLoggedIn(Astro.cookies.get(authCookieName)?.value)) {
   return Astro.redirect("/admin", 303);
 }
 
 let error = "";
+
 if (Astro.request.method === "POST") {
   if (Astro.request.headers.get("Origin") !== Astro.url.origin) {
     return new Response("Forbidden", { status: 403 });
   }
+
   const form = await Astro.request.formData().catch(() => null);
+
   const credentials = z
     .object({
       id: z.string().min(3).max(256),
       password: z.string().min(12).max(1024),
     })
     .safeParse({ id: form?.get("id"), password: form?.get("password") });
+
   const result = credentials.success
     ? login(credentials.data.id, credentials.data.password)
     : { error: "올바르지 않은 계정입니다", ok: false as const };
+
   if (result.ok) {
     Astro.cookies.set(authCookieName, result.data, authCookieOptions);
+
     return Astro.redirect("/admin", 303);
   }
+
   Astro.response.status = 401;
   ({ error } = result);
 }

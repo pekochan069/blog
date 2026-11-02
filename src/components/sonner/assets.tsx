@@ -8,7 +8,7 @@ const bars = Array.from({ length: 12 }, () => 0);
 export function Loader(props: { visible: boolean; class?: string; className?: string }) {
   return (
     <div
-      class={["sonner-loading-wrapper", props.class ?? props.className].filter(Boolean).join(" ")}
+      class={["sonner-loading-wrapper", props.class ?? props.className]}
       data-visible={String(Boolean(props.visible))}
     >
       <div class="sonner-spinner">
@@ -101,15 +101,19 @@ export function getAsset(type?: ToastTypes): JSX.Element | null {
     case "success": {
       return <SuccessIcon />;
     }
+
     case "info": {
       return <InfoIcon />;
     }
+
     case "warning": {
       return <WarningIcon />;
     }
+
     case "error": {
       return <ErrorIcon />;
     }
+
     default: {
       return null;
     }

@@ -17,12 +17,15 @@ export async function savePost(
 
   if (owner === undefined || repo === undefined || token === undefined) {
     const missingEnvs = [];
+
     if (!owner) {
       missingEnvs.push("owner");
     }
+
     if (!repo) {
       missingEnvs.push("repo");
     }
+
     if (!token) {
       missingEnvs.push("token");
     }
@@ -38,14 +41,17 @@ export async function savePost(
   }
 
   const rawMarkdown = buildRawMarkdown(params);
+
   const bodyString = {
     content: Buffer.from(rawMarkdown).toString("base64"),
     message: `post: ${params.sha ? "update" : "create"} ${params.id}.mdx at ${params.frontmatter.updated.toISOString()}`,
     sha: params.sha,
   };
+
   const body = JSON.stringify(bodyString);
 
   let res: Response;
+
   try {
     res = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/contents/${postsDirectory}/${params.id}.mdx`,
@@ -66,6 +72,7 @@ export async function savePost(
   }
 
   let data: unknown;
+
   try {
     data = await res.json();
   } catch (error) {

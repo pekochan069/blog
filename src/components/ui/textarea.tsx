@@ -4,6 +4,7 @@ import { omit } from "solid-js";
 
 function Textarea(props: ComponentProps<"textarea">) {
   const rest = omit(props, "class");
+
   return (
     <textarea
       data-slot="textarea"

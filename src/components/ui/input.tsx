@@ -4,6 +4,7 @@ import { omit } from "solid-js";
 
 function Input(props: ComponentProps<"input">) {
   const rest = omit(props, "class");
+
   return (
     <input
       data-slot="input"

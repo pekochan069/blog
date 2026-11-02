@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { source } = Astro.props;
+
 const themeCss = codeThemes
   .map((theme) => {
     const styles = themeToTreeStyles({
@@ -20,9 +21,11 @@ const themeCss = codeThemes
         "sideBar.foreground": theme.colors?.["editor.foreground"] ?? "",
       },
     });
+
     const declarations = Object.entries(styles)
       .map(([property, value]) => {
         const name = property.replaceAll(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`);
+
         return `${name}:${value};`;
       })
       .join("");

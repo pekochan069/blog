@@ -81,6 +81,7 @@ function DropdownMenuItem<T extends ValidComponent = "div">(props: DropdownMenuI
     },
     props
   );
+
   const rest = omit(merged, "variant", "inset", "class");
 
   return (

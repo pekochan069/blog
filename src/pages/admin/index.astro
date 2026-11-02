@@ -7,6 +7,7 @@ import { authCookieName, isLoggedIn } from "#lib/server/auth/is-logged-in";
 export const prerender = false;
 
 Astro.response.headers.set("Cache-Control", "no-store");
+
 if (!isLoggedIn(Astro.cookies.get(authCookieName)?.value)) {
   return Astro.redirect("/admin/login", 303);
 }

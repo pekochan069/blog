@@ -49,6 +49,7 @@ function PaginationLink(props: PaginationLinkProps) {
     { size: "icon", isActive: false } satisfies Partial<PaginationLinkProps>,
     props
   );
+
   const rest = omit(merged, "disabled", "isActive", "size");
 
   return (
@@ -69,6 +70,7 @@ function PaginationPrevious(props: ComponentProps<typeof PaginationLink> & { tex
     { text: "이전" } satisfies Partial<ComponentProps<typeof PaginationLink> & { text?: string }>,
     props
   );
+
   const rest = omit(merged, "class");
 
   return (

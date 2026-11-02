@@ -8,6 +8,7 @@ const _contents = await getCollection("posts", (entry) => {
   if (serverEnv.NODE_ENV === "production") {
     return entry.data.draft === false;
   }
+
   return true;
 });
 
@@ -70,9 +71,11 @@ const { availableYears, availableCategories, availableTags } = (() => {
   const availableYearsList: { year: number; posts: number }[] = [];
   const availableCategoriesList: { category: string; posts: number }[] = [];
   const _availableTags = new Set<string>();
+
   for (const content of contents) {
     const year = content.data.published.getFullYear();
     const yearIndex = availableYearsList.findIndex((a) => a.year === year);
+
     if (yearIndex === -1) {
       availableYearsList.push({ posts: 1, year });
     } else {
@@ -80,8 +83,10 @@ const { availableYears, availableCategories, availableTags } = (() => {
     }
 
     const { category, tags } = content.data;
+
     if (category !== "") {
       const categoryIndex = availableCategoriesList.findIndex((a) => a.category === category);
+
       if (categoryIndex === -1) {
         availableCategoriesList.push({ category, posts: 1 });
       } else {
@@ -93,6 +98,7 @@ const { availableYears, availableCategories, availableTags } = (() => {
       _availableTags.add(tag);
     }
   }
+
   const availableTagsList = [..._availableTags];
 
   return {
@@ -101,15 +107,18 @@ const { availableYears, availableCategories, availableTags } = (() => {
     availableYears: availableYearsList,
   };
 })();
+
 export { availableYears, availableCategories, availableTags };
 
 export function getPostsInYear(year: number) {
   const postsInYear = contents.filter((content) => content.data.published.getFullYear() === year);
 
   const result = new Map<number, PostEntry[]>();
+
   for (const post of postsInYear) {
     const month = post.data.published.getMonth();
     const posts = result.get(month);
+
     if (posts === undefined) {
       result.set(month, [post]);
     } else {

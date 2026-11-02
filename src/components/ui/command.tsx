@@ -16,6 +16,7 @@ import { SearchIcon } from "#icons/runeicons/normal/search";
 
 function Command(props: ComponentProps<typeof CommandPrimitive>) {
   const rest = omit(props, "class");
+
   return (
     <CommandPrimitive
       data-slot="command"
@@ -45,6 +46,7 @@ function CommandDialog(props: CommandDialogProps) {
     } satisfies Partial<CommandDialogProps>,
     props
   );
+
   const rest = omit(merged, "title", "description", "class", "showCloseButton", "children");
 
   return (
@@ -65,6 +67,7 @@ function CommandDialog(props: CommandDialogProps) {
 
 function CommandInput(props: ComponentProps<typeof CommandPrimitive.Input>) {
   const rest = omit(props, "class");
+
   return (
     <div data-slot="command-input-wrapper" class="p-1 pb-0">
       <InputGroup class="border-input/30 bg-input/30 h-8! rounded-lg! shadow-none! *:data-[slot=input-group-addon]:pl-2!">
@@ -86,6 +89,7 @@ function CommandInput(props: ComponentProps<typeof CommandPrimitive.Input>) {
 
 function CommandList(props: ComponentProps<typeof CommandPrimitive.List>) {
   const rest = omit(props, "class");
+
   return (
     <CommandPrimitive.List
       data-slot="command-list"
@@ -100,6 +104,7 @@ function CommandList(props: ComponentProps<typeof CommandPrimitive.List>) {
 
 function CommandEmpty(props: ComponentProps<typeof CommandPrimitive.Empty>) {
   const rest = omit(props, "class");
+
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
@@ -111,6 +116,7 @@ function CommandEmpty(props: ComponentProps<typeof CommandPrimitive.Empty>) {
 
 function CommandGroup(props: ComponentProps<typeof CommandPrimitive.Group>) {
   const rest = omit(props, "class");
+
   return (
     <CommandPrimitive.Group
       data-slot="command-group"
@@ -125,6 +131,7 @@ function CommandGroup(props: ComponentProps<typeof CommandPrimitive.Group>) {
 
 function CommandSeparator(props: ComponentProps<typeof CommandPrimitive.Separator>) {
   const rest = omit(props, "class");
+
   return (
     <CommandPrimitive.Separator
       data-slot="command-separator"
@@ -136,6 +143,7 @@ function CommandSeparator(props: ComponentProps<typeof CommandPrimitive.Separato
 
 function CommandItem(props: ComponentProps<typeof CommandPrimitive.Item>) {
   const rest = omit(props, "class", "children");
+
   return (
     <CommandPrimitive.Item
       data-slot="command-item"
@@ -153,6 +161,7 @@ function CommandItem(props: ComponentProps<typeof CommandPrimitive.Item>) {
 
 function CommandShortcut(props: ComponentProps<"span">) {
   const rest = omit(props, "class");
+
   return (
     <span
       data-slot="command-shortcut"

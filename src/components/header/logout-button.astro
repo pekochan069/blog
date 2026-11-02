@@ -4,6 +4,7 @@ import { LogOutIcon } from "#icons/runeicons/normal/log-out";
 import { authCookieName, isLoggedIn } from "#lib/server/auth/is-logged-in";
 
 Astro.response.headers.set("Cache-Control", "private, no-store");
+
 const loggedIn = isLoggedIn(Astro.cookies.get(authCookieName)?.value);
 ---
 

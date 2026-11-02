@@ -29,9 +29,10 @@ export function ThemeToggle() {
       // @ts-expect-error: mermaid
       const { mermaid } = window;
       const diagrams = document.querySelectorAll<HTMLElement>(".mermaid[data-mermaid-source]");
+
       if (mermaid && diagrams.length > 0) {
         // oxlint-disable-next-line promise/prefer-await-to-then
-        mermaidRender = mermaidRender.then(async () => {
+        mermaidRender = mermaidRender.then(() => {
           mermaid.initialize({
             startOnLoad: false,
             theme: currentTheme === "light" ? "default" : "dark",
@@ -42,7 +43,7 @@ export function ThemeToggle() {
             delete diagram.dataset.processed;
           }
 
-          await mermaid.run({ nodes: diagrams });
+          return mermaid.run({ nodes: diagrams });
         });
       }
     }

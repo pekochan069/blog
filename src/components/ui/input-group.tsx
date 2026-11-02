@@ -12,6 +12,7 @@ import { Textarea } from "#components/ui/textarea";
 
 function InputGroup(props: ComponentProps<"div">) {
   const rest = omit(props, "class");
+
   return (
     <div
       data-slot="input-group"
@@ -53,7 +54,9 @@ function InputGroupAddon(
     >,
     props
   );
+
   const rest = omit(merged, "class", "align");
+
   return (
     <div
       role="group"
@@ -64,6 +67,7 @@ function InputGroupAddon(
         if (e.currentTarget.closest("button")) {
           return;
         }
+
         e.currentTarget.parentElement?.querySelector("input")?.focus();
       }}
       {...rest}
@@ -95,7 +99,9 @@ function InputGroupButton(props: InputGroupButtonProps) {
     { type: "button", variant: "ghost", size: "xs" } satisfies Partial<InputGroupButtonProps>,
     props
   );
+
   const rest = omit(merged, "class", "type", "variant", "size");
+
   return (
     <Button
       type={merged.type}
@@ -109,6 +115,7 @@ function InputGroupButton(props: InputGroupButtonProps) {
 
 function InputGroupText(props: ComponentProps<"span">) {
   const rest = omit(props, "class");
+
   return (
     <span
       class={cn(
@@ -122,6 +129,7 @@ function InputGroupText(props: ComponentProps<"span">) {
 
 function InputGroupInput(props: ComponentProps<"input">) {
   const rest = omit(props, "class");
+
   return (
     <Input
       data-slot="input-group-control"
@@ -136,6 +144,7 @@ function InputGroupInput(props: ComponentProps<"input">) {
 
 function InputGroupTextarea(props: ComponentProps<"textarea">) {
   const rest = omit(props, "class");
+
   return (
     <Textarea
       data-slot="input-group-control"

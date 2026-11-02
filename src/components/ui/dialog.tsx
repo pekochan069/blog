@@ -29,8 +29,10 @@ function DialogClose(props: DialogPrimitive.DialogCloseButtonProps) {
 function DialogOverlay(props: PolymorphicProps<"div", DialogPrimitive.DialogOverlayProps<"div">>) {
   const context = DialogPrimitive.useDialogContext();
   const rest = omit(props, "class", "onClick");
+
   const handleClick: ComponentProps<"div">["onClick"] = (event) => {
     callHandler(event, props.onClick);
+
     if (!event.defaultPrevented) {
       context.close();
     }
@@ -87,6 +89,7 @@ function DialogContent(
 
 function DialogHeader(props: ComponentProps<"div">) {
   const rest = omit(props, "class");
+
   return <div data-slot="dialog-header" class={cn("flex flex-col gap-2", props.class)} {...rest} />;
 }
 
@@ -97,6 +100,7 @@ function DialogFooter(
 ) {
   const merged = merge({ showCloseButton: false }, props);
   const rest = omit(merged, "class", "showCloseButton", "children");
+
   return (
     <div
       data-slot="dialog-footer"
@@ -116,6 +120,7 @@ function DialogFooter(
 
 function DialogTitle(props: PolymorphicProps<"h2", DialogPrimitive.DialogTitleProps<"h2">>) {
   const rest = omit(props, "class");
+
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
@@ -129,6 +134,7 @@ function DialogDescription(
   props: PolymorphicProps<"p", DialogPrimitive.DialogDescriptionProps<"p">>
 ) {
   const rest = omit(props, "class");
+
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"

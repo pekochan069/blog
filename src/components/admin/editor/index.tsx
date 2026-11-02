@@ -107,6 +107,7 @@ type EditorContainerProps = EditorContextStore & {
 
 export function EditorContainer(props: EditorContainerProps) {
   const [saveLoading, setSaveLoading] = createSignal(false);
+
   const [editorContext, setEditorContext] = createStore<EditorContextStore>({
     // oxlint-disable-next-line solid/reactivity
     category: props.category,
@@ -119,6 +120,7 @@ export function EditorContainer(props: EditorContainerProps) {
     // oxlint-disable-next-line solid/reactivity
     title: props.title,
   });
+
   // oxlint-disable-next-line solid/reactivity
   const [body, setBody] = createSignal(props.body);
 
@@ -128,8 +130,10 @@ export function EditorContainer(props: EditorContainerProps) {
     }
 
     setSaveLoading(true);
+
     try {
       const now = new Date();
+
       const result = await actions.savePost.orThrow({
         body: body(),
         frontmatter: {

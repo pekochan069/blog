@@ -26,10 +26,14 @@ import { ScrollToTop } from "#components/scroll-to-top";
         if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
           return localStorage.getItem("theme");
         }
+
         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       };
+
       const isDark = getThemePreference() === "dark";
+
       document.documentElement.classList.toggle("dark", isDark);
+
       document.documentElement.dataset["theme"] = isDark ? "catppuccin-macchiato" : "catppuccin-latte";
 
       if (typeof localStorage !== "undefined") {
@@ -37,6 +41,7 @@ import { ScrollToTop } from "#components/scroll-to-top";
           const changedIsDark = document.documentElement.classList.contains("dark");
           localStorage.setItem("theme", changedIsDark ? "dark" : "light");
         });
+
         observer.observe(document.documentElement, {
           attributeFilter: ["class"],
           attributes: true,

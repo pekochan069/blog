@@ -22,8 +22,10 @@ function getToastId(data?: { id?: number | string }): number | string {
   if (data?.id !== undefined && data.id !== "") {
     return data.id;
   }
+
   const id = toastsCounter;
   toastsCounter += 1;
+
   return id;
 }
 
@@ -96,6 +98,7 @@ class Observer {
   // Keeps the history bounded without ever dropping a toast that's still on screen.
   private trimHistory = () => {
     let toRemove = this.toasts.length - MAX_HISTORY_SIZE;
+
     if (toRemove <= 0) {
       return;
     }
@@ -104,6 +107,7 @@ class Observer {
       if (toRemove > 0 && this.dismissedToasts.has(toast.id)) {
         this.dismissedToasts.delete(toast.id);
         toRemove -= 1;
+
         return false;
       }
 
@@ -126,6 +130,7 @@ class Observer {
     // still on screen, so this updates it. Otherwise creating a toast right
     // after dismissing the same id lets that dismissal remove the new one.
     const pendingDismissal = this.pendingDismissals.get(id);
+
     if (pendingDismissal !== undefined) {
       cancelAnimationFrame(pendingDismissal);
       this.pendingDismissals.delete(id);
@@ -149,6 +154,7 @@ class Observer {
       this.toasts = this.toasts.map((toast) => {
         if (toast.id === id) {
           this.publish({ ...toast, ...data, dismissible, id, title: message });
+
           return {
             ...toast,
             ...data,
@@ -171,6 +177,7 @@ class Observer {
     if (id === undefined || id === null) {
       for (const activeToast of this.getActiveToasts()) {
         this.dismissedToasts.add(activeToast.id);
+
         for (const subscriber of this.subscribers) {
           subscriber({ dismiss: true, id: activeToast.id });
         }
@@ -182,6 +189,7 @@ class Observer {
     this.dismissedToasts.add(id);
 
     const alreadyPending = this.pendingDismissals.get(id);
+
     if (alreadyPending !== undefined) {
       cancelAnimationFrame(alreadyPending);
     }
@@ -190,6 +198,7 @@ class Observer {
       id,
       requestAnimationFrame(() => {
         this.pendingDismissals.delete(id);
+
         for (const subscriber of this.subscribers) {
           subscriber({ dismiss: true, id });
         }
@@ -227,6 +236,7 @@ class Observer {
     }
 
     let id: string | number | undefined;
+
     if (data.loading !== undefined) {
       id = this.create({
         ...data,
@@ -243,6 +253,7 @@ class Observer {
 
     const originalPromise = (async () => {
       let result: ["resolve", ToastData] | ["reject", unknown];
+
       try {
         const response = await pending;
         result = ["resolve", response];
@@ -254,39 +265,50 @@ class Observer {
           shouldDismiss = false;
           const error = `HTTP error! status: ${response.status}`;
           const message = typeof data.error === "function" ? await data.error(error) : data.error;
+
           const description =
             typeof data.description === "function"
               ? await data.description(error)
               : data.description;
+
           this.create({ description, id, type: "error", ...getPromiseSettings(message) });
         } else if (response instanceof Error) {
           shouldDismiss = false;
+
           const message =
             typeof data.error === "function" ? await data.error(response) : data.error;
+
           const description =
             typeof data.description === "function"
               ? await data.description(response)
               : data.description;
+
           this.create({ description, id, type: "error", ...getPromiseSettings(message) });
         } else if (data.success !== undefined) {
           shouldDismiss = false;
+
           const message =
             typeof data.success === "function" ? await data.success(response) : data.success;
+
           const description =
             typeof data.description === "function"
               ? await data.description(response)
               : data.description;
+
           this.create({ description, id, type: "success", ...getPromiseSettings(message) });
         }
       } catch (error) {
         result = ["reject", error];
+
         if (data.error !== undefined) {
           shouldDismiss = false;
           const message = typeof data.error === "function" ? await data.error(error) : data.error;
+
           const description =
             typeof data.description === "function"
               ? await data.description(error)
               : data.description;
+
           this.create({ description, id, type: "error", ...getPromiseSettings(message) });
         }
       } finally {
@@ -294,22 +316,27 @@ class Observer {
           this.dismiss(id);
           id = undefined;
         }
+
         onFinally?.();
       }
+
       return result;
     })();
 
     const unwrap = async () => {
       const result = await originalPromise;
+
       if (result[0] === "reject") {
         throw result[1];
       }
+
       return result[1];
     };
 
     if (id === undefined) {
       return { unwrap };
     }
+
     return Object.assign(id, { unwrap });
   };
   /* eslint-enable anti-slop/no-runtime-typeof */
@@ -318,6 +345,7 @@ class Observer {
     const id = getToastId(data);
     // A custom toast has no type, so it resets the one of the toast it replaces
     this.create({ ...data, id, jsx: jsx(id), type: undefined });
+
     return id;
   };
 

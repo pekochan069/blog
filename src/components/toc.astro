@@ -45,13 +45,16 @@ const { headings } = Astro.props;
 			event.preventDefault();
 			const href = tocLink.getAttribute("href");
 			const target = href === null ? null : document.querySelector(href);
+
 			if (target) {
 				target.scrollIntoView({ behavior: "smooth" });
 				window.history.pushState(null, "", tocLink.getAttribute("href"));
+
 				for (const l of document.querySelectorAll<HTMLAnchorElement>(".toc-link")) {
 					l.classList.remove("text-foreground", "font-semibold", "underline");
 					l.classList.add("text-muted-foreground");
 				}
+
 				tocLink.classList.remove("text-muted-foreground");
 				tocLink.classList.add("text-foreground", "font-semibold", "underline");
 			}

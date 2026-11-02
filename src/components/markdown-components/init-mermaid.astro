@@ -3,6 +3,7 @@
 
   void (async () => {
     const diagrams = document.querySelectorAll<HTMLElement>(".mermaid:not([data-processed])");
+
     if (diagrams.length === 0) {
       return;
     }

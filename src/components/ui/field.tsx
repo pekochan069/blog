@@ -215,19 +215,17 @@ function FieldError(
     );
   });
 
-  if (!content) {
-    return null;
-  }
-
   return (
-    <div
-      role="alert"
-      data-slot="field-error"
-      class={cn("text-destructive text-sm font-normal", props.class)}
-      {...rest}
-    >
-      {content()}
-    </div>
+    <Show when={content()}>
+      <div
+        role="alert"
+        data-slot="field-error"
+        class={cn("text-destructive text-sm font-normal", props.class)}
+        {...rest}
+      >
+        {content()}
+      </div>
+    </Show>
   );
 }
 

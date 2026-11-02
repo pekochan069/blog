@@ -55,5 +55,5 @@ export function Editor(props: EditorProps) {
     view.destroy();
   });
 
-  return <div class={props.class} ref={editorParentRef!}></div>;
+  return <div class={props.class} ref={editorParentRef!} />;
 }

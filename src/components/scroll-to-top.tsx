@@ -10,6 +10,7 @@ export function ScrollToTop() {
     const onScroll = () => {
       scrollToTopButton!.dataset["show"] = window.scrollY > 99 ? "true" : "false";
     };
+
     window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll", onScroll);

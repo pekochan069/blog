@@ -19,18 +19,22 @@ export async function renderMarkdownPreview(text: string) {
   await Promise.all(
     [...template.content.querySelectorAll("pre")].map(async (pre) => {
       const code = pre.querySelector(":scope > code");
+
       if (!code) {
         return;
       }
+
       const languageName =
         code.className
           .split(/\s+/u)
           .find((name) => name.startsWith("language-"))
           ?.slice("language-".length)
           .toLowerCase() ?? "text";
+
       const language = Object.entries(bundledLanguages).find(
         ([name]) => name === languageName
       )?.[1];
+
       if (!language) {
         return;
       }

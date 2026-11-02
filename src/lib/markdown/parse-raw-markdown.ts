@@ -8,5 +8,6 @@ export function parseRawMarkdown(body: string | undefined) {
   }
 
   const { frontmatter, content } = parseFrontmatter(body);
+
   return { body: content, frontmatter: frontmatterSchema.parse(frontmatter) };
 }

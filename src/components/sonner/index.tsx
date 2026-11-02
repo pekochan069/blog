@@ -6,7 +6,6 @@
  * https://github.com/emilkowalski/sonner/blob/main/src/index.tsx
  */
 import "./styles.css";
-import { mergeProps } from "@solidjs/web";
 import type { JSX } from "@solidjs/web";
 import {
   For,
@@ -19,6 +18,7 @@ import {
   onCleanup,
   onSettled,
   untrack,
+  merge,
 } from "solid-js";
 import type { Setter } from "solid-js";
 
@@ -74,6 +74,7 @@ function getDefaultSwipeDirections(position: string): SwipeDirection[] {
 
 function getDampening(delta: number) {
   const factor = Math.abs(delta) / 20;
+
   return 1 / (1.5 + factor);
 }
 
@@ -94,8 +95,10 @@ function getSwipeAmount(
     const allowed =
       (allowedDirections.includes("top") && yDelta < 0) ||
       (allowedDirections.includes("bottom") && yDelta > 0);
+
     return { x: 0, y: dampenMovement(yDelta, allowed) };
   }
+
   if (
     direction === "x" &&
     (allowedDirections.includes("left") || allowedDirections.includes("right"))
@@ -103,8 +106,10 @@ function getSwipeAmount(
     const allowed =
       (allowedDirections.includes("left") && xDelta < 0) ||
       (allowedDirections.includes("right") && xDelta > 0);
+
     return { x: dampenMovement(xDelta, allowed), y: 0 };
   }
+
   return { x: 0, y: 0 };
 }
 
@@ -118,22 +123,28 @@ function getSwipeDismissDirection(
   if (!direction) {
     return;
   }
+
   const amount = direction === "x" ? amountX : amountY;
   let allowedDirection: SwipeDirection;
+
   if (direction === "x") {
     allowedDirection = amountX > 0 ? "right" : "left";
   } else {
     allowedDirection = amountY > 0 ? "bottom" : "top";
   }
+
   if (!allowedDirections.includes(allowedDirection)) {
     return;
   }
+
   if (Math.abs(amount) < SWIPE_THRESHOLD && Math.abs(amount) / timeTaken <= 0.11) {
     return;
   }
+
   if (allowedDirection === "left" || allowedDirection === "right") {
     return allowedDirection;
   }
+
   return allowedDirection === "bottom" ? "down" : "up";
 }
 
@@ -169,9 +180,9 @@ function getNonActionContent(content: Action | JSX.Element): JSX.Element {
 }
 
 function ToastActionButton(props: {
+  class: string;
   content: Action | JSX.Element;
   kind: "action" | "cancel";
-  className: string;
   style?: JSX.CSSProperties;
   onClick: (event: MouseEvent) => void;
 }) {
@@ -184,7 +195,7 @@ function ToastActionButton(props: {
           data-cancel={props.kind === "cancel" ? "" : undefined}
           style={props.style}
           onClick={(event) => props.onClick(event)}
-          class={props.className}
+          class={props.class}
         >
           {action().label}
         </button>
@@ -199,17 +210,20 @@ function getDocumentDirection(): ToasterProps["dir"] {
   if (typeof window === "undefined") {
     return "ltr";
   }
+
   // oxlint-disable-next-line anti-slop/no-runtime-typeof -- `document` is absent during SSR.
   if (typeof document === "undefined") {
     return "ltr";
   }
 
   const dirAttribute = document.documentElement.getAttribute("dir");
+
   if (dirAttribute && isDirection(dirAttribute)) {
     return dirAttribute;
   }
 
   const { direction } = window.getComputedStyle(document.documentElement);
+
   return isDirection(direction) ? direction : "ltr";
 }
 
@@ -248,6 +262,7 @@ function assignOffset(defaultOffset?: Offset, mobileOffset?: Offset): JSX.CSSPro
         const value = offset[key];
         styles[`${prefix}-${key}`] = value === undefined ? defaultValue : formatOffset(value);
       }
+
       continue;
     }
 
@@ -278,6 +293,7 @@ function useSonner() {
     const unsubscribe = ToastState.subscribe((toastItem) => {
       if ("dismiss" in toastItem) {
         setActiveToasts((toasts) => toasts.filter((t) => t.id !== toastItem.id));
+
         return;
       }
 
@@ -308,6 +324,7 @@ function createToastTheme(theme: ToasterProps["theme"]) {
   if (theme !== "system") {
     return theme;
   }
+
   // oxlint-disable-next-line anti-slop/no-runtime-typeof -- `window` is absent during SSR.
   return typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
@@ -336,22 +353,27 @@ function ToastBody(props: {
   const classNames = () => props.classNames;
   const toastClassNames = () => props.toastClassNames;
   const toastType = () => props.toast.type;
+
   const hasIcon = () => {
     const type = toastType();
     const typeIcon = isToastIconType(type) ? props.icons?.[type] : undefined;
+
     return Boolean(
       (type || props.toast.icon || props.toast.promise) &&
       props.toast.icon !== null &&
       (typeIcon !== null || props.toast.icon)
     );
   };
+
   const loadingIconContent = () => {
     if (toastType() === "loading") {
       return props.toast.icon || props.getLoadingIcon();
     }
+
     if (props.toast.promise) {
       return props.getLoadingIcon();
     }
+
     return null;
   };
 
@@ -368,6 +390,7 @@ function ToastBody(props: {
             if (props.disabled || !props.dismissible) {
               return;
             }
+
             props.onDelete();
             props.onDismiss();
           }}
@@ -412,15 +435,18 @@ function ToastBody(props: {
                 content={cancel()}
                 kind="cancel"
                 style={props.toast.cancelButtonStyle ?? props.cancelButtonStyle}
-                className={cn(classNames()?.cancelButton, toastClassNames()?.cancelButton)}
+                class={cn(classNames()?.cancelButton, toastClassNames()?.cancelButton)}
                 onClick={(event) => {
                   if (!props.dismissible) {
                     return;
                   }
+
                   const currentCancel = cancel();
+
                   if (!isAction(currentCancel)) {
                     return;
                   }
+
                   currentCancel.onClick?.(event);
                   props.onDelete();
                 }}
@@ -441,16 +467,20 @@ function ToastBody(props: {
                 content={action()}
                 kind="action"
                 style={props.toast.actionButtonStyle ?? props.actionButtonStyle}
-                className={cn(classNames()?.actionButton, toastClassNames()?.actionButton)}
+                class={cn(classNames()?.actionButton, toastClassNames()?.actionButton)}
                 onClick={(event) => {
                   const currentAction = action();
+
                   if (!isAction(currentAction)) {
                     return;
                   }
+
                   currentAction.onClick?.(event);
+
                   if (event.defaultPrevented) {
                     return;
                   }
+
                   props.onDelete();
                 }}
               />
@@ -496,14 +526,18 @@ function setupToastEffects({
     }),
     (metadata) => {
       const toastElement = getToastElement();
+
       if (!metadata.mounted || !toastElement) {
         return;
       }
+
       const measure = () => {
         const currentElement = getToastElement();
+
         if (!currentElement || isRemoving()) {
           return;
         }
+
         const originalHeight = currentElement.style.height;
         currentElement.style.height = "auto";
         const { height } = currentElement.getBoundingClientRect();
@@ -516,14 +550,17 @@ function setupToastEffects({
             toastId: metadata.toastId,
             toasterId: metadata.toasterId,
           };
+
           return heights.some((item) => item.toastId === entry.toastId)
             ? heights.map((item) => (item.toastId === entry.toastId ? entry : item))
             : [entry, ...heights];
         });
       };
+
       measure();
       const observer = new ResizeObserver(measure);
       observer.observe(toastElement);
+
       return () => observer.disconnect();
     }
   );
@@ -547,13 +584,17 @@ function setupToastEffects({
       if (isRemoved || type === "loading" || lifetime === Number.POSITIVE_INFINITY) {
         return;
       }
+
       if (!previous || previous[2] !== type || previous[4] !== lifetime || previous[6] !== title) {
         remainingTime = lifetime;
       }
+
       if (expanded || interacting || (pauseWhenHidden && hidden)) {
         return;
       }
+
       const startedAt = Date.now();
+
       const timer = setTimeout(
         () => {
           props.toast.onAutoClose?.(props.toast);
@@ -561,6 +602,7 @@ function setupToastEffects({
         },
         Math.max(0, remainingTime)
       );
+
       return () => {
         clearTimeout(timer);
         remainingTime -= Date.now() - startedAt;
@@ -574,6 +616,7 @@ function setupToastEffects({
       if (!shouldDelete) {
         return;
       }
+
       untrack(() => {
         deleteToast();
         props.toast.onDismiss?.(props.toast);
@@ -589,9 +632,11 @@ function Toast(props: ToastProps) {
   const [swipeOut, setSwipeOut] = createSignal(false);
   const [isSwiped, setIsSwiped] = createSignal(false);
   let swipeDirection: "x" | "y" | null = null;
+
   const [swipeOutDirection, setSwipeOutDirection] = createSignal<
     "left" | "right" | "up" | "down" | null
   >(null);
+
   const [offsetBeforeRemove, setOffsetBeforeRemove] = createSignal(0);
   const [initialHeight, setInitialHeight] = createSignal(0);
   let toastRef: HTMLLIElement | undefined;
@@ -607,40 +652,53 @@ function Toast(props: ToastProps) {
   const dismissible = () => props.toast.dismissible !== false;
   const classNames = () => mergeClassNames(props.classNames, props.classes);
   const className = () => mergeClassName(props.className, props.class);
+
   const descriptionClassName = () =>
     mergeDescriptionClassName(props.descriptionClassName, props.descriptionClass);
+
   const toastClassName = () => mergeClassName(props.toast.className, props.toast.class);
+
   const toastDescriptionClassName = () =>
     mergeDescriptionClassName(props.toast.descriptionClassName, props.toast.descriptionClass);
+
   const toastClassNames = () => mergeClassNames(props.toast.classNames, props.toast.classes);
   const closeButton = () => props.toast.closeButton ?? props.closeButton;
   const duration = () => props.toast.duration ?? props.duration ?? TOAST_LIFETIME;
   const invert = () => props.toast.invert ?? props.invert;
   const disabled = () => toastType() === "loading";
+
   // Toasts created with `toast()` have no type, `classNames.default` is the key for those.
   const toastTypeKey = () => {
     const type = toastType();
+
     return isToastClassNameType(type) ? type : "default";
   };
+
   const swipeDirections = () => props.swipeDirections ?? getDefaultSwipeDirections(props.position);
   const y = createMemo(() => props.position.split("-")[0]);
   const x = createMemo(() => props.position.split("-")[1]);
+
   const heightIndex = createMemo(() =>
     Math.max(
       0,
       props.heights.findIndex((height) => height.toastId === props.toast.id)
     )
   );
+
   const toastsHeightBefore = createMemo(() => {
     let total = 0;
+
     for (const [index, height] of props.heights.entries()) {
       if (index >= heightIndex()) {
         break;
       }
+
       total += height.height;
     }
+
     return total;
   });
+
   const offset = createMemo(() => heightIndex() * (props.gap ?? GAP) + toastsHeightBefore());
   const isDocumentHidden = useIsDocumentHidden();
 
@@ -648,6 +706,7 @@ function Toast(props: ToastProps) {
     if (removalTimer !== undefined) {
       return;
     }
+
     setRemoved(true);
     setOffsetBeforeRemove(offset());
     props.setHeights((heights) => heights.filter((height) => height.toastId !== props.toast.id));
@@ -679,12 +738,14 @@ function Toast(props: ToastProps) {
 
   const icon = () => {
     const type = toastType();
+
     return (
       props.toast.icon ??
       (isToastIconType(type) ? props.icons?.[type] : undefined) ??
       getAsset(type)
     );
   };
+
   onSettled(() => {
     setMounted(true);
   });
@@ -711,9 +772,11 @@ function Toast(props: ToastProps) {
     if (event.button === 2 || disabled() || !dismissible()) {
       return;
     }
+
     if (event.target instanceof Element && event.target.closest("button")) {
       return;
     }
+
     dragStartTime = Date.now();
     setOffsetBeforeRemove(offset());
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -725,14 +788,19 @@ function Toast(props: ToastProps) {
     if (swipeOut() || !dismissible()) {
       return;
     }
+
     pointerStart = null;
+
     const amountX = Number(
       toastRef?.style.getPropertyValue("--swipe-amount-x").replace("px", "") || 0
     );
+
     const amountY = Number(
       toastRef?.style.getPropertyValue("--swipe-amount-y").replace("px", "") || 0
     );
+
     const timeTaken = Math.max(1, Date.now() - dragStartTime);
+
     const direction = getSwipeDismissDirection(
       swipeDirection,
       amountX,
@@ -740,14 +808,17 @@ function Toast(props: ToastProps) {
       timeTaken,
       swipeDirections()
     );
+
     if (direction) {
       setOffsetBeforeRemove(offset());
       props.toast.onDismiss?.(props.toast);
       setSwipeOutDirection(direction);
       deleteToast();
       setSwipeOut(true);
+
       return;
     }
+
     toastRef?.style.setProperty("--swipe-amount-x", "0px");
     toastRef?.style.setProperty("--swipe-amount-y", "0px");
     setIsSwiped(false);
@@ -757,18 +828,24 @@ function Toast(props: ToastProps) {
 
   function handlePointerMove(event: PointerEvent) {
     const start = pointerStart;
+
     if (!start || !dismissible() || window.getSelection()?.toString()) {
       return;
     }
+
     const xDelta = event.clientX - start.x;
     const yDelta = event.clientY - start.y;
+
     if (!swipeDirection && (Math.abs(xDelta) > 1 || Math.abs(yDelta) > 1)) {
       swipeDirection = Math.abs(xDelta) > Math.abs(yDelta) ? "x" : "y";
     }
+
     const amount = getSwipeAmount(swipeDirection, xDelta, yDelta, swipeDirections());
+
     if (amount.x !== 0 || amount.y !== 0) {
       setIsSwiped(true);
     }
+
     toastRef?.style.setProperty("--swipe-amount-x", `${amount.x}px`);
     toastRef?.style.setProperty("--swipe-amount-y", `${amount.y}px`);
   }
@@ -845,7 +922,7 @@ function Toast(props: ToastProps) {
 
 function Toaster(props: ToasterProps) {
   /* eslint-disable solid/reactivity */
-  const propsWithDefaults = mergeProps(
+  const propsWithDefaults = merge(
     {
       containerAriaLabel: "Notifications",
       dir: getDocumentDirection(),
@@ -857,17 +934,21 @@ function Toaster(props: ToasterProps) {
     },
     props
   );
+
   const initialTheme = untrack(() => createToastTheme(propsWithDefaults.theme));
 
   const [toastsStore, setToastsStore] = createStore<{ toasts: ToastT[] }>({ toasts: [] });
+
   const filteredToasts = createMemo(() => {
     const { toasts } = toastsStore;
+
     if (propsWithDefaults.id) {
       return toasts.filter((toast) => toast.toasterId === propsWithDefaults.id);
     }
 
     return toasts.filter((toast) => !toast.toasterId);
   });
+
   const possiblePositions = createMemo<Position[]>(() => [
     ...new Set([
       propsWithDefaults.position,
@@ -876,6 +957,7 @@ function Toaster(props: ToasterProps) {
         .map((toast) => toast.position),
     ]),
   ]);
+
   const [heights, setHeights] = createSignal<HeightT[]>([]);
   const [expanded, setExpanded] = createSignal(false);
   const [interacting, setInteracting] = createSignal(false);
@@ -886,21 +968,26 @@ function Toaster(props: ToasterProps) {
 
   const hotkeyLabel = () =>
     propsWithDefaults.hotkey.join("+").replaceAll("Key", "").replaceAll("Digit", "");
+
   const className = () => mergeClassName(propsWithDefaults.className, propsWithDefaults.class);
   const toastOptions = () => propsWithDefaults.toastOptions;
+
   const toastClassNames = () =>
     mergeClassNames(toastOptions()?.classNames, toastOptions()?.classes);
+
   const toastDescriptionClassName = () =>
     mergeDescriptionClassName(
       toastOptions()?.descriptionClassName,
       toastOptions()?.descriptionClass
     );
+
   const toastClassName = () => mergeClassName(toastOptions()?.className, toastOptions()?.class);
 
   const removeToast = (toastToRemove: ToastT) => {
     if (!untrack(() => toastsStore.toasts.find((toast) => toast.id === toastToRemove.id)?.delete)) {
       ToastState.dismiss(toastToRemove.id);
     }
+
     setToastsStore((draft) => {
       draft.toasts = draft.toasts.filter(({ id }) => id !== toastToRemove.id);
     });
@@ -911,12 +998,16 @@ function Toaster(props: ToasterProps) {
       setToastsStore((draft) => {
         if ("dismiss" in toastItem) {
           const existing = draft.toasts.find((toast) => toast.id === toastItem.id);
+
           if (existing) {
             existing.delete = true;
           }
+
           return;
         }
+
         const index = draft.toasts.findIndex((toast) => toast.id === toastItem.id);
+
         if (index === -1) {
           draft.toasts.unshift(toastItem);
         } else if (draft.toasts[index]!.delete) {
@@ -933,16 +1024,20 @@ function Toaster(props: ToasterProps) {
     (theme) => {
       if (theme !== "system") {
         setActualTheme(theme);
+
         return;
       }
+
       // oxlint-disable-next-line anti-slop/no-runtime-typeof -- `window` is absent during SSR.
       if (typeof window === "undefined") {
         return;
       }
+
       const query = window.matchMedia("(prefers-color-scheme: dark)");
       const updateTheme = () => setActualTheme(query.matches ? "dark" : "light");
       updateTheme();
       query.addEventListener("change", updateTheme);
+
       return () => query.removeEventListener("change", updateTheme);
     }
   );
@@ -963,13 +1058,16 @@ function Toaster(props: ToasterProps) {
       ["metaKey", event.metaKey],
       ["shiftKey", event.shiftKey],
     ]);
+
     const isHotkeyPressed =
       propsWithDefaults.hotkey.length > 0 &&
       propsWithDefaults.hotkey.every((key) => modifierKeys.get(key) === true || event.code === key);
+
     if (isHotkeyPressed) {
       setExpanded(true);
       listRef?.focus();
     }
+
     if (
       event.code === "Escape" &&
       (document.activeElement === listRef || listRef?.contains(document.activeElement))
@@ -980,6 +1078,7 @@ function Toaster(props: ToasterProps) {
 
   onSettled(() => {
     document.addEventListener("keydown", handleKeyDown);
+
     return () => document.removeEventListener("keydown", handleKeyDown);
   });
 
@@ -1004,11 +1103,13 @@ function Toaster(props: ToasterProps) {
       <For each={possiblePositions()}>
         {(position, index) => {
           const [y, x] = position.split("-");
+
           const toastsByPosition = createMemo(() =>
             filteredToasts().filter(
               (toast) => (!toast.position && index() === 0) || toast.position === position
             )
           );
+
           const heightsByPosition = createMemo(() =>
             heights().filter(
               (height) => (index() === 0 && !height.position) || height.position === position
@@ -1044,6 +1145,7 @@ function Toaster(props: ToasterProps) {
                     )
                   ) {
                     setIsFocusWithinRef(false);
+
                     if (lastFocusedElementRef()) {
                       lastFocusedElementRef()?.focus({ preventScroll: true });
                       setLastFocusedElementRef(null);
@@ -1054,6 +1156,7 @@ function Toaster(props: ToasterProps) {
                   const isNotDismissible =
                     event.target instanceof HTMLElement &&
                     event.target.dataset.dismissible === "false";
+
                   if (isNotDismissible) {
                     return;
                   }
@@ -1077,9 +1180,11 @@ function Toaster(props: ToasterProps) {
                   const isNotDismissible =
                     event.target instanceof HTMLElement &&
                     event.target.dataset.dismissible === "false";
+
                   if (isNotDismissible) {
                     return;
                   }
+
                   setInteracting(true);
                 }}
                 onPointerUp={() => setInteracting(false)}
@@ -1129,4 +1234,5 @@ function Toaster(props: ToasterProps) {
 }
 
 export { Toaster, useSonner };
+
 export type * from "./types";
