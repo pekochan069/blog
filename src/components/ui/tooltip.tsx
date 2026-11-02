@@ -1,88 +1,66 @@
-"use client";
-
-import type { PolymorphicProps } from "@kobalte/core/polymorphic";
-import * as TooltipPrimitive from "@kobalte/core/tooltip";
-import type { ComponentProps } from "@solidjs/web";
+import {
+  Focusable,
+  OverlayArrow,
+  Tooltip as TooltipPrimitive,
+  TooltipTrigger as TooltipTriggerPrimitive,
+} from "@solid2-aria/components";
+import type { JSX, ComponentProps } from "@solidjs/web";
 import { cn } from "cn";
-import { omit } from "solid-js";
+import { merge, omit } from "solid-js";
 
-function Tooltip(props: TooltipPrimitive.TooltipRootProps) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
-}
-
-function TooltipTrigger(props: TooltipPrimitive.TooltipTriggerProps) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
-}
-
-type TooltipContentProps = PolymorphicProps<"div", TooltipPrimitive.TooltipContentProps<"div">> &
-  Pick<ComponentProps<"div">, "children" | "class">;
-
-function TooltipContent(props: TooltipContentProps) {
-  const rest = omit(props, "children", "class");
+function TooltipTrigger(props: ComponentProps<typeof TooltipTriggerPrimitive>) {
+  const merged = merge({ delay: 0 }, props);
+  const rest = omit(merged, "children");
 
   return (
-    <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        {...rest}
-        class={cn(
-          "bg-foreground text-background data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 isolate z-50 inline-flex w-fit max-w-xs origin-(--transform-origin) items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
-          props.class
-        )}
-      >
-        <TooltipPrimitive.Arrow />
-        {props.children}
-      </TooltipPrimitive.Content>
-    </TooltipPrimitive.Portal>
+    <TooltipTriggerPrimitive data-slot="tooltip-trigger" {...rest}>
+      <Focusable>{merged.children}</Focusable>
+    </TooltipTriggerPrimitive>
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent };
+const arrowTransforms = {
+  bottom: "translate(-50%, calc(50% + 2px)) rotate(45deg)",
+  center: "translate(calc(50% + 2px), -50%) rotate(45deg)",
+  left: "translate(calc(-50% - 2px), -50%) rotate(45deg)",
+  right: "translate(calc(50% + 2px), -50%) rotate(45deg)",
+  top: "translate(-50%, calc(-50% - 2px)) rotate(45deg)",
+};
 
-// function TooltipProvider({ delay = 0, ...props }: TooltipPrimitive.Provider.Props) {
-//   return <TooltipPrimitive.Provider data-slot="tooltip-provider" delay={delay} {...props} />;
-// }
+function Tooltip(
+  props: Omit<ComponentProps<typeof TooltipPrimitive>, "children" | "class"> & {
+    class?: string;
+    children?: JSX.Element;
+  }
+) {
+  const merged = merge({ crossOffset: 0, offset: 4, placement: "top" } as const, props);
 
-// function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
-//   return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
-// }
+  const rest = omit(merged, "class", "placement", "offset", "crossOffset", "children");
 
-// function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
-//   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
-// }
+  return (
+    <TooltipPrimitive
+      data-slot="tooltip-content"
+      placement={merged.placement}
+      offset={merged.offset}
+      crossOffset={merged.crossOffset}
+      class={cn(
+        "data-entering:animate-in data-entering:fade-in-0 data-entering:zoom-in-95 data-exiting:animate-out data-exiting:fade-out-0 data-exiting:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2 bg-foreground text-background z-50 inline-flex w-fit max-w-xs origin-(--trigger-anchor-point) items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
+        merged.class
+      )}
+      {...rest}
+    >
+      {merged.children}
+      <OverlayArrow
+        class="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-xs"
+        style={(renderProps0) => ({
+          ...renderProps0.defaultStyle,
+          rotate: "0deg",
+          transform: arrowTransforms[renderProps0.placement ?? "right"],
+          translate: "0 0",
+        })}
+      />
+    </TooltipPrimitive>
+  );
+}
 
-// function TooltipContent({
-//   className,
-//   side = "top",
-//   sideOffset = 4,
-//   align = "center",
-//   alignOffset = 0,
-//   children,
-//   ...props
-// }: TooltipPrimitive.Popup.Props &
-//   Pick<TooltipPrimitive.Positioner.Props, "align" | "alignOffset" | "side" | "sideOffset">) {
-//   return (
-//     <TooltipPrimitive.Portal>
-//       <TooltipPrimitive.Positioner
-//         align={align}
-//         alignOffset={alignOffset}
-//         side={side}
-//         sideOffset={sideOffset}
-//         className="isolate z-50"
-//       >
-//         <TooltipPrimitive.Popup
-//           data-slot="tooltip-content"
-//           className={cn(
-//             "bg-foreground text-background data-[side=bottom]:slide-in-from-top-2 data-[side=inline-end]:slide-in-from-left-2 data-[side=inline-start]:slide-in-from-right-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 z-50 inline-flex w-fit max-w-xs origin-(--transform-origin) items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
-//             className
-//           )}
-//           {...props}
-//         >
-//           {children}
-//           <TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)] rotate-45 rounded-[2px] data-[side=bottom]:top-1 data-[side=inline-end]:top-1/2! data-[side=inline-end]:-left-1 data-[side=inline-end]:-translate-y-1/2 data-[side=inline-start]:top-1/2! data-[side=inline-start]:-right-1 data-[side=inline-start]:-translate-y-1/2 data-[side=left]:top-1/2! data-[side=left]:-right-1 data-[side=left]:-translate-y-1/2 data-[side=right]:top-1/2! data-[side=right]:-left-1 data-[side=right]:-translate-y-1/2 data-[side=top]:-bottom-2.5" />
-//         </TooltipPrimitive.Popup>
-//       </TooltipPrimitive.Positioner>
-//     </TooltipPrimitive.Portal>
-//   );
-// }
-
-// export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+export { Tooltip, TooltipTrigger };

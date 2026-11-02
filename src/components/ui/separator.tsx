@@ -1,20 +1,18 @@
-import type { PolymorphicProps } from "@kobalte/core/polymorphic";
-import * as SeparatorPrimitive from "@kobalte/core/separator";
+import { Separator as SeparatorPrimitive } from "@solid2-aria/components";
+import type { ComponentProps } from "@solidjs/web";
 import { cn } from "cn";
 import { merge, omit } from "solid-js";
 
-type SeparatorProps = PolymorphicProps<"hr", SeparatorPrimitive.SeparatorRootProps<"hr">>;
-
-function Separator(props: SeparatorProps) {
-  const merged = merge({ orientation: "horizontal" } satisfies Partial<SeparatorProps>, props);
-  const rest = omit(merged, "orientation", "class");
+function Separator(props: ComponentProps<typeof SeparatorPrimitive>) {
+  const merged = merge({ orientation: "horizontal" } as const, props);
+  const rest = omit(merged, "class", "orientation");
 
   return (
-    <SeparatorPrimitive.Root
+    <SeparatorPrimitive
       data-slot="separator"
       orientation={merged.orientation}
       class={cn(
-        "bg-border shrink-0 data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
+        "bg-border block shrink-0 border-0 aria-[orientation=horizontal]:h-px aria-[orientation=horizontal]:w-full aria-[orientation=vertical]:w-px aria-[orientation=vertical]:self-stretch [:is(hr)]:h-px [:is(hr)]:w-full",
         merged.class
       )}
       {...rest}

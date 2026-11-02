@@ -7,8 +7,12 @@ export function ScrollToTop() {
   onSettled(() => {
     const scrollToTopButton = document.querySelector<HTMLButtonElement>("#scroll-to-top");
 
+    if (!scrollToTopButton) {
+      return;
+    }
+
     const onScroll = () => {
-      scrollToTopButton!.dataset["show"] = window.scrollY > 99 ? "true" : "false";
+      scrollToTopButton.dataset["show"] = window.scrollY > 99 ? "true" : "false";
     };
 
     window.addEventListener("scroll", onScroll);
@@ -20,7 +24,7 @@ export function ScrollToTop() {
     <Button
       id="scroll-to-top"
       class="ease-out-circ data-[show=true]:ease-spring fixed right-8 bottom-8 size-12 translate-y-20 transition-transform duration-180 data-[show=true]:translate-y-0 data-[show=true]:duration-300 motion-reduce:transition-none"
-      variant="primary"
+      variant="default"
       onClick={() => {
         globalThis.window.scrollTo(0, 0);
       }}

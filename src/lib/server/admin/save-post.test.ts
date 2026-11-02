@@ -59,18 +59,20 @@ test("savePost sends SHA for updates, omits it for creation, and reports failure
     assert.doesNotMatch(createBody, /"sha":/u);
     assert.match(createBody, /post: create test-post/u);
 
-    for (const status of [401, 403, 409, 422]) {
-      response = Response.json({ message: "GitHub rejected save" }, { status });
-      // The response mock is shared; each status must finish before advancing.
-      // oxlint-disable-next-line no-await-in-loop
-      const rejected = await savePost(params);
-      assert.equal(rejected.ok, false);
+    await Promise.all(
+      [401, 403, 409, 422].map((status) =>
+        context.test(`reports HTTP ${status}`, async () => {
+          response = Response.json({ message: "GitHub rejected save" }, { status });
+          const rejected = await savePost(params);
+          assert.equal(rejected.ok, false);
 
-      if (!rejected.ok) {
-        assert.match(rejected.error, new RegExp(`HTTP ${status}`, "u"));
-        assert.match(rejected.error, /GitHub rejected save/u);
-      }
-    }
+          if (!rejected.ok) {
+            assert.match(rejected.error, new RegExp(`HTTP ${status}`, "u"));
+            assert.match(rejected.error, /GitHub rejected save/u);
+          }
+        })
+      )
+    );
 
     response = new Error("Network unavailable");
     const networkFailure = await savePost(params);

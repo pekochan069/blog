@@ -56,10 +56,7 @@ export async function getPostList(): Promise<
       missingEnvs.push("token");
     }
 
-    return apiError(
-      "깃허브 환경변수가 존재하지 않습니다.",
-      new Error(`missing env: ${missingEnvs}`)
-    );
+    return apiError("깃허브 환경변수가 존재하지 않습니다.", `missing env: ${missingEnvs}`);
   }
 
   let result: Response;
@@ -77,7 +74,7 @@ export async function getPostList(): Promise<
       }
     );
   } catch (error) {
-    return apiError("fetch 실패", error);
+    return apiError("fetch 실패", error instanceof Error ? error.message : JSON.stringify(error));
   }
 
   let data: unknown;
@@ -85,7 +82,11 @@ export async function getPostList(): Promise<
   try {
     data = await result.json();
   } catch (error) {
-    return apiError("JSON 변환 실패", error, result.status);
+    return apiError(
+      "JSON 변환 실패",
+      error instanceof Error ? error.message : JSON.stringify(error),
+      JSON.stringify(result.status)
+    );
   }
 
   let parsedData: PostListItem[];
@@ -93,7 +94,11 @@ export async function getPostList(): Promise<
   try {
     parsedData = await z.array(postListItemSchema).parseAsync(data);
   } catch (error) {
-    return apiError("스키마 변환 실패", error, data);
+    return apiError(
+      "스키마 변환 실패",
+      error instanceof Error ? error.message : JSON.stringify(error),
+      JSON.stringify(data)
+    );
   }
 
   const postsWithMetadata: PostWithFrontmatter[] = [];

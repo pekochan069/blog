@@ -6,7 +6,7 @@ import satteriPluginFileTreeSource from "../satteri/satteri-plugin-file-tree-sou
 import satteriPluginMathML from "../satteri/satteri-plugin-mathml";
 import satteriPluginMermaid from "../satteri/satteri-plugin-mermaid";
 
-export const satteriOptions: CompileOptions = {
+export const satteriOptions = {
   features: {
     gfm: true,
     math: true,
@@ -36,4 +36,4 @@ export const satteriOptions: CompileOptions = {
     satteriPluginMermaid(),
   ],
   mdastPlugins: [satteriPluginFileTreeSource(), satteriPluginMathML()],
-};
+} satisfies CompileOptions;

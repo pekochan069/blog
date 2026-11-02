@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 
-import { ButtonAnchor } from "#components/ui/button";
+import { LinkButton } from "#components/ui/button";
 import { Input } from "#components/ui/input";
 
 export function CreateNewPost() {
@@ -19,7 +19,7 @@ export function CreateNewPost() {
           }
         }}
       />
-      <ButtonAnchor href={`/admin/${id()}`}>작성</ButtonAnchor>
+      <LinkButton href={`/admin/${id()}`}>작성</LinkButton>
     </div>
   );
 }

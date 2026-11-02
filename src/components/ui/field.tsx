@@ -1,8 +1,8 @@
-import type { ComponentProps, JSX } from "@solidjs/web";
+import type { JSX, ComponentProps } from "@solidjs/web";
 import { cva } from "class-variance-authority";
 import type { VariantProps } from "class-variance-authority";
 import { cn } from "cn";
-import { createMemo, For, merge, omit, Show } from "solid-js";
+import { Show, createMemo, merge, omit, For } from "solid-js";
 
 import { Label } from "./label";
 import { Separator } from "./separator";
@@ -22,10 +22,12 @@ function FieldSet(props: ComponentProps<"fieldset">) {
   );
 }
 
-type FieldLabelProps = ComponentProps<"legend"> & { variant?: "legend" | "label" };
-
-function FieldLegend(props: FieldLabelProps) {
-  const merged = merge({ variant: "legend" } satisfies Partial<FieldLabelProps>, props);
+function FieldLegend(
+  props: ComponentProps<"legend"> & {
+    variant?: "legend" | "label";
+  }
+) {
+  const merged = merge({ variant: "legend" } as const, props);
   const rest = omit(merged, "class", "variant");
 
   return (
@@ -56,25 +58,23 @@ function FieldGroup(props: ComponentProps<"div">) {
   );
 }
 
-const fieldVariants = cva("group/field data-[invalid=true]:text-destructive flex w-full gap-2", {
+const fieldVariants = cva("data-[invalid]:text-destructive group/field flex w-full gap-2", {
+  defaultVariants: {
+    orientation: "vertical",
+  },
   variants: {
     orientation: {
-      vertical: "flex-col *:w-full [&>.sr-only]:w-auto",
       horizontal:
         "flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
       responsive:
         "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+      vertical: "flex-col *:w-full [&>.sr-only]:w-auto",
     },
-  },
-  defaultVariants: {
-    orientation: "vertical",
   },
 });
 
-type FieldProps = ComponentProps<"div"> & VariantProps<typeof fieldVariants>;
-
-function Field(props: FieldProps) {
-  const merged = merge({ orientation: "vertical" } satisfies Partial<FieldProps>, props);
+function Field(props: ComponentProps<"div"> & VariantProps<typeof fieldVariants>) {
+  const merged = merge({ orientation: "vertical" } as const, props);
   const rest = omit(merged, "class", "orientation");
 
   return (
@@ -107,7 +107,7 @@ function FieldLabel(props: ComponentProps<typeof Label>) {
     <Label
       data-slot="field-label"
       class={cn(
-        "group/field-label peer/field-label has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-focus-visible:border-ring has-[>[data-slot=field]]:has-focus-visible:ring-ring/50 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:has-focus-visible:ring-3 *:data-[slot=field]:p-2.5",
+        "has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-focus-visible:border-ring has-[>[data-slot=field]]:has-focus-visible:ring-ring/50 has-data-selected:bg-primary/5 has-data-selected:border-primary/30 dark:has-data-selected:border-primary/20 dark:has-data-selected:bg-primary/10 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-disabled/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:has-focus-visible:ring-3 *:data-[slot=field]:p-2.5",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
         props.class
       )}
@@ -123,7 +123,7 @@ function FieldTitle(props: ComponentProps<"div">) {
     <div
       data-slot="field-label"
       class={cn(
-        "flex w-fit items-center gap-2 text-sm font-medium group-data-[disabled=true]/field:opacity-50",
+        "flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-disabled/field:opacity-50",
         props.class
       )}
       {...rest}
@@ -138,7 +138,7 @@ function FieldDescription(props: ComponentProps<"p">) {
     <p
       data-slot="field-description"
       class={cn(
-        "text-muted-foreground text-left text-sm leading-normal font-normal group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
+        "text-muted-foreground text-left text-sm leading-normal font-normal group-has-data-[orientation=horizontal]/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
         "last:mt-0 nth-last-2:-mt-1",
         "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
         props.class
@@ -153,12 +153,12 @@ function FieldSeparator(
     children?: JSX.Element;
   }
 ) {
-  const rest = omit(props, "class", "children");
+  const rest = omit(props, "children", "class");
 
   return (
     <div
       data-slot="field-separator"
-      data-content={!!props.children}
+      data-content={Boolean(props.children)}
       class={cn(
         "relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2",
         props.class
@@ -166,9 +166,9 @@ function FieldSeparator(
       {...rest}
     >
       <Separator class="absolute inset-0 top-1/2" />
-      {props.children && (
+      {Boolean(props.children) && (
         <span
-          class="bg-background text-muted-foreground relative mx-auto block w-fit px-2"
+          class="text-muted-foreground bg-background relative mx-auto block w-fit px-2"
           data-slot="field-separator-content"
         >
           {props.children}
@@ -180,36 +180,39 @@ function FieldSeparator(
 
 function FieldError(
   props: ComponentProps<"div"> & {
-    errors?: ({ message?: string } | undefined)[];
+    errors?: (
+      | {
+          message?: string;
+        }
+      | undefined
+    )[];
   }
 ) {
   const rest = omit(props, "class", "children", "errors");
 
   const content = createMemo(() => {
-    if (props.children) {
+    const hasChildren = Boolean(props.children);
+
+    if (hasChildren) {
       return props.children;
     }
 
-    if (!props.errors?.length) {
+    if ((props.errors?.length ?? 0) === 0) {
       return null;
     }
 
     const uniqueErrors = [
-      ...new Map(props.errors.map((error) => [error?.message, error])).values(),
+      ...new Map(props.errors?.map((error) => [error?.message, error])).values(),
     ];
 
-    if (uniqueErrors?.length === 1) {
+    if (uniqueErrors.length === 1) {
       return uniqueErrors[0]?.message;
     }
 
     return (
       <ul class="ml-4 flex list-disc flex-col gap-1">
         <For each={uniqueErrors}>
-          {(error) => (
-            <Show when={error?.message}>
-              <li>{error!.message!}</li>
-            </Show>
-          )}
+          {(error) => Boolean(error?.message) && <li>{error?.message}</li>}
         </For>
       </ul>
     );

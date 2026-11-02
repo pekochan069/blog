@@ -5,10 +5,8 @@ export function parseFileTree(source: string) {
     .map((part) => {
       let start = part.length;
 
-      // oxlint-disable-next-line no-plusplus
-      for (let i = 0; i < part.length; ++i) {
-        // oxlint-disable-next-line typescript/no-non-null-assertion
-        const c = part[i]!;
+      for (let i = 0; i < part.length; i += 1) {
+        const c = part[i];
 
         if (c !== " ") {
           start = i;

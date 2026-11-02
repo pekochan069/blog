@@ -1,7 +1,7 @@
 import { EditorState, Compartment } from "@codemirror/state";
 import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { onCleanup, onSettled } from "solid-js";
+import { onSettled, untrack } from "solid-js";
 
 interface EditorProps {
   value?: string;
@@ -13,23 +13,25 @@ interface EditorProps {
 }
 
 export function Editor(props: EditorProps) {
-  let editorParentRef: HTMLDivElement;
-  let view: EditorView;
+  let editorParentRef: HTMLDivElement | undefined;
 
   const extensionsCompartment = new Compartment();
   const readOnlyCompartment = new Compartment();
 
   onSettled(() => {
+    if (!editorParentRef) {
+      return;
+    }
+
     const state = EditorState.create({
       doc: props.value ?? "",
       extensions: [
-        // oxlint-disable-next-line solid/reactivity
         EditorView.updateListener.of((update) => {
           if (!update.docChanged) {
             return;
           }
 
-          props.onChange?.(update.state.doc.toString());
+          untrack(() => props.onChange?.(update.state.doc.toString()));
         }),
 
         extensionsCompartment.of(props.extensions ?? []),
@@ -43,17 +45,22 @@ export function Editor(props: EditorProps) {
       ],
     });
 
-    view = new EditorView({
-      parent: editorParentRef!,
+    const view = new EditorView({
+      parent: editorParentRef,
       state,
     });
 
     props.ref?.(view);
+
+    return () => view.destroy();
   });
 
-  onCleanup(() => {
-    view.destroy();
-  });
-
-  return <div class={props.class} ref={editorParentRef!} />;
+  return (
+    <div
+      class={props.class}
+      ref={(element) => {
+        editorParentRef = element;
+      }}
+    />
+  );
 }

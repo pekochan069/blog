@@ -34,10 +34,7 @@ export async function getPost(id: string) {
       missingEnvs.push("token");
     }
 
-    return apiError(
-      "깃허브 환경변수가 존재하지 않습니다.",
-      new Error(`missing env: ${missingEnvs}`)
-    );
+    return apiError("깃허브 환경변수가 존재하지 않습니다.", `missing env: ${missingEnvs}`);
   }
 
   let result: Response;
@@ -55,7 +52,7 @@ export async function getPost(id: string) {
       }
     );
   } catch (error) {
-    return apiError("fetch 실패", error);
+    return apiError("fetch 실패", error instanceof Error ? error.message : JSON.stringify(error));
   }
 
   let data: unknown;
@@ -63,7 +60,11 @@ export async function getPost(id: string) {
   try {
     data = await result.json();
   } catch (error) {
-    return apiError("JSON 변환 실패", error, result.status);
+    return apiError(
+      "JSON 변환 실패",
+      error instanceof Error ? error.message : JSON.stringify(error),
+      JSON.stringify(result.status)
+    );
   }
 
   let parsedData: PostItem;
@@ -71,7 +72,11 @@ export async function getPost(id: string) {
   try {
     parsedData = await postItemSchema.parseAsync(data);
   } catch (error) {
-    return apiError("스키마 변환 실패", error, data);
+    return apiError(
+      "스키마 변환 실패",
+      error instanceof Error ? error.message : JSON.stringify(error),
+      JSON.stringify(data)
+    );
   }
 
   const decodedData = Buffer.from(parsedData.content, "base64").toString("utf-8");

@@ -6,7 +6,7 @@ import { render } from "astro:content";
 import { components } from "#components/markdown-components";
 import { CalendarIcon } from "#icons/runeicons/normal/calendar";
 import { LayoutGridIcon } from "#icons/runeicons/normal/layout-grid";
-import { ButtonAnchor } from "#components/ui/button";
+import { LinkButton } from "#components/ui/button";
 import Toc from "#components/toc.astro";
 import { Fa7SolidHashtag } from "#icons/fa7/solid/hashtag";
 
@@ -68,14 +68,14 @@ const { Content, headings } = await render(content);
         <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
           <LayoutGridIcon class="size-4" />
         </div>
-        <ButtonAnchor
+        <LinkButton
           href={`/?category=${encodeURIComponent(content.data.category)}`}
           class="relative z-10 h-7 px-2"
           variant="ghostPrimary"
           size="sm"
         >
           {content.data.category}
-        </ButtonAnchor>
+        </LinkButton>
       </div>
       {
         content.data.tags.length > 0 && (
@@ -92,14 +92,14 @@ const { Content, headings } = await render(content);
             <ul class="flex">
               {content.data.tags.map((tag) => (
                 <li>
-                  <ButtonAnchor
+                  <LinkButton
                     href={`/?tags=${encodeURIComponent(tag)}`}
                     class="relative z-10 h-7 px-2"
                     variant="ghostPrimary"
                     size="sm"
                   >
                     #{tag}
-                  </ButtonAnchor>
+                  </LinkButton>
                 </li>
               ))}
             </ul>

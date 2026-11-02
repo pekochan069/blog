@@ -6,7 +6,7 @@ import { Fa7SolidEllipsis } from "#icons/fa7/solid/ellipsis";
 import { ChevronLeftIcon } from "#icons/runeicons/normal/chevron-left";
 import { ChevronRightIcon } from "#icons/runeicons/normal/chevron-right";
 
-import { ButtonAnchor } from "./button";
+import { LinkButton } from "./button";
 
 function Pagination(props: ComponentProps<"nav">) {
   const rest = omit(props, "class");
@@ -40,65 +40,63 @@ function PaginationItem(props: ComponentProps<"li">) {
 
 type PaginationLinkProps = {
   isActive?: boolean;
-  disabled?: boolean;
-} & Pick<ComponentProps<typeof ButtonAnchor>, "size"> &
-  ComponentProps<"a">;
+} & Omit<ComponentProps<typeof LinkButton>, "variant">;
 
 function PaginationLink(props: PaginationLinkProps) {
-  const merged = merge(
-    { size: "icon", isActive: false } satisfies Partial<PaginationLinkProps>,
-    props
-  );
-
-  const rest = omit(merged, "disabled", "isActive", "size");
+  const merged = merge({ size: "icon" } as const, props);
+  const rest = omit(merged, "class", "isActive", "size");
 
   return (
-    <ButtonAnchor
-      variant={merged.isActive ? "primary" : "ghost"}
+    <LinkButton
+      variant={merged.isActive ? "default" : "ghost"}
       size={merged.size}
+      class={merged.class}
       aria-current={merged.isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={merged.isActive}
-      data-disabled={merged.disabled}
       {...rest}
     />
   );
 }
 
-function PaginationPrevious(props: ComponentProps<typeof PaginationLink> & { text?: string }) {
-  const merged = merge(
-    { text: "이전" } satisfies Partial<ComponentProps<typeof PaginationLink> & { text?: string }>,
-    props
-  );
-
-  const rest = omit(merged, "class");
+function PaginationPrevious(
+  props: ComponentProps<typeof PaginationLink> & {
+    text?: string;
+  }
+) {
+  const merged = merge({ text: "이전" } as const, props);
+  const rest = omit(merged, "class", "text");
 
   return (
     <PaginationLink
       aria-label="이전 페이지로 이동"
-      size="md"
+      size="default"
       class={cn("pl-1.5!", merged.class)}
       {...rest}
     >
-      <ChevronLeftIcon data-icon="inline-start" class="cn-rtl-flip" />
+      <ChevronLeftIcon data-icon="inline-start" class="rtl:rotate-180" />
       <span class="hidden sm:block">{merged.text}</span>
     </PaginationLink>
   );
 }
 
-function PaginationNext(props: ComponentProps<typeof PaginationLink> & { text?: string }) {
-  const merged = merge({ text: "다음" }, props);
+function PaginationNext(
+  props: ComponentProps<typeof PaginationLink> & {
+    text?: string;
+  }
+) {
+  const merged = merge({ text: "다음" } as const, props);
   const rest = omit(merged, "class", "text");
 
   return (
     <PaginationLink
       aria-label="다음 페이지로 이동"
-      size="md"
+      size="default"
       class={cn("pr-1.5!", merged.class)}
       {...rest}
     >
       <span class="hidden sm:block">{merged.text}</span>
-      <ChevronRightIcon data-icon="inline-end" class="cn-rtl-flip" />
+      <ChevronRightIcon data-icon="inline-end" class="rtl:rotate-180" />
     </PaginationLink>
   );
 }

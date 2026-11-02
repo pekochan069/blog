@@ -3,7 +3,6 @@ import mdx from "@astrojs/mdx";
 import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import expressiveCode from "astro-expressive-code";
-// @ts-expect-error: lib type error
 import solidNext from "astro-solid-next";
 import { defineConfig } from "astro/config";
 
@@ -37,6 +36,9 @@ export default defineConfig({
   },
 
   vite: {
+    optimizeDeps: {
+      entries: ["src/**/*.{astro,tsx}", "!src/components/ui-bak/**"],
+    },
     plugins: [tailwindcss()],
   },
 });

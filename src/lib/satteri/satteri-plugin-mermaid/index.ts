@@ -17,8 +17,7 @@ export const satteriMermaid = (): HastPluginInput => () =>
           return;
         }
 
-        // oxlint-disable-next-line prefer-destructuring
-        const code = contentChildren[0];
+        const [code] = contentChildren;
 
         if (
           node.properties.dataLanguage !== "mermaid" ||

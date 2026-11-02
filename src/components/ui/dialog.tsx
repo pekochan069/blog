@@ -1,89 +1,103 @@
-"use client";
-
-import * as DialogPrimitive from "@kobalte/core/dialog";
-import type { PolymorphicProps } from "@kobalte/core/polymorphic";
-import { callHandler } from "@kobalte/utils";
-import type { ComponentProps } from "@solidjs/web";
+import {
+  Dialog as DialogPrimitive,
+  DialogTrigger as DialogTriggerPrimitive,
+  Heading,
+  Text,
+  ModalOverlay as ModalOverlayPrimitive,
+  Modal as ModalPrimitive,
+} from "@solid2-aria/components";
+import type {
+  DialogTriggerProps as DialogTriggerPrimitiveProps,
+  ModalOverlayProps as ModalOverlayPrimitiveProps,
+} from "@solid2-aria/components";
+import type { JSX, ComponentProps } from "@solidjs/web";
 import { cn } from "cn";
-import { merge, omit, Show } from "solid-js";
+import { merge, omit } from "solid-js";
 
-import { Button } from "#/components/ui/button";
 import { XIcon } from "#icons/runeicons/normal/x";
 
-function Dialog(props: DialogPrimitive.DialogRootProps) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+import { Button } from "./button";
+
+export {
+  type DialogProps as DialogPrimitiveProps,
+  type DialogTriggerProps as DialogTriggerPrimitiveProps,
+} from "@solid2-aria/components";
+
+function DialogTrigger(props: DialogTriggerPrimitiveProps) {
+  return <DialogTriggerPrimitive data-slot="dialog-trigger" {...props} />;
 }
 
-function DialogTrigger(props: DialogPrimitive.DialogTriggerProps) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
-}
+function DialogClose(props: ComponentProps<typeof Button>) {
+  const merged = merge({ size: "default", variant: "outline" } as const, props);
 
-function DialogPortal(props: DialogPrimitive.DialogPortalProps) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
-}
-
-function DialogClose(props: DialogPrimitive.DialogCloseButtonProps) {
-  return <DialogPrimitive.CloseButton data-slot="dialog-close" {...props} />;
-}
-
-function DialogOverlay(props: PolymorphicProps<"div", DialogPrimitive.DialogOverlayProps<"div">>) {
-  const context = DialogPrimitive.useDialogContext();
-  const rest = omit(props, "class", "onClick");
-
-  const handleClick: ComponentProps<"div">["onClick"] = (event) => {
-    callHandler(event, props.onClick);
-
-    if (!event.defaultPrevented) {
-      context.close();
-    }
-  };
+  const rest = omit(merged, "class", "variant", "size");
 
   return (
-    <DialogPrimitive.Overlay
-      data-slot="dialog-overlay"
-      class={cn(
-        "data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs",
-        props.class
-      )}
-      onClick={handleClick}
+    <Button
+      slot="close"
+      data-slot="dialog-close"
+      variant={merged.variant}
+      size={merged.size}
+      class={cn(merged.class)}
       {...rest}
     />
   );
 }
 
-function DialogContent(
-  props: PolymorphicProps<"div", DialogPrimitive.DialogContentProps<"div">> & {
-    showCloseButton?: boolean;
+function DialogOverlay(
+  props: Omit<ModalOverlayPrimitiveProps, "class" | "children"> & {
+    class?: string;
+    children: JSX.Element;
   }
 ) {
-  const merged = merge({ showCloseButton: true }, props);
-  const rest = omit(merged, "class", "children", "showCloseButton");
+  const rest = omit(props, "class", "children");
 
   return (
-    <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Content
+    <ModalOverlayPrimitive
+      data-slot="dialog-overlay"
+      class={cn(
+        "data-entering:animate-in data-exiting:animate-out data-exiting:fade-out-0 data-entering:fade-in-0 fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs",
+        props.class
+      )}
+      {...rest}
+    >
+      {props.children}
+    </ModalOverlayPrimitive>
+  );
+}
+
+function Dialog(
+  props: Omit<ModalOverlayPrimitiveProps, "class" | "children"> &
+    Pick<ComponentProps<typeof ModalPrimitive>, "isDismissable"> & {
+      class?: string;
+      children: JSX.Element;
+      showCloseButton?: boolean;
+    }
+) {
+  const merged = merge({ isDismissable: true, showCloseButton: true } as const, props);
+
+  const rest = omit(merged, "class", "children", "showCloseButton", "isDismissable");
+
+  return (
+    <DialogOverlay isDismissable={merged.isDismissable} {...rest}>
+      <ModalPrimitive
         data-slot="dialog-content"
         class={cn(
-          "bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 text-sm ring-1 duration-100 outline-none sm:max-w-sm",
+          "bg-popover text-popover-foreground data-entering:animate-in data-exiting:animate-out data-exiting:fade-out-0 data-entering:fade-in-0 data-exiting:zoom-out-95 data-entering:zoom-in-95 ring-foreground/10 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 text-sm ring-1 duration-100 outline-none sm:max-w-sm",
           merged.class
         )}
-        {...rest}
       >
-        {merged.children}
-        <Show when={merged.showCloseButton}>
-          <DialogPrimitive.CloseButton
-            data-slot="dialog-close"
-            as={() => (
-              <Button variant="ghost" class="absolute top-2 right-2" size="icon-sm">
-                <XIcon />
-                <span class="sr-only">닫기</span>
-              </Button>
-            )}
-          />
-        </Show>
-      </DialogPrimitive.Content>
-    </DialogPortal>
+        <DialogPrimitive data-slot="dialog" class="[display:inherit] gap-[inherit] outline-none">
+          {merged.children}
+          {merged.showCloseButton && (
+            <DialogClose variant="ghost" class="absolute top-2 right-2" size="icon-sm">
+              <XIcon />
+              <span class="sr-only">닫기</span>
+            </DialogClose>
+          )}
+        </DialogPrimitive>
+      </ModalPrimitive>
+    </DialogOverlay>
   );
 }
 
@@ -98,7 +112,7 @@ function DialogFooter(
     showCloseButton?: boolean;
   }
 ) {
-  const merged = merge({ showCloseButton: false }, props);
+  const merged = merge({ showCloseButton: false } as const, props);
   const rest = omit(merged, "class", "showCloseButton", "children");
 
   return (
@@ -111,32 +125,34 @@ function DialogFooter(
       {...rest}
     >
       {merged.children}
-      <Show when={merged.showCloseButton}>
-        <DialogPrimitive.CloseButton as={() => <Button variant="outline">닫기</Button>} />
-      </Show>
+      {merged.showCloseButton && <DialogClose variant="outline">닫기</DialogClose>}
     </div>
   );
 }
 
-function DialogTitle(props: PolymorphicProps<"h2", DialogPrimitive.DialogTitleProps<"h2">>) {
+function DialogTitle(props: Omit<ComponentProps<typeof Heading>, "slot">) {
   const rest = omit(props, "class");
 
   return (
-    <DialogPrimitive.Title
+    <Heading
+      slot="title"
       data-slot="dialog-title"
-      class={cn("cn-font-heading text-base leading-none font-medium", props.class)}
+      class={cn(
+        "font-(family-name:--font-heading,var(--font-sans)) text-base leading-none font-medium",
+        props.class
+      )}
       {...rest}
     />
   );
 }
 
-function DialogDescription(
-  props: PolymorphicProps<"p", DialogPrimitive.DialogDescriptionProps<"p">>
-) {
+function DialogDescription(props: Omit<ComponentProps<typeof Text>, "slot">) {
   const rest = omit(props, "class");
 
   return (
-    <DialogPrimitive.Description
+    <Text
+      slot="description"
+      elementType="p"
       data-slot="dialog-description"
       class={cn(
         "text-muted-foreground *:[a]:hover:text-foreground text-sm *:[a]:underline *:[a]:underline-offset-3",
@@ -150,12 +166,10 @@ function DialogDescription(
 export {
   Dialog,
   DialogClose,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogOverlay,
-  DialogPortal,
   DialogTitle,
   DialogTrigger,
 };

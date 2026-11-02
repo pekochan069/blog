@@ -1,19 +1,25 @@
-import type { ComponentProps } from "@solidjs/web";
+import { LabelContext, Label as LabelPrimitive } from "@solid2-aria/components";
+import type { LabelProps } from "@solid2-aria/components";
 import { cn } from "cn";
-import { omit } from "solid-js";
+import { omit, useContext } from "solid-js";
 
-function Label(props: ComponentProps<"label">) {
-  const rest = omit(props, "class");
+function Label(props: LabelProps) {
+  const rest = omit(props, "class", "for", "slot");
+  const context = useContext(LabelContext);
 
   return (
-    <label
-      data-slot="label"
-      class={cn(
-        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-        props.class
-      )}
-      {...rest}
-    />
+    <LabelContext value={Boolean(props.for) && props.slot === undefined ? null : context}>
+      <LabelPrimitive
+        data-slot="label"
+        class={cn(
+          "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-disabled:pointer-events-none group-data-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 peer-data-disabled:opacity-50",
+          props.class
+        )}
+        {...rest}
+        for={props.for}
+        slot={props.slot}
+      />
+    </LabelContext>
   );
 }
 

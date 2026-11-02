@@ -2,10 +2,10 @@ import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 import { actions } from "astro:actions";
-import { createSignal, createStore, Show } from "solid-js";
+import { createSignal, createStore, Show, untrack } from "solid-js";
 
-import { toast } from "#components/sonner";
 import { Button } from "#components/ui/button";
+import { toast } from "#components/ui/sonner";
 import { publicEnv } from "#env";
 import { SvgSpinners180RingWithBg } from "#icons/svg-spinners/180-ring-with-bg";
 
@@ -108,21 +108,17 @@ type EditorContainerProps = EditorContextStore & {
 export function EditorContainer(props: EditorContainerProps) {
   const [saveLoading, setSaveLoading] = createSignal(false);
 
-  const [editorContext, setEditorContext] = createStore<EditorContextStore>({
-    // oxlint-disable-next-line solid/reactivity
-    category: props.category,
-    // oxlint-disable-next-line solid/reactivity
-    description: props.description,
-    // oxlint-disable-next-line solid/reactivity
-    draft: props.draft,
-    // oxlint-disable-next-line solid/reactivity
-    tags: props.tags,
-    // oxlint-disable-next-line solid/reactivity
-    title: props.title,
-  });
+  const [editorContext, setEditorContext] = createStore<EditorContextStore>(
+    untrack(() => ({
+      category: props.category,
+      description: props.description,
+      draft: props.draft,
+      tags: props.tags,
+      title: props.title,
+    }))
+  );
 
-  // oxlint-disable-next-line solid/reactivity
-  const [body, setBody] = createSignal(props.body);
+  const [body, setBody] = createSignal(untrack(() => props.body));
 
   const save = async () => {
     if (saveLoading()) {
@@ -205,9 +201,9 @@ export function EditorContainer(props: EditorContainerProps) {
       <div class="mx-auto mt-12 mb-16 px-4 lg:w-[95%] lg:max-w-[1920px]">
         <Button
           size="lg"
-          variant="primary"
+          variant="default"
           class="w-full"
-          disabled={saveLoading() || !check()}
+          isDisabled={saveLoading() || !check()}
           onClick={save}
         >
           <Show when={!saveLoading()} fallback={<SvgSpinners180RingWithBg />}>

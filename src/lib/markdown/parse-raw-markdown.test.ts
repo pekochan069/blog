@@ -1,12 +1,24 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { parseRawMarkdown } from "./parse-raw-markdown";
 
 test("extracts post frontmatter and preserves the Markdown body", () => {
-  const source = readFileSync(new URL("../../content/posts/nobpp.mdx", import.meta.url), "utf-8");
-  const { frontmatter, body } = parseRawMarkdown(source);
+  const source = `---
+title: nobpp
+description: NoBuild C++
+category: c++
+draft: false
+published: 2025-01-28T17:55:12.088Z
+updated: 2025-01-28T17:55:12.088Z
+tags: ["프로그래밍", "C++"]
+---
+## Body
+`;
+
+  const parsed = parseRawMarkdown(source);
+  assert.ok(parsed);
+  const { frontmatter, body } = parsed;
 
   assert.deepEqual(frontmatter, {
     category: "c++",
@@ -23,12 +35,13 @@ test("extracts post frontmatter and preserves the Markdown body", () => {
     "---\ntitle: Minimal\ndraft: false\npublished: 2025-01-28\nupdated: 2025-01-28\n---\n## Body\n"
   );
 
+  assert.ok(minimal);
   assert.equal(minimal.frontmatter.category, "");
   assert.deepEqual(minimal.frontmatter.tags, []);
   assert.ok(minimal.frontmatter.published instanceof Date);
   assert.equal(minimal.body, "\n## Body\n");
   assert.throws(() => parseRawMarkdown("## Body\n"));
-  assert.throws(() => parseRawMarkdown(""));
+  assert.equal(parseRawMarkdown(""), undefined);
   assert.throws(() => parseRawMarkdown(source.replace("title: nobpp\n", "")));
   assert.throws(() =>
     parseRawMarkdown(source.replace('tags: ["프로그래밍", "C++"]', "tags: invalid"))

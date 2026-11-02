@@ -1,6 +1,6 @@
 ---
 import type { PostListItemType } from "#lib/contents";
-import { ButtonAnchor } from "#components/ui/button";
+import { LinkButton } from "#components/ui/button";
 import { Fa7SolidHashtag } from "#icons/fa7/solid/hashtag";
 import { LayoutGridIcon } from "#icons/runeicons/normal/layout-grid";
 import { CalendarIcon } from "#icons/runeicons/normal/calendar";
@@ -73,14 +73,14 @@ const currentPath = Astro.url.pathname;
           <div class="rounded-md size-6 bg-primary text-primary-foreground grid place-content-center">
             <LayoutGridIcon class="size-4" />
           </div>
-          <ButtonAnchor
+          <LinkButton
             href={`/?category=${encodeURIComponent(category)}`}
             class="relative z-10 h-7 px-2"
             variant="ghostPrimary"
             size="sm"
           >
             {category}
-          </ButtonAnchor>
+          </LinkButton>
         </div>
         {
           tags.length > 0 && (
@@ -97,14 +97,14 @@ const currentPath = Astro.url.pathname;
               <ul class="flex">
                 {tags.map((tag) => (
                   <li>
-                    <ButtonAnchor
+                    <LinkButton
                       href={`/?tags=${encodeURIComponent(tag)}`}
                       class="relative z-10 h-7 px-2"
                       variant="ghostPrimary"
                       size="sm"
                     >
                       #{tag}
-                    </ButtonAnchor>
+                    </LinkButton>
                   </li>
                 ))}
               </ul>

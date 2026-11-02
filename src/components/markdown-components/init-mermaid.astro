@@ -12,14 +12,10 @@
       diagram.dataset.mermaidSource = diagram.textContent ?? "";
     }
 
-    // @ts-expect-error: mermaid
-    window.mermaid ??= mermaid;
-    // @ts-expect-error: mermaid
-    window.mermaid.initialize({
+    mermaid.initialize({
       startOnLoad: false,
       theme: document.documentElement.classList.contains("dark") ? "dark" : "default",
     });
-    // @ts-expect-error: mermaid
-    await window.mermaid.run({ nodes: diagrams });
+    await mermaid.run({ nodes: diagrams });
   })();
 </script>

@@ -1,11 +1,11 @@
-import { CommandInput } from "cmdk-solid";
+import { Autocomplete, TextField, createFilter } from "@solid2-aria/components";
 import { createSignal, For, Show } from "solid-js";
 import type { StoreSetter } from "solid-js";
 
 import { Badge } from "#components/ui/badge";
-import { Button, ButtonAnchor } from "#components/ui/button";
+import { Button, LinkButton } from "#components/ui/button";
 import { Checkbox } from "#components/ui/checkbox";
-import { Command, CommandEmpty, CommandItem, CommandList } from "#components/ui/command";
+import { CommandEmpty, CommandItem, CommandList } from "#components/ui/command";
 import { Input } from "#components/ui/input";
 import { Label } from "#components/ui/label";
 import { ArrowLeftIcon } from "#icons/runeicons/normal/arrow-left";
@@ -24,14 +24,15 @@ export function EditorMeta(props: EditorMetaProps) {
   const [openCategoryList, setOpenCategoryList] = createSignal(false);
   const [openTagsList, setOpenTagsList] = createSignal(false);
   const [selectedTag, setSelectedTag] = createSignal("");
+  const { contains } = createFilter({ sensitivity: "base" });
 
   return (
     <div class="bg-background border-border mx-auto mt-4 flex w-full flex-col gap-4 rounded-xl border p-4 shadow-sm md:w-[95%] md:max-w-6xl">
       <div>
-        <ButtonAnchor href="/admin">
+        <LinkButton href="/admin">
           <ArrowLeftIcon />
           <span>어드민으로 이동</span>
-        </ButtonAnchor>
+        </LinkButton>
       </div>
       <div class="flex flex-col gap-1">
         <Label for="title">제목</Label>
@@ -57,58 +58,69 @@ export function EditorMeta(props: EditorMetaProps) {
           }}
         />
       </div>
-      <div class="flex flex-col gap-1">
-        <Label for="category">카테고리</Label>
-        <Command
-          class="relative overflow-visible"
-          onFocusIn={() => {
-            setOpenCategoryList(true);
-          }}
-          onFocusOut={(event) => {
-            const nextTarget = event.relatedTarget;
+      <div
+        class="relative flex flex-col gap-1"
+        onFocusIn={() => {
+          setOpenCategoryList(true);
+        }}
+        onFocusOut={(event) => {
+          const nextTarget = event.relatedTarget;
 
-            if (!(nextTarget instanceof Node && event.currentTarget.contains(nextTarget))) {
-              setOpenCategoryList(false);
-            }
+          if (!(nextTarget instanceof Node && event.currentTarget.contains(nextTarget))) {
+            setOpenCategoryList(false);
+          }
+        }}
+      >
+        <Label for="category">카테고리</Label>
+        <Autocomplete
+          filter={contains}
+          inputValue={props.editorContext.category}
+          onInputChange={(value) => {
+            props.setEditorContext((ctx) => {
+              ctx.category = value;
+            });
           }}
         >
-          <CommandInput
-            data-slot="command-input"
-            class="border-input file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 h-8 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1 text-base outline-hidden transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 md:text-sm"
-            value={props.editorContext.category}
-            onValueChange={(v) => {
-              props.setEditorContext((ctx) => {
-                ctx.category = v;
-              });
-            }}
-          />
+          <TextField aria-label="카테고리">
+            <Input id="category" />
+          </TextField>
           <Show when={openCategoryList()}>
-            <CommandList class="bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-10 z-10 mt-1 w-full rounded-md border shadow-md">
-              <CommandEmpty class="py-2" />
-              <For each={props.availableCategories}>
-                {(category) => (
-                  <CommandItem
-                    value={category}
-                    onPointerDown={(event) => event.preventDefault()}
-                    onSelect={(v) => {
-                      props.setEditorContext((ctx) => {
-                        ctx.category = v;
-                      });
-                    }}
-                  >
-                    {category}
-                  </CommandItem>
-                )}
-              </For>
+            <CommandList
+              aria-label="카테고리 목록"
+              items={props.availableCategories.map((category) => ({
+                id: category,
+                label: category,
+              }))}
+              renderEmptyState={() => (
+                <CommandEmpty class="text-muted-foreground px-2 py-3 text-left">
+                  일치하는 카테고리가 없습니다.
+                </CommandEmpty>
+              )}
+              class="bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-full left-0 z-10 mt-1 w-full rounded-lg border p-1 shadow-md motion-reduce:animate-none"
+            >
+              {(category) => (
+                <CommandItem
+                  id={category.id}
+                  textValue={category.label}
+                  onPointerDown={(event) => event.preventDefault()}
+                  onAction={() => {
+                    props.setEditorContext((ctx) => {
+                      ctx.category = category.label;
+                    });
+                  }}
+                >
+                  {category.label}
+                </CommandItem>
+              )}
             </CommandList>
           </Show>
-        </Command>
+        </Autocomplete>
       </div>
       <div class="flex flex-col gap-1">
-        <Label>태그</Label>
+        <Label for="tags">태그</Label>
         <div class="flex items-center gap-2">
-          <Command
-            class="relative overflow-visible"
+          <div
+            class="relative min-w-0 flex-1 overflow-visible"
             onFocusIn={() => {
               setOpenTagsList(true);
             }}
@@ -120,30 +132,41 @@ export function EditorMeta(props: EditorMetaProps) {
               }
             }}
           >
-            <CommandInput
-              data-slot="command-input"
-              class="border-input file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 h-8 w-full min-w-0 rounded-lg border bg-transparent px-2.5 py-1 text-base outline-hidden transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-3 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 md:text-sm"
-              value={selectedTag()}
-              onValueChange={setSelectedTag}
-            />
-            <Show when={openTagsList()}>
-              <CommandList class="bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-10 z-10 mt-1 w-full rounded-md border shadow-md">
-                <CommandEmpty class="py-2" />
-                <For each={props.availableTags}>
+            <Autocomplete
+              filter={contains}
+              inputValue={selectedTag()}
+              onInputChange={setSelectedTag}
+            >
+              <TextField aria-label="태그">
+                <Input id="tags" />
+              </TextField>
+              <Show when={openTagsList()}>
+                <CommandList
+                  aria-label="태그 목록"
+                  items={props.availableTags.map((tag) => ({ id: tag, label: tag }))}
+                  renderEmptyState={() => (
+                    <CommandEmpty class="text-muted-foreground px-2 py-3 text-left">
+                      일치하는 태그가 없습니다.
+                    </CommandEmpty>
+                  )}
+                  class="bg-popover text-popover-foreground animate-in fade-in-0 zoom-in-95 absolute top-full left-0 z-10 mt-1 w-full rounded-lg border p-1 shadow-md motion-reduce:animate-none"
+                >
                   {(tag) => (
                     <CommandItem
-                      value={tag}
+                      id={tag.id}
+                      textValue={tag.label}
                       onPointerDown={(event) => event.preventDefault()}
-                      onSelect={setSelectedTag}
+                      onAction={() => setSelectedTag(tag.label)}
                     >
-                      {tag}
+                      {tag.label}
                     </CommandItem>
                   )}
-                </For>
-              </CommandList>
-            </Show>
-          </Command>
+                </CommandList>
+              </Show>
+            </Autocomplete>
+          </div>
           <Button
+            variant="outline"
             onClick={() => {
               const tag = selectedTag();
               props.setEditorContext((ctx) => {
@@ -177,8 +200,9 @@ export function EditorMeta(props: EditorMetaProps) {
       </div>
       <div class="flex gap-2">
         <Checkbox
+          aria-label="드래프트"
           id="draft"
-          checked={props.editorContext.draft}
+          isSelected={props.editorContext.draft}
           onChange={(v) => {
             props.setEditorContext((ctx) => {
               ctx.draft = v;

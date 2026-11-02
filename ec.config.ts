@@ -8,8 +8,6 @@ export default defineEcConfig({
     langAlias: {
       math: "txt",
     },
-    // @ts-expect-error: lib
-    langs: ["math"],
   },
   styleOverrides: {
     borderColor: "var(--color-border)",

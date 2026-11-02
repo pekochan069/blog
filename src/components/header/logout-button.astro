@@ -1,5 +1,5 @@
 ---
-import { Button, ButtonAnchor } from "#components/ui/button";
+import { Button, LinkButton } from "#components/ui/button";
 import { LogOutIcon } from "#icons/runeicons/normal/log-out";
 import { authCookieName, isLoggedIn } from "#lib/server/auth/is-logged-in";
 
@@ -15,8 +15,8 @@ const loggedIn = isLoggedIn(Astro.cookies.get(authCookieName)?.value);
         로그아웃
       </Button>
     </form>
-    <ButtonAnchor href="/admin" variant="ghost">
+    <LinkButton href="/admin" variant="ghost">
       어드민
-    </ButtonAnchor>
+    </LinkButton>
   )
 }

@@ -74,7 +74,10 @@ function resolveComposition(
     : composition;
 }
 
-/* oxlint-disable anti-slop/no-runtime-typeof */
+function isStyleText(style: FileTreeProps["style"]): style is string {
+  return typeof style === "string";
+}
+
 function resolveHostStyle(
   model: FileTreeModel,
   style: FileTreeProps["style"]
@@ -82,23 +85,17 @@ function resolveHostStyle(
   const itemHeight = `${String(model.getItemHeight())}px`;
   const density = model.getDensityFactor();
 
-  if (typeof style === "string") {
+  if (isStyleText(style)) {
     return `--trees-item-height:${itemHeight};--trees-density-override:${String(density)};${style}`;
   }
 
-  const resolvedStyle = {
+  const resolvedStyle: JSX.CSSProperties = {
     "--trees-density-override": density,
     "--trees-item-height": itemHeight,
   };
 
-  if (typeof style === "object" && style !== null) {
-    Object.assign(resolvedStyle, style);
-  }
-
-  // SAFETY: keys and values come from Solid's validated CSSProperties input.
-  return resolvedStyle as JSX.CSSProperties;
+  return { ...resolvedStyle, ...style };
 }
-/* oxlint-enable anti-slop/no-runtime-typeof */
 
 export function FileTree(props: FileTreeProps) {
   let host: HTMLElement | undefined;

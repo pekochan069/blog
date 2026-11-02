@@ -1,11 +1,10 @@
-// oxlint-disable-next-line anti-slop/no-unknown-parameters
-export function apiError(header: string, error: unknown, body?: unknown) {
+export function apiError(header: string, message: string | undefined, serializedBody?: string) {
   return {
     error: JSON.stringify(
       {
-        body: JSON.stringify(body),
+        body: serializedBody,
         header: "header",
-        message: error instanceof Error ? error.message : JSON.stringify(error),
+        message,
       },
       undefined,
       2

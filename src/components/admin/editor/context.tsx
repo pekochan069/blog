@@ -1,4 +1,4 @@
-import { createContext, createSignal, createStore, useContext } from "solid-js";
+import { createContext, createSignal, createStore, untrack, useContext } from "solid-js";
 import type { Accessor, ParentProps, Setter, StoreSetter } from "solid-js";
 
 interface EditorContextStore {
@@ -29,18 +29,15 @@ export function EditorContextProvider(
     }
   >
 ) {
-  const [editorContext, setEditorContext] = createStore<EditorContextStore>({
-    // oxlint-disable-next-line solid/reactivity
-    category: props.category,
-    // oxlint-disable-next-line solid/reactivity
-    description: props.description,
-    // oxlint-disable-next-line solid/reactivity
-    draft: props.draft,
-    // oxlint-disable-next-line solid/reactivity
-    tags: props.tags,
-    // oxlint-disable-next-line solid/reactivity
-    title: props.title,
-  });
+  const [editorContext, setEditorContext] = createStore<EditorContextStore>(
+    untrack(() => ({
+      category: props.category,
+      description: props.description,
+      draft: props.draft,
+      tags: props.tags,
+      title: props.title,
+    }))
+  );
 
   const [text, setText] = createSignal(() => props.text);
 

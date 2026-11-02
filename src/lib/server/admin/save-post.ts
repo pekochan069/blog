@@ -30,10 +30,7 @@ export async function savePost(
       missingEnvs.push("token");
     }
 
-    return apiError(
-      "깃허브 환경변수가 존재하지 않습니다.",
-      new Error(`missing env: ${missingEnvs}`)
-    );
+    return apiError("깃허브 환경변수가 존재하지 않습니다.", `missing env: ${missingEnvs}`);
   }
 
   if (params.frontmatter.category === "") {
@@ -68,7 +65,10 @@ export async function savePost(
       }
     );
   } catch (error) {
-    return apiError("savePost fetch 실패", error);
+    return apiError(
+      "savePost fetch 실패",
+      error instanceof Error ? error.message : JSON.stringify(error)
+    );
   }
 
   let data: unknown;
@@ -76,11 +76,15 @@ export async function savePost(
   try {
     data = await res.json();
   } catch (error) {
-    return apiError("savePost JSON 변환 실패", error, res.status);
+    return apiError(
+      "savePost JSON 변환 실패",
+      error instanceof Error ? error.message : JSON.stringify(error),
+      JSON.stringify(res.status)
+    );
   }
 
   if (!res.ok) {
-    return apiError("GitHub 저장 실패", new Error(`HTTP ${res.status}`), data);
+    return apiError("GitHub 저장 실패", `HTTP ${res.status}`, JSON.stringify(data));
   }
 
   return apiSuccess(data);

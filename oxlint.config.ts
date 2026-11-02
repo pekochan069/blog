@@ -5,30 +5,11 @@ import core from "ultracite/oxlint/core";
 
 export default defineConfig({
   extends: [core, antiSlop],
-  ignorePatterns: core.ignorePatterns,
-  jsPlugins: ["eslint-plugin-solid"],
-  overrides: [
-    {
-      files: ["./src/components/ui/*.tsx"],
-      rules: {
-        "anti-slop/require-safety-comment-for-type-assertion": "off",
-        "sort-keys": "off",
-      },
-    },
-    {
-      files: ["**.tsx"],
-      rules: {
-        "no-unassigned-vars": "off",
-        "typescript/no-non-null-assertion": "off",
-      },
-    },
-    {
-      files: ["**.astro"],
-      rules: {
-        "unicorn/prefer-module": "off",
-      },
-    },
+  ignorePatterns: [
+    ...(core.ignorePatterns === undefined ? [] : core.ignorePatterns),
+    "src/components/ui-bak/*",
   ],
+  jsPlugins: ["eslint-plugin-solid"],
   rules: {
     ...solidv2.rules,
     "func-style": "off",

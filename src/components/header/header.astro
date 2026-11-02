@@ -1,7 +1,7 @@
 ---
 import { HouseIcon } from "#icons/runeicons/normal/house";
 import { ArrowRightIcon } from "#icons/runeicons/normal/arrow-right";
-import { ButtonAnchor } from "#components/ui/button";
+import { LinkButton } from "#components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { SquareArrowOutUpRightIcon } from "#icons/runeicons/normal/square-arrow-out-up-right";
 import { GithubIconIcon } from "#icons/logos/github-icon";
@@ -15,7 +15,7 @@ import { MobileHeaderNav } from "./mobile-header-nav";
     class="flex justify-between bg-background max-w-6xl h-20 px-6 py-4 mx-auto items-center rounded-b-xl border-border w-full border md:w-[95%] data-[scrolled=true]:h-14 transition-[height,width] duration-300 ease-spring shadow-sm motion-reduce:transition-none data-[scrolled=true]:bg-background/95 data-[scrolled=true]:backdrop-blur data-[scrolled=true]:supports-backdrop-filter:bg-background/60"
     id="site-header-container"
   >
-    <ButtonAnchor href="/" size="lg" variant="ghost" class="flex items-center group">
+    <LinkButton href="/" size="lg" variant="ghost" class="flex items-center group">
       <div class="relative">
         <HouseIcon class="size-6 transition-all group-hover:rotate-90 group-hover:opacity-0" />
         <ArrowRightIcon
@@ -23,11 +23,11 @@ import { MobileHeaderNav } from "./mobile-header-nav";
         />
       </div>
       <h1 class="text-xl font-bold">pekochan069</h1>
-    </ButtonAnchor>
+    </LinkButton>
     <div class="flex gap-2 items-center">
       <LogoutButton server:defer />
       <nav>
-        <ButtonAnchor
+        <LinkButton
           href="https://github.com/pekochan069/"
           target="_blank"
           class="size-9 md:w-full group"
@@ -42,7 +42,7 @@ import { MobileHeaderNav } from "./mobile-header-nav";
             />
           </div>
           <span class="sr-only md:not-sr-only text-lg font-semibold">Github</span>
-        </ButtonAnchor>
+        </LinkButton>
       </nav>
       <ThemeToggle client:load />
     </div>
