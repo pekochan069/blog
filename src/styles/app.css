@@ -882,6 +882,8 @@ html {
 }
 
 .prose {
+  @apply selection:bg-primary selection:text-primary-foreground;
+
   h1 {
     @apply text-4xl font-extrabold tracking-tight lg:text-5xl;
   }
@@ -995,7 +997,7 @@ html {
   }
 
   a {
-    @apply text-primary no-underline hover:underline;
+    @apply text-catppuccin-blue no-underline selection:underline hover:underline;
   }
 
   @media (prefers-color-scheme: dark) {
